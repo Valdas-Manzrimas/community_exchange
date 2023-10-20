@@ -15,17 +15,13 @@ module.exports = function (app) {
     [authJwt.verifyToken, authJwt.isAdmin || authJwt.isModerator],
     controller.getAllUsers
   );
-  // current user
   app.get('/api/user/', [authJwt.verifyToken], controller.userBoard);
-  // update current user
   app.put('/api/user/update', [authJwt.verifyToken], controller.updateUser);
-  // change password
   app.put(
     '/api/user/changePassword',
     [authJwt.verifyToken],
     controller.changePassword
   );
-  // delete current user
   app.delete('/api/user/delete', [authJwt.verifyToken], controller.deleteUser);
 
   app.get(
