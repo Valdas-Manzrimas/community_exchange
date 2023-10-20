@@ -38,14 +38,6 @@ module.exports = function (app) {
   app.post('/api/product/create', productController.createProduct);
 
   app.get('/api/product/:productId', productController.getProductById);
-  app.put(
-    '/api/product/:productId',
-    checkProductAuthorization,
-    productController.updateProduct
-  );
-  app.delete(
-    '/api/product/:productId',
-    checkProductAuthorization,
-    productController.deleteProduct
-  );
+  app.put('/api/product/update/:productId', productController.updateProduct);
+  app.delete('/api/product/delete/:productId', productController.deleteProduct);
 };
