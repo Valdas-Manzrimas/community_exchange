@@ -15,7 +15,6 @@ exports.createProduct = async (req, res) => {
     wantedProducts: req.body.wantedProducts,
   });
   const currentUser = await User.findById(req.userId).exec();
-  console.log(currentUser);
   try {
     // if (!currentUser && !currentUser.roles.includes('moderator')) {
     //   return res.status(401).send({ message: 'Unauthorized.' });
