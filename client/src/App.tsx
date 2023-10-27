@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes } from 'react-router-dom';
 // import { AppProvider } from './AppContext';
 import Header from './components/layout/Header';
+import ResponsiveHeader from './components/layout/ResponsiveHeader';
 import 'tailwindcss/tailwind.css';
 
 // import Home from './Home';
@@ -15,7 +16,7 @@ const App: React.FC = () => {
     <div className='bg-light'>
       <Router basename={publicUrl}>
         {/* <AppProvider> */}
-        <Header />
+        <ResponsiveHeader />
         <Routes>
           {/* <Route exact path='/' component={Home} />
           <Route path='/about' component={About} />
