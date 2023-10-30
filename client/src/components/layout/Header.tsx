@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import Dropdown from '../Base/Dropdown';
+import { Button } from 'reactstrap';
 
 const Header: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -23,13 +24,18 @@ const Header: React.FC = () => {
               <li>App is still in development. Please check back later.</li>
             </ul>
           </div>
-          <div className='header-info header-info-right'>
+          <div className='header-info header-info-right flex align-center'>
             <Dropdown
               buttonText='English'
               options={['English', 'Lithuanian']}
               buttonStyles='inline-flex w-full justify-center gap-x-1.5  px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50'
               replaceButtonText
             />
+            <div className='flex items-center'>
+              <Link to='/authentication' className='text-sm'>
+                Log In / Sign Up
+              </Link>
+            </div>
           </div>
         </div>
       </div>

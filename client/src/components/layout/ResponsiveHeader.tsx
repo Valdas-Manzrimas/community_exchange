@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import Dropdown from '../Base/Dropdown';
 
 const ResponsiveHeader: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -122,9 +123,13 @@ const ResponsiveHeader: React.FC = () => {
         </div>
 
         <div className='flex flex-col items-center h-full mt-20'>
-          <Link to='/authentication'>
-            <a>Log In / Sign Up</a>
-          </Link>
+          <Dropdown
+            buttonText='English'
+            options={['English', 'Lithuanian']}
+            buttonStyles='inline-flex w-full justify-center gap-x-1.5  px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50'
+            replaceButtonText
+          />
+          <Link to='/authentication'>Log In / Sign Up</Link>
         </div>
       </nav>
     </header>
