@@ -1,5 +1,7 @@
 // App.tsx
 import React from 'react';
+import { useMediaQuery } from '@react-hook/media-query';
+
 import { BrowserRouter as Router, Routes } from 'react-router-dom';
 // import { AppProvider } from './AppContext';
 import Header from './components/layout/Header';
@@ -12,11 +14,13 @@ import 'tailwindcss/tailwind.css';
 
 const App: React.FC = () => {
   const publicUrl = process.env.PUBLIC_URL || '';
+  const isMediumScreen = useMediaQuery('(max-width: 768px)');
+
   return (
     <div className='bg-light'>
       <Router basename={publicUrl}>
         {/* <AppProvider> */}
-        <ResponsiveHeader />
+        {isMediumScreen ? <ResponsiveHeader /> : <Header />}
         <Routes>
           {/* <Route exact path='/' component={Home} />
           <Route path='/about' component={About} />

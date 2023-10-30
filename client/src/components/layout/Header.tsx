@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import Dropdown from '../Base/Dropdown';
 
 const Header: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -15,74 +16,24 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <div className='header-top header-top-ptb-1 hidden lg:block'>
-        <div className='container'>
-          <div className='flex items-center justify-between'>
-            <div className='header-info'>
-              <ul className='flex'>
-                <li className='mr-6'>
-                  <i className='fi-rs-smartphone'></i>
-                  <Link to='/#'>
-                    <a>(+01) - 2345 - 6789</a>
-                  </Link>
-                </li>
-                <li>
-                  <i className='fi-rs-marker'></i>
-                  <Link to='/page-contact'>
-                    <a>Our location</a>
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div className='text-center'>
-              <div id='news-flash' className='inline-block'>
-                <ul>
-                  <li>
-                    Get great devices up to 50% off
-                    <Link to='/products/shop-grid-right'>
-                      <a> View details</a>
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div className='header-info header-info-right'>
-              <ul className='flex'>
-                <li className='relative mr-6'>
-                  <Link to='/#'>
-                    <a className='language-dropdown-active flex items-center'>
-                      <i className='fi-rs-world mr-2'></i>
-                      English
-                      <i className='fi-rs-angle-small-down ml-2'></i>
-                    </a>
-                  </Link>
-                  <ul className='language-dropdown absolute top-full left-0 mt-2 py-2 bg-white rounded-lg shadow-lg z-10 hidden'>
-                    <li>
-                      <Link to='/#'>
-                        <a className='flex items-center'>
-                          <img
-                            src='/assets/imgs/theme/flag-lt.png'
-                            alt=''
-                            className='w-4 h-4 mr-2'
-                          />
-                          Lietuvių
-                        </a>
-                      </Link>
-                    </li>
-                  </ul>
-                </li>
-                <li>
-                  <i className='fi-rs-user'></i>
-                  <Link to='/page-login-register'>
-                    <a>Log In / Sign Up</a>
-                  </Link>
-                </li>
-              </ul>
-            </div>
+      <div className='header-top header-top-ptb-1 hidden md:block bg-narvik-200 py-1'>
+        <div className='flex items-center justify-between mx-6'>
+          <div id='news-flash' className='inline-block'>
+            <ul>
+              <li>App is still in development. Please check back later.</li>
+            </ul>
+          </div>
+          <div className='header-info header-info-right'>
+            <Dropdown
+              buttonText='English'
+              options={['English', 'Lithuanian']}
+              buttonStyles='inline-flex w-full justify-center gap-x-1.5  px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50'
+              replaceButtonText
+            />
           </div>
         </div>
       </div>
-      <header className='w-full bg-light sm:justify-between sm:flex sm:items-center sm:px-4 sm:py-3'>
+      <header className='w-full bg-narvik-100 sm:justify-between sm:flex sm:items-center sm:px-4 sm:py-3'>
         <div className='flex items-center justify-self-start px-4 py-3 sm:p-0'>
           <div>
             <Link to='/'>
