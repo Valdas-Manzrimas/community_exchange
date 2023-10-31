@@ -33,7 +33,7 @@ export default {
     colors: {
       transparent: 'transparent',
       light: '#dcfce6',
-
+      white: '#ffffff',
       primary: {
         DEFAULT: '#166534',
         dark: '#052e16',

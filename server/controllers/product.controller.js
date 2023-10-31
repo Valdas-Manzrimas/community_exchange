@@ -78,13 +78,11 @@ exports.deleteProduct = async (req, res) => {
 
 exports.getAllProducts = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
+  const limit = 4;
+  const offset = (page - 1) * limit;
 
   try {
-    const products = await Product.find()
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .exec();
+    const products = await Product.find().skip(offset).limit(limit).exec();
 
     const count = await Product.countDocuments().exec();
 

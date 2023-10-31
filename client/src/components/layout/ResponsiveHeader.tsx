@@ -31,7 +31,7 @@ const ResponsiveHeader: React.FC = () => {
   };
 
   return (
-    <header className='w-full bg-light justify-between flex items-center px-4 py-3 px-4 py-3 z-50'>
+    <header className='w-full bg-light justify-between flex items-center px-4 py-3 px-4 py-3 z-100'>
       <div className='flex items-center justify-self-start'>
         <div>
           <Link to='/'>
@@ -85,7 +85,7 @@ const ResponsiveHeader: React.FC = () => {
       </div>
       <nav
         ref={navRef}
-        className={`absolute bottom-0 right-0 h-full w-56 bg-light transition-all duration-300 ease-in-out -z-10 border-l-primary ${
+        className={`absolute -bottom-12 right-0 h-full w-56 bg-light transition-all duration-300 ease-in-out z-10 border-l-primary ${
           showMenu ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -122,7 +122,7 @@ const ResponsiveHeader: React.FC = () => {
           </div>
         </div>
 
-        <div className='flex flex-col items-center h-full mt-20'>
+        <div className='flex flex-col items-center'>
           <Dropdown
             buttonText='English'
             options={['English', 'Lithuanian']}

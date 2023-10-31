@@ -69,7 +69,7 @@ const Dropdown = ({
       </div>
 
       {isOpen && (
-        <div className='absolute right-0 mt-2 w-32 bg-narvik-300 focus:outline-none '>
+        <div className='absolute right-0 mt-2 w-32 bg-white focus:outline-none '>
           <div
             className='py-1'
             role='menu'
