@@ -43,27 +43,23 @@ const ResponsiveHeader: React.FC = () => {
       </div>
       <div className='flex items-center'>
         <div className='header-action-icon-2'>
-          <Link to='/shop-wishlist'>
-            <a className='flex items-center'>
-              <img
-                alt='Wishlist'
-                src='./assets/imgs/theme/icons/icon-heart.svg'
-                className='w-7 m-2 text-primary'
-              />
-              <span className='pro-count white'>{/*totalWishlistItems*/}</span>
-            </a>
+          <Link to='/shop-wishlist' className='flex items-center'>
+            <img
+              alt='Wishlist'
+              src='./assets/imgs/theme/icons/icon-heart.svg'
+              className='w-7 m-2 text-primary'
+            />
+            <span className='pro-count white'>{/*totalWishlistItems*/}</span>
           </Link>
         </div>
         <div className='header-action-icon-2'>
-          <Link to='/shop-cart'>
-            <a className='flex items-center'>
-              <img
-                alt='Orders'
-                src='./assets/imgs/theme/icons/icon-cart.svg'
-                className='w-7 m-2 text-primary'
-              />
-              <span className='pro-count white'>{/*totalCartItems*/}</span>
-            </a>
+          <Link to='/shop-cart' className='flex items-center'>
+            <img
+              alt='Orders'
+              src='./assets/imgs/theme/icons/icon-cart.svg'
+              className='w-7 m-2 text-primary'
+            />
+            <span className='pro-count white'>{/*totalCartItems*/}</span>
           </Link>
         </div>
         <div className='w-7 m-2 text-primary' />
