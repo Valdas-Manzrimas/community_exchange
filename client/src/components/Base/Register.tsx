@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
 
-interface RegisterProps {
-  onSubmit: (user: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-  }) => void;
-}
-
-const Register: React.FC<RegisterProps> = ({ onSubmit }) => {
+const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -17,7 +8,7 @@ const Register: React.FC<RegisterProps> = ({ onSubmit }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit({
+    console.log({
       firstName: firstName,
       lastName: lastName,
       email: email,
@@ -26,13 +17,13 @@ const Register: React.FC<RegisterProps> = ({ onSubmit }) => {
   };
 
   return (
-    <section className='bg-gray-50'>
-      <div className='w-full bg-narvik-200 rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0'>
+    <section className=' w-3/4'>
+      <div className='w-full bg-narvik-200 rounded-lg shadow border'>
         <div className='p-6 space-y-4 md:space-y-6 sm:p-8'>
           <h1 className='text-xl font-bold leading-tight tracking-tight text-dark md:text-2xl'>
             Create an account
           </h1>
-          <form className='space-y-4 md:space-y-6' onSubmit={handleSubmit}>
+          <form className='space-y-2 md:space-y-3' onSubmit={handleSubmit}>
             <div>
               <label
                 htmlFor='firstName'
