@@ -3,7 +3,7 @@ import Register from '../Base/Register';
 
 function LoginRegister() {
   return (
-    <div className='grid grid-flow-col mt-20 items-center'>
+    <div className='grid md:grid-flow-col mt-20 items-center grid-flow-row'>
       <div className='w-50 h-full flex justify-center items-center'>
         <Login />
       </div>

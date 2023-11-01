@@ -18,7 +18,7 @@ const Register = () => {
 
   return (
     <section className=' w-3/4'>
-      <div className='w-full bg-narvik-200 rounded-lg shadow border'>
+      <div className='w-full bg-white rounded-lg shadow border'>
         <div className='p-6 space-y-4 md:space-y-6 sm:p-8'>
           <h1 className='text-xl font-bold leading-tight tracking-tight text-dark md:text-2xl'>
             Create an account

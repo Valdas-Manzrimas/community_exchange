@@ -1,17 +1,36 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(email, password);
+    try {
+      const response = await axios.post(
+        'http://localhost:8080/api/auth/login',
+        {
+          email,
+          password,
+        }
+      );
+
+      // Handle response here. For example:
+      if (response.status === 200) {
+        console.log(response.data.token);
+        // localStorage.setItem('x-access-token', response.data.token);
+      } else {
+        console.log('Login failed');
+      }
+    } catch (error) {
+      console.error('An error occurred while logging in:', error);
+    }
   };
 
   return (
     <section className='w-3/4 h-3/4 flex justify-center items-center'>
-      <div className='w-full bg-narvik-200 rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0'>
+      <div className='w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0'>
         <div className='p-6 space-y-4 md:space-y-6 sm:p-8'>
           <h1 className='text-xl font-bold leading-tight tracking-tight text-dark md:text-2xl'>
             Sign in to your account
@@ -61,7 +80,6 @@ const Login = () => {
                     aria-describedby='remember'
                     type='checkbox'
                     className='w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800'
-                    required
                   />
                 </div>
                 <div className='ml-3 text-sm'>
