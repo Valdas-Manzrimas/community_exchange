@@ -5,13 +5,10 @@ interface Product {
   name: string;
   description: string;
   category: string;
-  owner: string;
   images: string[];
   tags: string[];
-  condition: string;
   location: string;
   isAvailable: boolean;
-  wantedProducts: string[];
 }
 
 interface CardProps {
@@ -32,7 +29,6 @@ const Card: React.FC<CardProps> = ({ product }) => {
         <p className='text-gray-600'>{product.description}</p>
         <div className='flex justify-between items-center mt-4'>
           <p className='text-gray-600'>{product.category}</p>
-          <p className='text-gray-600'>{product.condition}</p>
         </div>
         <div className='flex justify-between items-center mt-4'>
           <p className='text-gray-600'>{product.location}</p>

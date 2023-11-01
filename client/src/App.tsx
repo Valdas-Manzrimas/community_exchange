@@ -6,6 +6,7 @@ import Header from './components/layout/Header';
 import ResponsiveHeader from './components/layout/ResponsiveHeader';
 import 'tailwindcss/tailwind.css';
 import Home from './components/pages/Home';
+import LoginRegister from './components/pages/Login_Register';
 
 // import About from './About';
 // import Contact from './Contact';
@@ -20,6 +21,7 @@ const App: React.FC = () => {
         {isMediumScreen ? <ResponsiveHeader /> : <Header />}
         <Routes>
           <Route path='/' element={<Home />} />
+          <Route path='/login-register' element={<LoginRegister />} />
           {/* <Route path='/about' element={<About />} />
           <Route path='/contact' element={<Contact />} /> */}
         </Routes>
