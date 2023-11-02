@@ -81,8 +81,8 @@ const ResponsiveHeader: React.FC = () => {
       </div>
       <nav
         ref={navRef}
-        className={`absolute -bottom-12 right-0 h-full w-56 bg-light transition-all duration-300 ease-in-out z-10 border-l-primary ${
-          showMenu ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed -bottom-12 right-0 h-full w-56 bg-light transition-all duration-300 ease-in-out z-10 border-l-primary ${
+          showMenu ? 'translate-x-0 visible' : 'translate-x-full not-visible'
         }`}
       >
         <div className='flex flex-col items-center mt-20'>
@@ -125,7 +125,7 @@ const ResponsiveHeader: React.FC = () => {
             buttonStyles='inline-flex w-full justify-center gap-x-1.5  px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50'
             replaceButtonText
           />
-          <Link to='/authentication'>Log In / Sign Up</Link>
+          <Link to='/login-register'>Log In / Sign Up</Link>
         </div>
       </nav>
     </header>
