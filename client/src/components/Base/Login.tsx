@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 
 import { useDispatch } from 'react-redux';
 import { login } from '../../store/slices/authSlice';
+import { setUser } from '../../store/slices/userSlice';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -28,6 +29,15 @@ const Login = () => {
       // Handle response here. For example:
       if (response.status === 200) {
         dispatch(login(token));
+
+        dispatch(
+          setUser({
+            firstName: response.data.firstName,
+            lastName: response.data.lastName,
+            email: response.data.email,
+            roles: response.data.roles,
+          })
+        );
         navigate('/');
       } else {
         console.log('Login failed');
