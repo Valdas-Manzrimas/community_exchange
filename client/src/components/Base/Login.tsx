@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,6 +23,7 @@ const Login = () => {
       if (response.status === 200) {
         console.log(response.data.token);
         // localStorage.setItem('x-access-token', response.data.token);
+        navigate('/');
       } else {
         console.log('Login failed');
       }
@@ -29,9 +33,9 @@ const Login = () => {
   };
 
   return (
-    <section className='w-3/4 h-3/4 flex justify-center items-center'>
-      <div className='w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0'>
-        <div className='p-6 space-y-4 md:space-y-6 sm:p-8'>
+    <section className='w-full mx-2 max-w-md lg:mx-0 flex justify-center self-start'>
+      <div className='w-full bg-white rounded-lg shadow border'>
+        <div className='p-6'>
           <h1 className='text-xl font-bold leading-tight tracking-tight text-dark md:text-2xl'>
             Sign in to your account
           </h1>
@@ -46,7 +50,6 @@ const Login = () => {
               <input
                 type='email'
                 name='email'
-                id='email'
                 className='bg-narvik-100 border border-narvik-300 text-dark sm:text-sm rounded-lg focus:ring-narvik-800 focus:border-narvik-800 block w-full p-2.5'
                 placeholder='name@company.com'
                 required
@@ -64,7 +67,6 @@ const Login = () => {
               <input
                 type='password'
                 name='password'
-                id='password'
                 placeholder='••••••••'
                 className='bg-narvik-100 border border-narvik-300 text-dark sm:text-sm rounded-lg focus:ring-narvik-800 focus:border-narvik-800 block w-full p-2.5'
                 required
