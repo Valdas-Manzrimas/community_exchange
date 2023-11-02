@@ -1,10 +1,22 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Dropdown from '../Base/Dropdown';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../../store/slices/authSlice';
+
+interface RootState {
+  isAuthenticated: boolean;
+}
 
 const Header: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
   const location = useLocation();
+
+  const dispatch = useDispatch();
+
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.isAuthenticated
+  );
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -12,6 +24,12 @@ const Header: React.FC = () => {
 
   const active = (path: string) => {
     return location.pathname === path ? 'border-primary' : 'border-light';
+  };
+
+  const handleOptionClick = (option: string) => {
+    if (option === 'Logout') {
+      dispatch(logout());
+    }
   };
 
   return (
@@ -31,9 +49,18 @@ const Header: React.FC = () => {
               replaceButtonText
             />
             <div className='flex items-center'>
-              <Link to='/login-register' className='text-sm'>
-                Log In / Sign Up
-              </Link>
+              {isAuthenticated ? (
+                <Dropdown
+                  buttonText='User'
+                  replaceButtonText={false}
+                  onOptionClick={handleOptionClick}
+                  options={['Profile', 'Settings', `Logout`]}
+                />
+              ) : (
+                <Link to='/login-register' className='text-sm'>
+                  Log In / Sign Up
+                </Link>
+              )}
             </div>
           </div>
         </div>

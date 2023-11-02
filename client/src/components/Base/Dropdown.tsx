@@ -5,13 +5,15 @@ type DropdownProps = {
   buttonStyles?: string;
   options: string[];
   replaceButtonText?: boolean;
+  onOptionClick?: (option: string) => void;
 };
 
 const Dropdown = ({
   buttonText,
-  buttonStyles = 'bg-blue-500 text-white',
+  buttonStyles = 'bg-blue-500 text-narvik-800',
   options,
   replaceButtonText = true,
+  onOptionClick,
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
@@ -20,6 +22,9 @@ const Dropdown = ({
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
     setIsOpen(false);
+    if (onOptionClick) {
+      onOptionClick(option);
+    }
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -79,7 +84,7 @@ const Dropdown = ({
             {options.map((option) => (
               <button
                 key={option}
-                className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left'
+                className='block px-4 py-2 text-sm text-narvik-800 hover:bg-gray-100 hover:text-gray-900 w-full text-left'
                 role='menuitem'
                 onClick={() => handleOptionClick(option)}
               >
