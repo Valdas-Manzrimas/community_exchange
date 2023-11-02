@@ -10,7 +10,7 @@ type DropdownProps = {
 
 const Dropdown = ({
   buttonText,
-  buttonStyles = 'bg-blue-500 text-narvik-800',
+  buttonStyles = 'text-narvik-800 inline-flex w-full justify-center gap-x-0.5 pl-1 pr-3 py-2 text-sm font-semibold hover:bg-gray-50',
   options,
   replaceButtonText = true,
   onOptionClick,
@@ -49,14 +49,13 @@ const Dropdown = ({
         <button
           type='button'
           className={`${buttonStyles}`}
-          id='options-menu'
           aria-haspopup='true'
           aria-expanded='true'
           onClick={() => setIsOpen(!isOpen)}
         >
           {replaceButtonText ? selectedOption || buttonText : buttonText}
           <svg
-            className={`-mr-1 ml-2 h-5 w-5 transition ${
+            className={`h-5 w-5 transition ${
               isOpen ? 'transform rotate-180' : ''
             }`}
             xmlns='http://www.w3.org/2000/svg'

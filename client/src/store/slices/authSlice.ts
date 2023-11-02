@@ -1,6 +1,11 @@
 // authSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
+export interface AuthState {
+  token: string;
+  isAuthenticated: boolean;
+}
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState: {
