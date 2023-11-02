@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 
+import { useDispatch } from 'react-redux';
+import { login } from '../../store/slices/authSlice';
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,10 +23,11 @@ const Login = () => {
         }
       );
 
+      const token = response.data.token;
+
       // Handle response here. For example:
       if (response.status === 200) {
-        console.log(response.data.token);
-        // localStorage.setItem('x-access-token', response.data.token);
+        dispatch(login(token));
         navigate('/');
       } else {
         console.log('Login failed');
