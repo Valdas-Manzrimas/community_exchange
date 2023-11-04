@@ -16,8 +16,6 @@ exports.signup = async (req, res) => {
       password: bcrypt.hashSync(req.body.password, 8),
     });
 
-    await user.save();
-
     if (req.body.roles) {
       const roles = await Role.find({ name: { $in: req.body.roles } });
       user.roles = roles.map((role) => role._id);
@@ -26,6 +24,13 @@ exports.signup = async (req, res) => {
       user.roles = [role._id];
     }
 
+    await user.populate('roles');
+
+    const authorities = user.roles.map(
+      (role) => 'ROLE_' + role.name.toUpperCase()
+    );
+
+    console.log('authorities:', authorities);
     await user.save();
 
     const token = jwt.sign({ id: user.id }, config.secret, {
@@ -36,6 +41,7 @@ exports.signup = async (req, res) => {
     res.status(201).json({
       message: 'User was registered successfully!',
       token: token,
+      roles: authorities,
     });
   } catch (error) {
     console.error('Error during user registration:', error);

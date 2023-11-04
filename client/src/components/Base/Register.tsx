@@ -1,4 +1,9 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { login } from '../../store/slices/authSlice';
+import { setUser } from '../../store/slices/userSlice';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -6,14 +11,42 @@ const Register = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log({
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      password: password,
-    });
+    try {
+      const response = await axios.post(
+        'http://localhost:8080/api/auth/register',
+        {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          password: password,
+        }
+      );
+
+      const token = response.data.token;
+
+      if (response.status === 201) {
+        dispatch(login(token));
+
+        dispatch(
+          setUser({
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            roles: response.data.roles,
+          })
+        );
+        navigate('/');
+      } else {
+        console.log('Login failed');
+      }
+    } catch (error) {
+      console.error('Error during user registration:', error);
+    }
   };
 
   return (
