@@ -39,7 +39,7 @@ export default {
         dark: '#052e16',
       },
       success: '#22c554',
-      error: '#f4443f',
+      error: '#fc716d',
       narvik: {
         50: '#f0fdf4',
         100: '#dcfce6',

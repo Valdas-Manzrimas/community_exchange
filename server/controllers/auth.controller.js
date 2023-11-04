@@ -30,7 +30,6 @@ exports.signup = async (req, res) => {
       (role) => 'ROLE_' + role.name.toUpperCase()
     );
 
-    console.log('authorities:', authorities);
     await user.save();
 
     const token = jwt.sign({ id: user.id }, config.secret, {
@@ -91,7 +90,6 @@ exports.signin = async (req, res) => {
       token: token,
     });
   } catch (error) {
-    console.error('Error during signin:', error);
     res.status(500).json({ message: 'An error occurred during signin.' });
   }
 };

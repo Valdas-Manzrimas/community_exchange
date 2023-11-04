@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { login } from '../../store/slices/authSlice';
 import { setUser } from '../../store/slices/userSlice';
+import { setAlert } from '../../store/slices/alertSlice';
+
+import { handleErrors } from './functions/handleErrors';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -41,11 +44,21 @@ const Register = () => {
           })
         );
         navigate('/');
+        dispatch(
+          setAlert({ status: 'success', message: 'User created successfully' })
+        );
       } else {
-        console.log('Login failed');
+        dispatch(
+          setAlert({
+            status: 'error',
+            message: `An error occurred while logging in: ${response.status}`,
+          })
+        );
       }
     } catch (error) {
-      console.error('Error during user registration:', error);
+      handleErrors(error, dispatch, {
+        400: 'Email is already in use. Please try again with a different email.',
+      });
     }
   };
 
