@@ -38,6 +38,8 @@ export default {
         DEFAULT: '#166534',
         dark: '#052e16',
       },
+      success: '#22c554',
+      error: '#f4443f',
       narvik: {
         50: '#f0fdf4',
         100: '#dcfce6',

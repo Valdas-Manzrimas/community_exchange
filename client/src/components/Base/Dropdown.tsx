@@ -10,7 +10,7 @@ type DropdownProps = {
 
 const Dropdown = ({
   buttonText,
-  buttonStyles = 'text-narvik-800 inline-flex w-full justify-center gap-x-0.5 pl-1 pr-3 py-2 text-sm font-semibold hover:bg-gray-50',
+  buttonStyles = 'text-narvik-800 inline-flex w-full justify-center gap-x-0.5 pl-1 pr-3 text-sm font-semibold hover:bg-gray-50',
   options,
   replaceButtonText = true,
   onOptionClick,

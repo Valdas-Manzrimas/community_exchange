@@ -4,10 +4,15 @@ import Dropdown from '../Base/Dropdown';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout, AuthState } from '../../store/slices/authSlice';
 import { clearUser, User } from '../../store/slices/userSlice';
+import { AlertState } from '../../store/slices/alertSlice';
+import Alert from './Alert';
 
 interface RootState {
-  auth: AuthState;
-  user: User;
+  persisted: {
+    auth: AuthState;
+    user: User;
+  };
+  alert: AlertState;
 }
 
 const Header: React.FC = () => {
@@ -16,10 +21,14 @@ const Header: React.FC = () => {
 
   const dispatch = useDispatch();
 
+  const alert = useSelector((state: RootState) => state.alert);
+
+  alert.message && <Alert type={alert.status} message={alert.message} />;
+
   const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated
+    (state: RootState) => state.persisted.auth.isAuthenticated
   );
-  const user = useSelector((state: RootState) => state.user);
+  const user = useSelector((state: RootState) => state.persisted.user);
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -38,14 +47,13 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <div className='header-top header-top-ptb-1 hidden md:block bg-narvik-200 py-1'>
+      {alert.message && <Alert type={alert.status} message={alert.message} />}
+      <div className='hidden md:block bg-narvik-200 py-1'>
         <div className='flex items-center justify-between mx-6'>
           <div id='news-flash' className='inline-block'>
-            <ul>
-              <li>App is still in development. Please check back later.</li>
-            </ul>
+            <span>App is still in development. Please check back later.</span>
           </div>
-          <div className='header-info header-info-right flex align-center'>
+          <div className='flex align-center'>
             <Dropdown
               buttonText='English'
               options={['English', 'Lithuanian']}
