@@ -1,14 +1,35 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Dropdown from '../Base/Dropdown';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout, AuthState } from '../../store/slices/authSlice';
+import { clearUser, User } from '../../store/slices/userSlice';
+
+interface RootState {
+  auth: AuthState;
+  user: User;
+}
 
 const ResponsiveHeader: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
   const location = useLocation();
   const navRef = useRef<HTMLDivElement>(null);
 
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
+  const user = useSelector((state: RootState) => state.user);
+
   const toggleMenu = () => {
     setShowMenu(!showMenu);
+  };
+
+  const handleOptionClick = (option: string) => {
+    if (option === 'Logout') {
+      dispatch(logout());
+      dispatch(clearUser());
+    }
   };
 
   useEffect(() => {
@@ -125,7 +146,27 @@ const ResponsiveHeader: React.FC = () => {
             buttonStyles='inline-flex w-full justify-center gap-x-1.5  px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50'
             replaceButtonText
           />
-          <Link to='/login-register'>Log In / Sign Up</Link>
+          <div className='flex items-center'>
+            {isAuthenticated ? (
+              <div className='flex items-center'>
+                <img
+                  src='./assets/imgs/icons/circle-user.svg'
+                  alt='user'
+                  className='w-4'
+                />
+                <Dropdown
+                  buttonText={user.firstName}
+                  replaceButtonText={false}
+                  onOptionClick={handleOptionClick}
+                  options={['Profile', 'Settings', `Logout`]}
+                />
+              </div>
+            ) : (
+              <Link to='/login-register' className='text-sm'>
+                Log In / Sign Up
+              </Link>
+            )}
+          </div>
         </div>
       </nav>
     </header>
