@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { login } from '../../store/slices/authSlice';
 import { setUser } from '../../store/slices/userSlice';
+import { setAlert } from '../../store/slices/alertSlice';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -38,11 +39,19 @@ const Login = () => {
           })
         );
         navigate('/');
+        dispatch(setAlert({ status: 'success', message: 'Login success' }));
       } else {
         console.log('Login failed');
+        dispatch(setAlert({ status: 'error', message: 'Login failed' }));
       }
     } catch (error) {
       console.error('An error occurred while logging in:', error);
+      dispatch(
+        setAlert({
+          status: 'error',
+          message: `An error occurred while logging in: ${error}`,
+        })
+      );
     }
   };
 
