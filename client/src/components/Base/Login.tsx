@@ -26,7 +26,6 @@ const Login = () => {
 
       const token = response.data.token;
 
-      // Handle response here. For example:
       if (response.status === 200) {
         dispatch(login(token));
 
