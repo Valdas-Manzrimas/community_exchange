@@ -95,3 +95,26 @@ exports.getAllProducts = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.getMyProducts = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 8;
+  const offset = (page - 1) * limit;
+
+  try {
+    const products = await Product.find({ owner: req.userId })
+      .skip(offset)
+      ?.limit(limit)
+      .exec();
+
+    const count = await Product.countDocuments({ owner: req.userId }).exec();
+
+    res.status(200).json({
+      products,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
