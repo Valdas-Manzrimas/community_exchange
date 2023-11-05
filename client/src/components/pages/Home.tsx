@@ -8,7 +8,10 @@ const Home = () => {
       <Landing />
 
       <h1 className='text-3xl font-bold text-gray-900 mt-20'>Products</h1>
-      <CardContainer />
+      <CardContainer
+        pagination={false}
+        fetchUrl='http://localhost:8080/api/product/all?limit=8'
+      />
     </div>
   );
 };

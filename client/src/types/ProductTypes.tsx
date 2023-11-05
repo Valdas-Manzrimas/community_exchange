@@ -7,8 +7,8 @@ export type Product = {
   tags: string[];
   location: string;
   isAvailable: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export type Category = {
