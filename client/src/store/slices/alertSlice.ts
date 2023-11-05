@@ -6,8 +6,8 @@ export interface AlertState {
   message: string;
 }
 
-const initialState = {
-  status: '',
+const initialState: AlertState = {
+  status: 'success',
   message: '',
 };
 
@@ -20,7 +20,7 @@ const alertSlice = createSlice({
       state.message = action.payload.message;
     },
     clearAlert: (state) => {
-      state.status = '';
+      state.status = 'success';
       state.message = '';
     },
   },

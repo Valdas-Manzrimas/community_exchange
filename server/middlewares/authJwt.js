@@ -7,15 +7,18 @@ const Role = db.role;
 
 const verifyToken = (req, res, next) => {
   let token = req.headers['x-access-token'];
-
   if (!token) {
     return res.status(403).send({ message: 'No token provided!' });
   }
+  console.log('req', req.headers);
   try {
     const decoded = jwt.verify(token, config.secret);
     req.userId = decoded.id;
     next();
   } catch (error) {
+    console.error(error);
+    console.error(error.message);
+
     return res.status(401).send({ message: 'Unauthorized!' });
   }
 };

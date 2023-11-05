@@ -7,6 +7,7 @@ import ResponsiveHeader from './components/layout/ResponsiveHeader';
 import 'tailwindcss/tailwind.css';
 import Home from './components/pages/Home';
 import LoginRegister from './components/pages/Login_Register';
+import MyProducts from './components/pages/MyProducts';
 
 // import About from './About';
 // import Contact from './Contact';
@@ -22,6 +23,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/login-register' element={<LoginRegister />} />
+          <Route path='/my-products' element={<MyProducts />} />
           {/* <Route path='/about' element={<About />} />
           <Route path='/contact' element={<Contact />} /> */}
         </Routes>

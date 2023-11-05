@@ -1,19 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Dropdown from '../Base/Dropdown';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout, AuthState } from '../../store/slices/authSlice';
-import { clearUser, User } from '../../store/slices/userSlice';
-import { AlertState } from '../../store/slices/alertSlice';
+import { logout } from '../../store/slices/authSlice';
+import { clearUser } from '../../store/slices/userSlice';
+import { RootState } from '../../store';
 import Alert from './Alert';
-
-interface RootState {
-  persisted: {
-    auth: AuthState;
-    user: User;
-  };
-  alert: AlertState;
-}
 
 const Header: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -149,6 +141,18 @@ const Header: React.FC = () => {
               About
             </Link>
           </div>
+          {isAuthenticated && (
+            <div className='px-2 py-2'>
+              <Link
+                to='/my-products'
+                className={`block px-2 py-1 text-primary border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-primary-dark ${active(
+                  '/my-products'
+                )}`}
+              >
+                My Products
+              </Link>
+            </div>
+          )}
           <div className='px-2 py-2'>
             <Link
               to='/contact'

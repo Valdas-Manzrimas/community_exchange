@@ -134,6 +134,18 @@ const ResponsiveHeader: React.FC = () => {
                 About
               </Link>
             </div>
+            {isAuthenticated && (
+              <div className='px-2 py-2'>
+                <Link
+                  to='/my-products'
+                  className={`block px-2 py-1 text-primary border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-primary-dark ${active(
+                    '/my-products'
+                  )}`}
+                >
+                  My Products
+                </Link>
+              </div>
+            )}
             <div className='px-2 py-2'>
               <Link
                 to='/contact'

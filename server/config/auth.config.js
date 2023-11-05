@@ -6,6 +6,6 @@ const generateRandomSecret = () => {
 };
 
 module.exports = {
-  secret: generateRandomSecret(),
+  secret: process.env.JWT_SECRET || 'soppasdkmv654sdasd2sdfss2255qwe',
   expiresIn: 86400,
 };
