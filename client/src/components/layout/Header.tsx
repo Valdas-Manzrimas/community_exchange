@@ -17,7 +17,7 @@ interface RootState {
 
 const Header: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  // const [isScrolled, setIsScrolled] = useState(false);
 
   const location = useLocation();
 
@@ -45,23 +45,21 @@ const Header: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 15);
-    };
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     setIsScrolled(window.scrollY > 15);
+  //   };
 
-    window.addEventListener('scroll', handleScroll);
+  //   window.addEventListener('scroll', handleScroll);
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('scroll', handleScroll);
+  //   };
+  // }, []);
 
   return (
     <div className={`sticky top-0 transition-all duration-500`}>
-      {!isScrolled && alert.message && (
-        <Alert type={alert.status} message={alert.message} />
-      )}
+      {alert.message && <Alert type={alert.status} message={alert.message} />}
       <div
         className={`hidden md:block bg-narvik-200 py-1 transition-all duration-1000 `}
       >
@@ -185,11 +183,11 @@ const Header: React.FC = () => {
           </div>
         </div>
       </header>
-      {isScrolled && alert.message && (
+      {/* {isScrolled && alert.message && (
         <div className='relative top-0 left-0 -z-10'>
           <Alert type={alert.status} message={alert.message} />
         </div>
-      )}
+      )} */}
     </div>
   );
 };
