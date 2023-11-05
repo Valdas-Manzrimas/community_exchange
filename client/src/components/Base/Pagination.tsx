@@ -7,7 +7,7 @@ interface PaginationProps {
 }
 
 const Pagination: React.FC<PaginationProps> = ({
-  totalPages,
+  totalPages = 0,
   currentPage,
   onPageChange,
 }) => {
@@ -15,17 +15,18 @@ const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <div className='flex justify-center my-4'>
-      {pages.map((page) => (
-        <button
-          key={page}
-          className={`mx-1 px-3 py-2 bg-white border border-gray-400 rounded-lg focus:outline-none ${
-            currentPage === page ? 'text-blue-500' : 'text-gray-700'
-          }`}
-          onClick={() => onPageChange(page)}
-        >
-          {page}
-        </button>
-      ))}
+      {totalPages > 1 &&
+        pages.map((page) => (
+          <button
+            key={page}
+            className={`mx-1 px-3 py-2 text-narvik-600 border border-narvik rounded-lg focus:outline-none ${
+              currentPage === page ? 'bg-narvik-200' : ' bg-white'
+            }`}
+            onClick={() => onPageChange(page)}
+          >
+            {page}
+          </button>
+        ))}
     </div>
   );
 };

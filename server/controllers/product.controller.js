@@ -98,7 +98,7 @@ exports.getAllProducts = async (req, res) => {
 
 exports.getMyProducts = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 8;
+  const limit = parseInt(req.query.limit) || 12;
   const offset = (page - 1) * limit;
 
   try {

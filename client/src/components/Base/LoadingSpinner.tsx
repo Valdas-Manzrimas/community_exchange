@@ -4,7 +4,7 @@ const LoadingSpinner: React.FC = () => {
   return (
     <div
       role='status'
-      className='absolute inset-0 z-500 w-full h-full flex items-center justify-center bg-dark bg-opacity-50'
+      className='absolute inset-0 z-500 w-full h-full flex items-center justify-center bg-white bg-opacity-40'
     >
       <svg
         aria-hidden='true'

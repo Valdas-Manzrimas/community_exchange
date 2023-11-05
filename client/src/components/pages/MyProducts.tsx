@@ -14,13 +14,15 @@ const MyProducts: React.FC = () => {
   };
 
   return (
-    <CardContainer
-      pagination={true}
-      fetchUrl={`http://localhost:8080/api/product/owned?page=${currentPage}`}
-      token={isAuthenticated && token ? token : undefined}
-      onPageChange={handlePageChange}
-      currentPage={currentPage}
-    />
+    <div className='max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8'>
+      <CardContainer
+        pagination={true}
+        fetchUrl={`http://localhost:8080/api/product/owned?page=${currentPage}`}
+        token={isAuthenticated && token ? token : undefined}
+        onPageChange={handlePageChange}
+        currentPage={currentPage}
+      />
+    </div>
   );
 };
 
