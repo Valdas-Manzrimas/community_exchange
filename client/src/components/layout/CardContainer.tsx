@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { Product } from '../../types/ProductTypes';
 import Pagination from '../Base/Pagination';
 import LoadingSpinner from '../Base/LoadingSpinner';
+import { handleErrors } from '../Base/functions/handleErrors';
+
+import { useDispatch } from 'react-redux';
 
 interface CardContainerProps {
   fetchUrl: string;
@@ -26,6 +29,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
   const [totalPages, setTotalPages] = useState<number>(0);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -40,12 +44,12 @@ const CardContainer: React.FC<CardContainerProps> = ({
         setLoading(false);
       } catch (error: unknown) {
         setLoading(false);
-        console.log(error);
+        handleErrors(error, dispatch);
       }
     };
 
     fetchProducts();
-  }, [fetchUrl, token]);
+  }, [fetchUrl, token, dispatch]);
 
   const handlePageChange = (newPage: number) => {
     if (onPageChange) {
