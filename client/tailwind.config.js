@@ -25,10 +25,9 @@ export default {
     extend: {
       boxShadow: {
         inner: 'inset 0 2px 4px 0 rgb(0 0 0 / 0.1)',
+        2: '0 0 6px 0 rgba(0, 0, 0, 0.2)',
       },
-      borderLeft: {
-        primary: '2px solid #166534',
-      },
+      fadeIn: 'fadeIn 0.5s ease-in-out',
     },
     colors: {
       transparent: 'transparent',
@@ -52,6 +51,18 @@ export default {
         800: '#16652e',
         900: '#145327',
         950: '#052e12',
+      },
+      gray: {
+        50: '#F9FAFB',
+        100: '#F3F4F6',
+        200: '#E5E7EB',
+        300: '#D1D5DB',
+        400: '#9CA3AF',
+        500: '#6B7280',
+        600: '#4B5563',
+        700: '#374151',
+        800: '#1F2937',
+        900: '#111827',
       },
       dark: '#09090b',
       tahiti: '#3ab7bf',
