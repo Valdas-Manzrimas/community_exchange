@@ -14,34 +14,39 @@ interface Product {
 interface CardProps {
   product: Product;
   key: string;
+  myProduct: boolean;
 }
 
-const Card: React.FC<CardProps> = ({ product }) => {
+const Card: React.FC<CardProps> = ({ product, myProduct }) => {
   return (
     <div className='bg-white rounded-lg shadow-md overflow-hidden border border-narvik-400 relative group'>
       {/* Hover box */}
       <div className='absolute opacity-0 top-0 left-0 group-hover:opacity-60 bg-dark w-full h-full transition-opacity duration-500 shadow-inner'></div>{' '}
       <div className='w-full h-full flex items-center justify-center flex-col absolute opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-2xl shadow-narvik-800'>
-        <div className='w-12 h-12 rounded-full border-2 border flex items-center justify-center border-white bg-narvik-300/75 hover:bg-narvik-300 hover:shadow-2 hover:shadow-white transition-all duration-200'>
-          <img
-            src='/assets/imgs/theme/icons/icon-cart.svg'
-            alt='Add to cart'
-            className='w-8 h-8 p-1'
-          />
-        </div>
+        {!myProduct && (
+          <>
+            <div className='w-12 h-12 rounded-full border-2 border flex items-center justify-center border-white bg-narvik-300/75 hover:bg-narvik-300 hover:shadow-2 hover:shadow-white transition-all duration-200'>
+              <img
+                src='/assets/imgs/theme/icons/icon-cart.svg'
+                alt='Add to cart'
+                className='w-8 h-8 p-1'
+              />
+            </div>
 
-        <div className='w-12 h-12 mt-4 rounded-full border-2 border flex items-center justify-center border-white bg-narvik-300/75 hover:bg-narvik-300 hover:shadow-2 hover:shadow-white transition-all duration-200'>
-          <img
-            src='/assets/imgs/theme/icons/icon-heart.svg'
-            alt='Wishlist'
-            className='w-8 h-8 pt-1'
-          />
-        </div>
+            <div className='w-12 h-12 mt-4 rounded-full border-2 border flex items-center justify-center border-white bg-narvik-300/75 hover:bg-narvik-300 hover:shadow-2 hover:shadow-white transition-all duration-200'>
+              <img
+                src='/assets/imgs/theme/icons/icon-heart.svg'
+                alt='Wishlist'
+                className='w-8 h-8 pt-1'
+              />
+            </div>
+          </>
+        )}
 
         <div className='w-12 h-12 rounded-full border-2 border flex items-center justify-center border-white mt-4 bg-narvik-300/75 hover:bg-narvik-300 hover:shadow-2 hover:shadow-white transition-all duration-200'>
           <img
             src='/assets/imgs/theme/icons/fast-arrow-right.svg'
-            alt='Add to cart'
+            alt='View details'
             className='w-16 h-16 p-1'
           />
         </div>

@@ -6,8 +6,10 @@ import { Product } from '../../types/ProductTypes';
 import Pagination from '../Base/Pagination';
 import LoadingSpinner from '../Base/LoadingSpinner';
 import { handleErrors } from '../Base/functions/handleErrors';
+import { useSelector } from 'react-redux';
 
 import { useDispatch } from 'react-redux';
+import { RootState } from '../../store';
 
 interface CardContainerProps {
   fetchUrl: string;
@@ -28,6 +30,8 @@ const CardContainer: React.FC<CardContainerProps> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [totalPages, setTotalPages] = useState<number>(0);
 
+  const userId = useSelector((state: RootState) => state.persisted.user.id);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -39,17 +43,29 @@ const CardContainer: React.FC<CardContainerProps> = ({
           headers: token ? { 'x-access-token': token } : {},
         });
 
-        setProducts(() => [...response.data.products]);
+        const fetchedProducts = response.data.products;
+
+        const myProducts = fetchedProducts.map((product: Product) => {
+          return {
+            ...product,
+            isMine: product.owner === userId,
+          };
+        });
+
+        setProducts(myProducts);
         setTotalPages(response.data.totalPages);
         setLoading(false);
       } catch (error: unknown) {
         setLoading(false);
         handleErrors(error, dispatch);
+        if (error === 403) {
+          navigate('/');
+        }
       }
     };
 
     fetchProducts();
-  }, [fetchUrl, token, dispatch]);
+  }, [fetchUrl, token, dispatch, userId]);
 
   const handlePageChange = (newPage: number) => {
     if (onPageChange) {
@@ -68,7 +84,11 @@ const CardContainer: React.FC<CardContainerProps> = ({
         <>
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4'>
             {products.map((product) => (
-              <Card product={product} key={product._id} />
+              <Card
+                product={product}
+                key={product._id}
+                myProduct={product.isMine}
+              />
             ))}
           </div>
 

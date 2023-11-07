@@ -34,6 +34,7 @@ const Login = () => {
 
         dispatch(
           setUser({
+            id: response.data.id,
             firstName: response.data.firstName,
             lastName: response.data.lastName,
             email: response.data.email,

@@ -5,6 +5,8 @@ export type Product = {
   category: string;
   images: string[];
   tags: string[];
+  owner: string;
+  isMine: boolean;
   location: string;
   isAvailable: boolean;
   createdAt?: Date;

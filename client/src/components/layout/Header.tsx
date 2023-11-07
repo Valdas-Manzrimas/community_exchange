@@ -6,6 +6,7 @@ import { logout } from '../../store/slices/authSlice';
 import { clearUser } from '../../store/slices/userSlice';
 import { RootState } from '../../store';
 import Alert from './Alert';
+import { useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -14,6 +15,7 @@ const Header: React.FC = () => {
   const location = useLocation();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const alert = useSelector((state: RootState) => state.alert);
 
@@ -34,6 +36,7 @@ const Header: React.FC = () => {
     if (option === 'Logout') {
       dispatch(logout());
       dispatch(clearUser());
+      navigate('/');
     }
   };
 
