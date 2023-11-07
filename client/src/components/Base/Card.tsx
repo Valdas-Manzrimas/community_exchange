@@ -1,15 +1,5 @@
 import React from 'react';
-
-interface Product {
-  _id: string;
-  name: string;
-  description: string;
-  category: string;
-  images: string[];
-  tags: string[];
-  location: string;
-  isAvailable: boolean;
-}
+import { Product } from '../../types/ProductTypes';
 
 interface CardProps {
   product: Product;

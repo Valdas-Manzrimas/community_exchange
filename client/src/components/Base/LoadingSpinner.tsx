@@ -1,6 +1,6 @@
 import React from 'react';
 
-const LoadingSpinner: React.FC = () => {
+const LoadingSpinner: React.ComponentType = () => {
   return (
     <div
       role='status'

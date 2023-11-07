@@ -9,7 +9,8 @@ export type Product = {
   isMine: boolean;
   location: string;
   isAvailable: boolean;
-  createdAt?: Date;
+  inWishlist: number;
+  createdAt: Date;
   updatedAt?: Date;
 };
 
