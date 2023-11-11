@@ -1,26 +1,66 @@
 const Product = require('../models/product.model');
 const User = require('../models/user.model');
+const { Storage } = require('@google-cloud/storage');
+
+const storage = new Storage({
+  projectId: 'norse-bond-299713',
+  keyFilename: './norse-bond-299713-21558e10abe7.json',
+});
+
+const bucketName = 'community_exchange';
+const folderName = 'Product-Images';
+
+exports.uploadImage = async (req, res) => {
+  const { file } = req; // assuming you're using multer to handle the file upload
+
+  const blob = storage
+    .bucket(bucketName)
+    .file(`${folderName}/${file.originalname}`);
+  const blobStream = blob.createWriteStream();
+
+  blobStream.on('error', (err) => {
+    console.log('blobStream.on', err); // console
+    res.status(400).json({ message: err.message });
+  });
+
+  blobStream.on('finish', async () => {
+    const publicUrl = `https://storage.googleapis.com/${bucketName}/${blob.name}`;
+    res.status(200).json({ imageUrl: publicUrl });
+    return publicUrl;
+  });
+
+  blobStream.end(file.buffer);
+};
 
 exports.createProduct = async (req, res) => {
+  let images = [];
+
+  if (req.file) {
+    const publicUrl = `https://storage.googleapis.com/${bucketName}/${req.file.filename}`;
+    images.push(publicUrl);
+  }
   const product = new Product({
     name: req.body.name,
     description: req.body.description,
     category: req.body.category,
     owner: req.body.owner,
-    images: req.body.images,
+    images: images,
     tags: req.body.tags,
     condition: req.body.condition,
     location: req.body.location,
     isAvailable: req.body.isAvailable,
     wantedProducts: req.body.wantedProducts,
   });
-  const currentUser = await User.findById(req.userId).exec();
-  try {
-    // if (!currentUser && !currentUser.roles.includes('moderator')) {
-    //   return res.status(401).send({ message: 'Unauthorized.' });
-    // }
 
+  const currentUser = await User.findById(req.userId).exec();
+
+  try {
     const newProduct = await product.save();
+
+    if (!currentUser) {
+      return res.status(400).json({ message: 'Bad request. User not found.' });
+    }
+
     res.status(201).json(newProduct);
   } catch (err) {
     res.status(400).json({ message: err.message });

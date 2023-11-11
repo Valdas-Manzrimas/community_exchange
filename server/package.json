@@ -10,6 +10,7 @@
   "author": "Valdas Manzrimas",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/storage": "^7.6.0",
     "bcryptjs": "^2.4.3",
     "cookie-session": "^2.0.0",
     "cors": "^2.8.5",
@@ -17,6 +18,7 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.3.3",
+    "multer": "^1.4.5-lts.1",
     "nodemon": "^3.0.1",
     "yup": "^1.2.0"
   }

@@ -18,6 +18,10 @@ const CreateProduct = () => {
   const [isAvailable, setIsAvailable] = useState<string>('true');
   const [wantedProducts, setWantedProducts] = useState<string[]>([]);
 
+  const { isAuthenticated, token } = useSelector(
+    (state: RootState) => state.persisted.auth
+  );
+
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const formData = new FormData();
     if (event.target.files) {
@@ -25,9 +29,16 @@ const CreateProduct = () => {
       for (let i = 0; i < files.length; i++) {
         formData.append('images', files[i]);
       }
-      axios.post('/api/upload', formData).then((response) => {
-        setImages([...images, ...response.data]);
-      });
+
+      axios
+        .post('http://localhost:8080/api/product/uploadImage', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then((response) => {
+          setImages((prevImages) => [...prevImages, response.data.imageUrl]);
+        });
     }
   };
 
@@ -43,7 +54,7 @@ const CreateProduct = () => {
       description,
       category,
       owner: userId,
-      images,
+      images: images,
       tags,
       condition,
       location,
@@ -52,7 +63,9 @@ const CreateProduct = () => {
     };
     try {
       axios
-        .post('http://localhost:8080/api/product/create', product)
+        .post('http://localhost:8080/api/product/create', product, {
+          headers: isAuthenticated && token ? { 'x-access-token': token } : {},
+        })
         .then(() => {
           navigate('/my-products');
           dispatch(
@@ -237,7 +250,7 @@ const CreateProduct = () => {
             </label>
             <div className='flex items-center justify-center bg-grey-lighter'>
               <label
-                className='w-full flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-white'
+                className='w-full flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-narvik-600'
                 htmlFor='file-upload'
               >
                 <svg
@@ -258,6 +271,7 @@ const CreateProduct = () => {
                 <input
                   id='file-upload'
                   type='file'
+                  name='images'
                   className='hidden'
                   multiple
                   onChange={handleImageUpload}
@@ -279,7 +293,7 @@ const CreateProduct = () => {
         </div>
         <div className='flex items-center justify-center'>
           <button
-            className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
+            className='bg-blue-500 hover:bg-blue-700 text-narvik-600 border-narvik-600 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
             type='submit'
           >
             Create Product
