@@ -4,7 +4,6 @@ import Card from '../Base/Card';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../../types/ProductTypes';
 import Pagination from '../Base/Pagination';
-import LoadingSpinner from '../Base/LoadingSpinner';
 import { handleErrors } from '../Base/functions/handleErrors';
 import { useSelector } from 'react-redux';
 
@@ -76,39 +75,38 @@ const CardContainer: React.FC<CardContainerProps> = ({
     }
   };
   const handleClick = async () => {
-    navigate('/allProducts');
+    navigate('/all-products');
   };
 
   return (
-    // {loading ? (
-    //   <LoadingSpinner />
-    // ) : (
-
-    // )}
-
     <div className='h-100 bg-narvik-50 mt-4 p-4'>
       {isListView ? (
         <div className='w-full border-solid'>
           <div className='w-full'>
             <div className=''>
-              <div className='grid grid-cols-8 text-xs font-bold text-left w-full gap-2 p-2'>
-                <div>Name</div>
-                <div>Create Date</div>
-                <div>Categories</div>
-                <div>Tags</div>
-                <div>Availability</div>
-                <div>Location</div>
-                <div>Present in wishlists</div>
-                <div className='w-40'></div>
-              </div>
-
-              {products.map((product) => (
-                <InLineCard
-                  product={product}
-                  key={product._id}
-                  myProduct={product.isMine}
-                />
-              ))}
+              <table className='w-full text-xs mb-4'>
+                <thead>
+                  <tr>
+                    <td className='py-2'>Name</td>
+                    <td className='py-2'>Create Date</td>
+                    <td className='py-2'>Categories</td>
+                    <td className='py-2'>Tags</td>
+                    <td className='py-2'>Availability</td>
+                    <td className='py-2'>Location</td>
+                    <td className='py-2'>Present in wishlists</td>
+                    <td className='py-2'></td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products.map((product) => (
+                    <InLineCard
+                      product={product}
+                      key={product._id}
+                      myProduct={product.isMine}
+                    />
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
           <div className='w-full m-1'></div>

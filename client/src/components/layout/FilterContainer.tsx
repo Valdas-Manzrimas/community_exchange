@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 interface FilterContainerProps {
   onFilterChange: (filter: string) => void;
@@ -48,12 +49,12 @@ const FilterContainer: React.FC<FilterContainerProps> = ({
         />
         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-1 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-narvik-700"></div>
       </label>
-      <button
-        type='button'
+      <Link
+        to='/create-product'
         className='text-dark border-dark bg-gradient-to-r from-narvik-200 via-narvik-500 to-narvik-800 hover:bg-gradient-to-br font-medium rounded-lg text-sm px-2 py-0.5 text-center absolute right-0 active:border-narvik-200 active:shadow-2'
       >
         Create Product
-      </button>{' '}
+      </Link>
     </div>
   );
 };

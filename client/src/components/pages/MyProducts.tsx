@@ -2,7 +2,7 @@ import { useState } from 'react';
 import CardContainer from '../layout/CardContainer';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import FilterContainer from '../layout/filterContainer';
+import FilterContainer from '../layout/FilterContainer';
 
 const MyProducts: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
