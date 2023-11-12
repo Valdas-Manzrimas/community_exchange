@@ -4,47 +4,50 @@ const { Storage } = require('@google-cloud/storage');
 
 const storage = new Storage({
   projectId: 'norse-bond-299713',
-  keyFilename: './norse-bond-299713-21558e10abe7.json',
+  keyFilename: './norse-bond-299713-7470e7a36420.json',
 });
 
 const bucketName = 'community_exchange';
 const folderName = 'Product-Images';
 
-exports.uploadImage = async (req, res) => {
-  const { file } = req; // assuming you're using multer to handle the file upload
+let imageUrls = [];
+
+exports.uploadImage = async (req, res, next) => {
+  const { file } = req;
+
+  if (!file) {
+    return res.status(400).json({ message: 'No file uploaded.' });
+  }
 
   const blob = storage
     .bucket(bucketName)
     .file(`${folderName}/${file.originalname}`);
-  const blobStream = blob.createWriteStream();
+  const blobStream = blob.createWriteStream({
+    metadata: {
+      contentType: file.mimetype,
+    },
+  });
 
   blobStream.on('error', (err) => {
-    console.log('blobStream.on', err); // console
-    res.status(400).json({ message: err.message });
+    return next(err);
   });
 
   blobStream.on('finish', async () => {
     const publicUrl = `https://storage.googleapis.com/${bucketName}/${blob.name}`;
+    imageUrls.push(publicUrl);
     res.status(200).json({ imageUrl: publicUrl });
-    return publicUrl;
   });
 
   blobStream.end(file.buffer);
 };
 
 exports.createProduct = async (req, res) => {
-  let images = [];
-
-  if (req.file) {
-    const publicUrl = `https://storage.googleapis.com/${bucketName}/${req.file.filename}`;
-    images.push(publicUrl);
-  }
   const product = new Product({
     name: req.body.name,
     description: req.body.description,
     category: req.body.category,
     owner: req.body.owner,
-    images: images,
+    images: imageUrls,
     tags: req.body.tags,
     condition: req.body.condition,
     location: req.body.location,
