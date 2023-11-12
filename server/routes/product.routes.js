@@ -2,15 +2,6 @@ const productController = require('../controllers/product.controller');
 const { verifyToken } = require('../middlewares/authJwt');
 const multer = require('multer');
 
-// const multerStorage = multer.memoryStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, 'multer/');
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, file.originalname);
-//   },
-// });
-
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
@@ -18,17 +9,20 @@ const upload = multer({
   },
 });
 
-// Routes for product controller functions
-
 module.exports = function (app) {
   app.get('/api/product/all', productController.getAllProducts);
   app.get('/api/product/owned', verifyToken, productController.getMyProducts);
 
   app.post(
     '/api/product/uploadImage',
-    upload.single('images'),
+    upload.array('images'),
     productController.uploadImage
   );
+  app.delete(
+    '/api/product/deleteImage/:imageName',
+    productController.deleteUploadedImage
+  );
+
   app.post('/api/product/create', verifyToken, productController.createProduct);
 
   app.get('/api/product/:productId', productController.getProductById);

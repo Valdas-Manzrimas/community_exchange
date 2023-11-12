@@ -13,32 +13,59 @@ const folderName = 'Product-Images';
 let imageUrls = [];
 
 exports.uploadImage = async (req, res, next) => {
-  const { file } = req;
+  const files = req.files;
 
-  if (!file) {
-    return res.status(400).json({ message: 'No file uploaded.' });
+  if (!files || files.length === 0) {
+    return res.status(400).json({ message: 'No files uploaded.' });
   }
 
-  const blob = storage
-    .bucket(bucketName)
-    .file(`${folderName}/${file.originalname}`);
-  const blobStream = blob.createWriteStream({
-    metadata: {
-      contentType: file.mimetype,
-    },
+  const uploadPromises = files.map((file) => {
+    return new Promise((resolve, reject) => {
+      const blob = storage
+        .bucket(bucketName)
+        .file(`${folderName}/${file.originalname}`);
+      const blobStream = blob.createWriteStream({
+        metadata: {
+          contentType: file.mimetype,
+        },
+      });
+
+      blobStream.on('error', (err) => {
+        reject(err);
+      });
+
+      blobStream.on('finish', async () => {
+        const publicUrl = `https://storage.googleapis.com/${bucketName}/${blob.name}`;
+        resolve(publicUrl);
+      });
+
+      blobStream.end(file.buffer);
+    });
   });
 
-  blobStream.on('error', (err) => {
-    return next(err);
-  });
+  // Wait for all uploads to finish
+  imageUrls = await Promise.all(uploadPromises);
 
-  blobStream.on('finish', async () => {
-    const publicUrl = `https://storage.googleapis.com/${bucketName}/${blob.name}`;
-    imageUrls.push(publicUrl);
-    res.status(200).json({ imageUrl: publicUrl });
-  });
+  res.status(200).json({ imageUrls });
+};
 
-  blobStream.end(file.buffer);
+exports.deleteUploadedImage = async (req, res, next) => {
+  const { imageName } = req.params;
+
+  if (!imageName) {
+    return res.status(400).json({ message: 'No image name provided.' });
+  }
+
+  const file = storage.bucket(bucketName).file(`${folderName}/${imageName}`);
+
+  file
+    .delete()
+    .then(() => {
+      res.status(200).json({ message: 'Image deleted successfully.' });
+    })
+    .catch((err) => {
+      return next(err);
+    });
 };
 
 exports.createProduct = async (req, res) => {
