@@ -1,5 +1,5 @@
 // App.tsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useMediaQuery } from '@react-hook/media-query';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/layout/Header';
@@ -10,6 +10,7 @@ import LoginRegister from './components/pages/Login_Register';
 import MyProducts from './components/pages/MyProducts';
 import AllProducts from './components/pages/AllProducts';
 import CreateProduct from './components/pages/CreateProduct';
+import AuthCheck from './components/Base/functions/authCheck';
 
 // import About from './About';
 // import Contact from './Contact';
@@ -21,6 +22,7 @@ const App: React.FC = () => {
   return (
     <div>
       <Router basename={publicUrl}>
+        <AuthCheck />
         {isMediumScreen ? <ResponsiveHeader /> : <Header />}
         <Routes>
           <Route path='/' element={<Home />} />
