@@ -8,25 +8,41 @@ interface InLineCardProps {
 }
 
 const InLineCard: React.FC<InLineCardProps> = ({ product }) => {
-  const onSettingsClick = () => {
-    console.log('Settings clicked');
+  const onEditClick = () => {
+    console.log('Edit button clicked');
+  };
+  const onDeleteClick = () => {
+    console.log('Edit button clicked');
   };
 
   return (
-    <tr className='divide-y'>
-      <td className='py-2'>{product.name}</td>
-      <td className='py-2'>
+    <tr className='divide-y hover:bg-narvik-100 '>
+      <td className='py-4'>{product.name}</td>
+      <td className='py-4'>
         {new Date(product.createdAt).toLocaleDateString()}
       </td>
-      <td className='py-2'>{product.category}</td>
-      <td className='py-2'>{product.tags}</td>
-      <td className='py-2'>
+      <td className='py-4'>{product.category}</td>
+      <td className='py-4'>{product.tags}</td>
+      <td className='py-4'>
         {product.isAvailable ? 'Available' : 'Not available'}
       </td>
-      <td className='py-2'>{product.location}</td>
-      <td className='py-2'>{product.inWishlist}</td>
-      <td className='py-2'>
-        <button onClick={onSettingsClick}>Settings</button>
+      <td className='py-4'>{product.location}</td>
+      <td className='py-4'>{product.inWishlist}</td>
+      <td className='py-4'>
+        <button onClick={onEditClick} className='cursor-pointer'>
+          <img
+            src='assets\imgs\theme\icons\edit.svg'
+            alt='Edit'
+            className='w-4 h-4'
+          />
+        </button>
+        <button onClick={onDeleteClick} className='cursor-pointer'>
+          <img
+            src='assets\imgs\theme\icons\trash.svg'
+            alt='Edit'
+            className='ml-2 w-4 h-4'
+          />
+        </button>
       </td>
     </tr>
   );

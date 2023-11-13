@@ -1,5 +1,5 @@
 // App.tsx
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useMediaQuery } from '@react-hook/media-query';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/layout/Header';
@@ -27,8 +27,8 @@ const App: React.FC = () => {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/login-register' element={<LoginRegister />} />
-          <Route path='/my-products' element={<MyProducts />} />
           <Route path='/all-products' element={<AllProducts />} />
+          <Route path='/my-products' element={<MyProducts />} />
           <Route path='/create-product' element={<CreateProduct />} />
           {/* <Route path='/about' element={<About />} />
           <Route path='/contact' element={<Contact />} /> */}
