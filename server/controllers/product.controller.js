@@ -139,8 +139,21 @@ exports.deleteProduct = async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
+
+    for (const imageUrl of product.images) {
+      // Extract the image name from the image URL
+      const imageName = imageUrl.split('/').pop();
+
+      const file = storage
+        .bucket(bucketName)
+        .file(`${folderName}/${imageName}`);
+      await file.delete();
+    }
+
     await Product.deleteOne({ _id: req.params.productId });
-    res.status(200).json({ message: 'Product deleted successfully' });
+    res
+      .status(200)
+      .json({ message: 'Product and its images deleted successfully' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
