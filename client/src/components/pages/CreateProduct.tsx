@@ -30,7 +30,6 @@ const CreateProduct = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('Submitting form...', images);
     const product = {
       name,
       description,

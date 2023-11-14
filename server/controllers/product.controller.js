@@ -141,13 +141,16 @@ exports.deleteProduct = async (req, res) => {
     }
 
     for (const imageUrl of product.images) {
-      // Extract the image name from the image URL
       const imageName = imageUrl.split('/').pop();
 
       const file = storage
         .bucket(bucketName)
         .file(`${folderName}/${imageName}`);
-      await file.delete();
+      try {
+        await file.delete();
+      } catch (err) {
+        console.error(`Failed to delete image ${imageName}: ${err.message}`);
+      }
     }
 
     await Product.deleteOne({ _id: req.params.productId });
