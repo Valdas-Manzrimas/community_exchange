@@ -1,5 +1,72 @@
 const Product = require('../models/product.model');
 const User = require('../models/user.model');
+const { Storage } = require('@google-cloud/storage');
+
+const storage = new Storage({
+  projectId: 'norse-bond-299713',
+  keyFilename: './norse-bond-299713-7470e7a36420.json',
+});
+
+const bucketName = 'community_exchange';
+const folderName = 'Product-Images';
+
+let imageUrls = [];
+
+exports.uploadImage = async (req, res, next) => {
+  const files = req.files;
+
+  if (!files || files.length === 0) {
+    return res.status(400).json({ message: 'No files uploaded.' });
+  }
+
+  const uploadPromises = files.map((file) => {
+    return new Promise((resolve, reject) => {
+      const blob = storage
+        .bucket(bucketName)
+        .file(`${folderName}/${file.originalname}`);
+      const blobStream = blob.createWriteStream({
+        metadata: {
+          contentType: file.mimetype,
+        },
+      });
+
+      blobStream.on('error', (err) => {
+        reject(err);
+      });
+
+      blobStream.on('finish', async () => {
+        const publicUrl = `https://storage.googleapis.com/${bucketName}/${blob.name}`;
+        resolve(publicUrl);
+      });
+
+      blobStream.end(file.buffer);
+    });
+  });
+
+  // Wait for all uploads to finish
+  imageUrls = await Promise.all(uploadPromises);
+
+  res.status(200).json({ imageUrls });
+};
+
+exports.deleteUploadedImage = async (req, res, next) => {
+  const { imageName } = req.params;
+
+  if (!imageName) {
+    return res.status(400).json({ message: 'No image name provided.' });
+  }
+
+  const file = storage.bucket(bucketName).file(`${folderName}/${imageName}`);
+
+  file
+    .delete()
+    .then(() => {
+      res.status(200).json({ message: 'Image deleted successfully.' });
+    })
+    .catch((err) => {
+      return next(err);
+    });
+};
 
 exports.createProduct = async (req, res) => {
   const product = new Product({
@@ -7,20 +74,23 @@ exports.createProduct = async (req, res) => {
     description: req.body.description,
     category: req.body.category,
     owner: req.body.owner,
-    images: req.body.images,
+    images: imageUrls,
     tags: req.body.tags,
     condition: req.body.condition,
     location: req.body.location,
     isAvailable: req.body.isAvailable,
     wantedProducts: req.body.wantedProducts,
   });
-  const currentUser = await User.findById(req.userId).exec();
-  try {
-    // if (!currentUser && !currentUser.roles.includes('moderator')) {
-    //   return res.status(401).send({ message: 'Unauthorized.' });
-    // }
 
+  const currentUser = await User.findById(req.userId).exec();
+
+  try {
     const newProduct = await product.save();
+
+    if (!currentUser) {
+      return res.status(400).json({ message: 'Bad request. User not found.' });
+    }
+
     res.status(201).json(newProduct);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -69,8 +139,24 @@ exports.deleteProduct = async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
+
+    for (const imageUrl of product.images) {
+      const imageName = imageUrl.split('/').pop();
+
+      const file = storage
+        .bucket(bucketName)
+        .file(`${folderName}/${imageName}`);
+      try {
+        await file.delete();
+      } catch (err) {
+        console.error(`Failed to delete image ${imageName}: ${err.message}`);
+      }
+    }
+
     await Product.deleteOne({ _id: req.params.productId });
-    res.status(200).json({ message: 'Product deleted successfully' });
+    res
+      .status(200)
+      .json({ message: 'Product and its images deleted successfully' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -98,7 +184,7 @@ exports.getAllProducts = async (req, res) => {
 
 exports.getMyProducts = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 8;
+  const limit = parseInt(req.query.limit) || 12;
   const offset = (page - 1) * limit;
 
   try {

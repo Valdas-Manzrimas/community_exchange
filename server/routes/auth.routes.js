@@ -17,4 +17,8 @@ module.exports = function (app) {
   app.post('/api/auth/login', controller.signin);
 
   app.post('/api/auth/logout', controller.signout);
+
+  app.post('/api/auth/verifyToken', verifyToken, (req, res) => {
+    res.json({ valid: true, userId: req.userId });
+  });
 };

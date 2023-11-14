@@ -5,10 +5,13 @@ export type Product = {
   category: string;
   images: string[];
   tags: string[];
+  owner: string;
+  isMine: boolean;
   location: string;
   isAvailable: boolean;
+  inWishlist: number;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt?: Date;
 };
 
 export type Category = {
