@@ -1,5 +1,6 @@
 import React from 'react';
 import { Product } from '../../types/ProductTypes';
+import { Link } from 'react-router-dom';
 
 interface CardProps {
   product: Product;
@@ -15,7 +16,7 @@ const Card: React.FC<CardProps> = ({ product, myProduct }) => {
       <div className='w-full h-full flex items-center justify-center flex-col absolute opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-2xl shadow-narvik-800'>
         {!myProduct && (
           <>
-            <div className='w-12 h-12 rounded-full border-2 border flex items-center justify-center border-white bg-narvik-300/75 hover:bg-narvik-300 hover:shadow-2 hover:shadow-white transition-all duration-200'>
+            <div className='w-12 h-12 rounded-full border flex items-center justify-center border-white bg-narvik-300/75 hover:bg-narvik-300 hover:shadow-2 hover:shadow-white transition-all duration-200'>
               <img
                 src='/assets/imgs/theme/icons/icon-cart.svg'
                 alt='Add to cart'
@@ -23,7 +24,7 @@ const Card: React.FC<CardProps> = ({ product, myProduct }) => {
               />
             </div>
 
-            <div className='w-12 h-12 mt-4 rounded-full border-2 border flex items-center justify-center border-white bg-narvik-300/75 hover:bg-narvik-300 hover:shadow-2 hover:shadow-white transition-all duration-200'>
+            <div className='w-12 h-12 mt-4 rounded-full border flex items-center justify-center border-white bg-narvik-300/75 hover:bg-narvik-300 hover:shadow-2 hover:shadow-white transition-all duration-200'>
               <img
                 src='/assets/imgs/theme/icons/icon-heart.svg'
                 alt='Wishlist'
@@ -32,14 +33,33 @@ const Card: React.FC<CardProps> = ({ product, myProduct }) => {
             </div>
           </>
         )}
-
-        <div className='w-12 h-12 rounded-full border-2 border flex items-center justify-center border-white mt-4 bg-narvik-300/75 hover:bg-narvik-300 hover:shadow-2 hover:shadow-white transition-all duration-200'>
-          <img
-            src='/assets/imgs/theme/icons/fast-arrow-right.svg'
-            alt='View details'
-            className='w-16 h-16 p-1'
-          />
-        </div>
+        {myProduct && (
+          <>
+            <div className='w-12 h-12 rounded-full border flex items-center justify-center border-white mt-4 bg-narvik-300/75 hover:bg-narvik-300 hover:shadow-2 hover:shadow-white transition-all duration-200'>
+              <img
+                src='/assets/imgs/theme/icons/trash.svg'
+                alt='View details'
+                className='w-10 h-10 p-1'
+              />
+            </div>
+            <div className='w-12 h-12 rounded-full border flex items-center justify-center border-white mt-4 bg-narvik-300/75 hover:bg-narvik-300 hover:shadow-2 hover:shadow-white transition-all duration-200'>
+              <img
+                src='/assets/imgs/theme/icons/edit.svg'
+                alt='View details'
+                className='w-8 h-8 p-1'
+              />
+            </div>
+          </>
+        )}
+        <Link to={`/product/${product._id}`}>
+          <div className='w-12 h-12 rounded-full border flex items-center justify-center border-white mt-4 bg-narvik-300/75 hover:bg-narvik-300 hover:shadow-2 hover:shadow-white transition-all duration-200'>
+            <img
+              src='/assets/imgs/theme/icons/fast-arrow-right.svg'
+              alt='View details'
+              className='w-16 h-16 p-1'
+            />
+          </div>
+        </Link>
       </div>
       {/* Hover box end */}
       <img

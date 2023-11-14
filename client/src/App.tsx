@@ -11,6 +11,7 @@ import MyProducts from './components/pages/MyProducts';
 import AllProducts from './components/pages/AllProducts';
 import CreateProduct from './components/pages/CreateProduct';
 import AuthCheck from './components/Base/functions/authCheck';
+import SingleProduct from './components/pages/SingleProduct';
 
 // import About from './About';
 // import Contact from './Contact';
@@ -30,6 +31,8 @@ const App: React.FC = () => {
           <Route path='/all-products' element={<AllProducts />} />
           <Route path='/my-products' element={<MyProducts />} />
           <Route path='/create-product' element={<CreateProduct />} />
+          <Route path='/product/:productId' element={<SingleProduct />} />
+
           {/* <Route path='/about' element={<About />} />
           <Route path='/contact' element={<Contact />} /> */}
         </Routes>

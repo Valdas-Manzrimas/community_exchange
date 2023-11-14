@@ -34,8 +34,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ setPropImages }) => {
           }
         );
 
-        console.log(response.data);
-
         // Assuming response.data is an array of image URLs
         setImages((prevImages) => [...prevImages, ...response.data.imageUrls]);
         setPropImages((prevImages) => [
