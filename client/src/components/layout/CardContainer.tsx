@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { RootState } from '../../store';
 import InLineCard from '../Base/InLineCard';
+import { deleteProduct } from '../Base/functions/deleteProduct';
 
 interface CardContainerProps {
   fetchUrl: string;
@@ -37,35 +38,32 @@ const CardContainer: React.FC<CardContainerProps> = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      // setLoading(true);
-      try {
-        const response = await axios.get(fetchUrl, {
-          headers: token ? { 'x-access-token': token } : {},
-        });
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(fetchUrl, {
+        headers: token ? { 'x-access-token': token } : {},
+      });
 
-        const fetchedProducts = response.data.products;
+      const fetchedProducts = response.data.products;
 
-        const myProducts = fetchedProducts.map((product: Product) => {
-          return {
-            ...product,
-            isMine: product.owner === userId,
-          };
-        });
+      const myProducts = fetchedProducts.map((product: Product) => {
+        return {
+          ...product,
+          isMine: product.owner === userId,
+        };
+      });
 
-        setProducts(myProducts);
-        setTotalPages(response.data.totalPages);
-        // setLoading(false);
-      } catch (error: unknown) {
-        // setLoading(false);
-        handleErrors(error, dispatch);
-        if (error === 403) {
-          navigate('/');
-        }
+      setProducts(myProducts);
+      setTotalPages(response.data.totalPages);
+    } catch (error: unknown) {
+      handleErrors(error, dispatch);
+      if (error === 403) {
+        navigate('/');
       }
-    };
+    }
+  };
 
+  useEffect(() => {
     fetchProducts();
   }, [fetchUrl, token, dispatch, userId]);
 
@@ -74,6 +72,12 @@ const CardContainer: React.FC<CardContainerProps> = ({
       onPageChange(newPage);
     }
   };
+
+  const handleDelete = async (productId: string) => {
+    await deleteProduct(productId, token);
+    fetchProducts();
+  };
+
   const handleClick = async () => {
     navigate('/all-products');
   };
@@ -103,6 +107,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
                       product={product}
                       key={product._id}
                       myProduct={product.isMine}
+                      onDeleteClick={handleDelete}
                     />
                   ))}
                 </tbody>

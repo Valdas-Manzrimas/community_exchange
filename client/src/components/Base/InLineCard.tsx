@@ -5,13 +5,11 @@ interface InLineCardProps {
   product: Product;
   key: string;
   myProduct: boolean;
+  onDeleteClick: (productId: string, token: string) => void;
 }
 
-const InLineCard: React.FC<InLineCardProps> = ({ product }) => {
+const InLineCard: React.FC<InLineCardProps> = ({ product, onDeleteClick }) => {
   const onEditClick = () => {
-    console.log('Edit button clicked');
-  };
-  const onDeleteClick = () => {
     console.log('Edit button clicked');
   };
 
@@ -36,7 +34,10 @@ const InLineCard: React.FC<InLineCardProps> = ({ product }) => {
             className='w-4 h-4'
           />
         </button>
-        <button onClick={onDeleteClick} className='cursor-pointer'>
+        <button
+          onClick={() => onDeleteClick(product._id, 'token')}
+          className='cursor-pointer'
+        >
           <img
             src='assets\imgs\theme\icons\trash.svg'
             alt='Edit'
