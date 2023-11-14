@@ -12,21 +12,21 @@ const upload = multer({
 module.exports = function (app) {
   app.get('/api/product/all', productController.getAllProducts);
   app.get('/api/product/owned', verifyToken, productController.getMyProducts);
+  app.get('/api/product/:productId', productController.getProductById);
 
   app.post(
     '/api/product/uploadImage',
     upload.array('images'),
     productController.uploadImage
   );
+  app.post('/api/product/create', verifyToken, productController.createProduct);
+
+  app.put('/api/product/update/:productId', productController.updateProduct);
+
   app.delete(
     '/api/product/deleteImage/:imageName',
     productController.deleteUploadedImage
   );
-
-  app.post('/api/product/create', verifyToken, productController.createProduct);
-
-  app.get('/api/product/:productId', productController.getProductById);
-  app.put('/api/product/update/:productId', productController.updateProduct);
   app.delete(
     '/api/product/delete/:productId',
     verifyToken,
