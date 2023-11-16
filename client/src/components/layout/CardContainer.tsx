@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import Card from '../Base/Card';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +19,7 @@ interface CardContainerProps {
   onPageChange?: (newPage: number) => void;
   currentPage?: number;
   isListView?: boolean;
+  refreshKey: number;
 }
 
 const CardContainer: React.FC<CardContainerProps> = ({
@@ -28,6 +29,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
   token,
   onPageChange,
   isListView = false,
+  refreshKey,
 }) => {
   const [products, setProducts] = useState<Product[]>([]);
   // const [loading, setLoading] = useState<boolean>(true);
@@ -38,7 +40,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       const response = await axios.get(fetchUrl, {
         headers: token ? { 'x-access-token': token } : {},
@@ -61,11 +63,15 @@ const CardContainer: React.FC<CardContainerProps> = ({
         navigate('/');
       }
     }
-  };
+  }, [fetchUrl, token, dispatch, userId]);
 
   useEffect(() => {
     fetchProducts();
-  }, [fetchUrl, token, dispatch, userId]);
+  }, [fetchProducts]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [refreshKey, fetchProducts]);
 
   const handlePageChange = (newPage: number) => {
     if (onPageChange) {

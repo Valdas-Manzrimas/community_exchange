@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 
 interface FilterContainerProps {
   onFilterChange: (filter: string) => void;
   onSortChange: (sort: string) => void;
   onToggleView: (isListView: boolean) => void;
+  isModalOpen: boolean;
+  toggleModal: () => void;
 }
 
 const FilterContainer: React.FC<FilterContainerProps> = ({
   onFilterChange,
-  onSortChange,
+  // onSortChange,
   onToggleView,
+  toggleModal,
 }) => {
   const [isListView, setIsListView] = useState(false);
 
@@ -18,9 +20,9 @@ const FilterContainer: React.FC<FilterContainerProps> = ({
     onFilterChange(event.target.value);
   };
 
-  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    onSortChange(event.target.value);
-  };
+  // const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   onSortChange(event.target.value);
+  // };
 
   const handleToggleView = () => {
     setIsListView(!isListView);
@@ -49,12 +51,14 @@ const FilterContainer: React.FC<FilterContainerProps> = ({
         />
         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-1 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-narvik-700"></div>
       </label>
-      <Link
-        to='/create-product'
+
+      <button
+        onClick={() => toggleModal()}
         className='text-dark border-dark bg-gradient-to-r from-narvik-200 via-narvik-500 to-narvik-800 hover:bg-gradient-to-br font-medium rounded-lg text-sm px-2 py-0.5 text-center absolute right-0 active:border-narvik-200 active:shadow-2'
+        type='button'
       >
         Create Product
-      </Link>
+      </button>
     </div>
   );
 };

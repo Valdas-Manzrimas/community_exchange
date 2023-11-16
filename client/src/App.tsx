@@ -9,7 +9,6 @@ import Home from './components/pages/Home';
 import LoginRegister from './components/pages/Login_Register';
 import MyProducts from './components/pages/MyProducts';
 import AllProducts from './components/pages/AllProducts';
-import CreateProduct from './components/pages/CreateProduct';
 import AuthCheck from './components/Base/functions/authCheck';
 import SingleProduct from './components/pages/SingleProduct';
 
@@ -30,7 +29,6 @@ const App: React.FC = () => {
           <Route path='/login-register' element={<LoginRegister />} />
           <Route path='/all-products' element={<AllProducts />} />
           <Route path='/my-products' element={<MyProducts />} />
-          <Route path='/create-product' element={<CreateProduct />} />
           <Route path='/product/:productId' element={<SingleProduct />} />
 
           {/* <Route path='/about' element={<About />} />

@@ -1,16 +1,33 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 import { useDispatch } from 'react-redux';
 import { setAlert } from '../../store/slices/alertSlice';
 
 interface ImageUploadProps {
-  setPropImages: React.Dispatch<React.SetStateAction<string[]>>;
+  setPropImages: (images: string[]) => void;
+  reset?: boolean;
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({ setPropImages }) => {
+const ImageUpload: React.FC<ImageUploadProps> = ({ setPropImages, reset }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [images, setImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    console.log('Reset changed:', reset);
+
+    if (reset) {
+      console.log('Clearing images');
+
+      setImages([]);
+
+      console.log('Images after clearing:', images);
+    }
+  }, [reset]);
+
+  useEffect(() => {
+    console.log('Images:', images);
+  }, [images]);
 
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -34,12 +51,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ setPropImages }) => {
           }
         );
 
-        // Assuming response.data is an array of image URLs
-        setImages((prevImages) => [...prevImages, ...response.data.imageUrls]);
-        setPropImages((prevImages) => [
-          ...prevImages,
-          ...response.data.imageUrls,
-        ]);
+        const newImages = [...images, ...response.data.imageUrls];
+        setImages(newImages);
+        setPropImages(newImages);
       } catch (error) {
         console.error('Error:', error);
       } finally {
