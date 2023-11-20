@@ -2,26 +2,23 @@
 
 const Landing = () => {
   return (
-    <div className='bg-transparent'>
-      <div className='flex flex-col md:flex-row justify-between items-center'>
-        <div className='md:w-1/2 mb-4 md:mb-0'>
-          <h1 className='text-4xl font-bold text-gray-800 mb-4'>
-            Welcome to our Community Exchange
+    <div className='relative h-[32rem] bg-gradient-to-b from-primary to-secondary'>
+      <div className='h-full md:p-4 flex flex-col md:flex-row justify-between items-center'>
+        <div className='p-4 md:p-0md:w-1/2 mb-4 md:mb-0 text-center h-full flex flex-col justify-center items-center z-10'>
+          <h1 className='text-4xl font-bold text-gray-100 mb-4'>
+            Welcome to Harmony Exchange
           </h1>
-          <p className='text-gray-700 mb-4'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
+          <p className='text-xl text-gray-100 mb-4'>
+            Here is the place to connect
           </p>
           <button className='bg-blue-500 hover:bg-blue-700 text-narvik-800 font-bold py-2 px-4 rounded'>
             Learn More
           </button>
         </div>
-        <div className='md:w-1/2'>
+        <div className='absolute top-1/4 md:top:1/2 md:w-1/2 opacity-40 md:relative z-0'>
           <img
             className='w-full h-auto object-cover object-center'
-            src='https://img.freepik.com/free-photo/website-design-content-layout-graphic_53876-21203.jpg?w=1380&t=st=1698743661~exp=1698744261~hmac=40db9edfccc8ce2e9aee9609fdf7e7d7e91e3ec40baa5ab6df52540015eb17b4'
+            src='/assets/imgs/background/tree.svg'
             alt='Community Exchange'
           />
         </div>

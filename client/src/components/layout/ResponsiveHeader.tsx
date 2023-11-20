@@ -36,6 +36,7 @@ const ResponsiveHeader: React.FC = () => {
       dispatch(logout());
       dispatch(clearUser());
     }
+    setShowMenu(false);
   };
 
   useEffect(() => {
@@ -54,16 +55,18 @@ const ResponsiveHeader: React.FC = () => {
   }, [navRef, showMenu]);
 
   const active = (path: string) => {
-    return location.pathname === path ? 'border-primary' : 'border-light';
+    return location.pathname === path
+      ? 'border-secondary text-secondary'
+      : 'border-primary text-white';
   };
 
   return (
-    <div className='sticky top-0 transition-all duration-500 z-80'>
-      <header className='w-full bg-light justify-between flex items-center px-4 py-3 px-4 py-3 z-100'>
+    <div className='sticky top-0 transition-all duration-500'>
+      <header className='w-full bg-primary justify-between flex items-center px-4 py-3 z-50'>
         <div className='flex items-center justify-self-start'>
           <div>
-            <Link to='/'>
-              <span className='text-primary font-semibold font-serif text-4xl tracking-tight'>
+            <Link to='/' onClick={() => showMenu && toggleMenu}>
+              <span className='text-gray-50 font-semibold font-serif text-4xl tracking-tight'>
                 Barter
               </span>
             </Link>
@@ -71,21 +74,29 @@ const ResponsiveHeader: React.FC = () => {
         </div>
         <div className='flex items-center'>
           <div className='header-action-icon-2'>
-            <Link to='/shop-wishlist' className='flex items-center'>
+            <Link
+              to='/shop-wishlist'
+              className='flex items-center'
+              onClick={() => showMenu && toggleMenu}
+            >
               <img
                 alt='Wishlist'
                 src='./assets/imgs/theme/icons/icon-heart.svg'
-                className='w-7 m-2 text-primary'
+                className='w-7 m-2 text-white'
               />
               <span className='pro-count white'>{/*totalWishlistItems*/}</span>
             </Link>
           </div>
           <div className='header-action-icon-2'>
-            <Link to='/shop-cart' className='flex items-center'>
+            <Link
+              to='/shop-cart'
+              className='flex items-center'
+              onClick={() => showMenu && toggleMenu}
+            >
               <img
                 alt='Orders'
                 src='./assets/imgs/theme/icons/icon-cart.svg'
-                className='w-7 m-2 text-primary'
+                className='w-7 m-2 text-white'
               />
               <span className='pro-count white'>{/*totalCartItems*/}</span>
             </Link>
@@ -94,7 +105,7 @@ const ResponsiveHeader: React.FC = () => {
           <div className='w-7 m-2 text-primary'>
             <button
               type='button'
-              className={`block text-gray-500 hover:text-light focus:text-light focus:outline-none `}
+              className={`block text-gray hover:text-light focus:text-light focus:outline-none `}
               onClick={toggleMenu}
               name='hamburger'
             >
@@ -107,88 +118,97 @@ const ResponsiveHeader: React.FC = () => {
             </button>
           </div>
         </div>
-        <nav
-          ref={navRef}
-          className={`fixed -bottom-12 right-0 h-full w-56 bg-light transition-all duration-300 ease-in-out z-10 border-l-primary ${
-            showMenu ? 'translate-x-0 visible' : 'translate-x-full not-visible'
-          }`}
-        >
-          <div className='flex flex-col items-center mt-20'>
-            <div className='px-2 py-2'>
-              <Link
-                to='/'
-                className={`block px-2 py-1 text-primary border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-primary-dark ${active(
-                  '/'
-                )}`}
-              >
-                Home
-              </Link>
-            </div>
-            <div className='px-2 py-2'>
-              <Link
-                to='/about'
-                className={`block px-2 py-1 text-primary border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-primary-dark ${active(
-                  '/about'
-                )}`}
-              >
-                About
-              </Link>
-            </div>
-            {isAuthenticated && (
-              <div className='px-2 py-2'>
-                <Link
-                  to='/my-products'
-                  className={`block px-2 py-1 text-primary border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-primary-dark ${active(
-                    '/my-products'
-                  )}`}
-                >
-                  My Products
-                </Link>
-              </div>
-            )}
-            <div className='px-2 py-2'>
-              <Link
-                to='/contact'
-                className={`block px-2 py-1 text-primary border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-primary-dark ${active(
-                  '/contact'
-                )}`}
-              >
-                Contact
-              </Link>
-            </div>
-          </div>
-
-          <div className='flex flex-col items-center'>
-            <Dropdown
-              buttonText='English'
-              options={['English', 'Lithuanian']}
-              buttonStyles='inline-flex w-full justify-center gap-x-1.5  px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50'
-              replaceButtonText
-            />
-            <div className='flex items-center'>
-              {isAuthenticated ? (
-                <div className='flex items-center'>
-                  <img
-                    src='./assets/imgs/icons/circle-user.svg'
-                    alt='user'
-                    className='w-4'
-                  />
-                  <Dropdown
-                    buttonText={user.firstName}
-                    replaceButtonText={false}
-                    onOptionClick={handleOptionClick}
-                    options={['Profile', 'Settings', `Logout`]}
-                  />
-                </div>
-              ) : (
-                <Link to='/login-register' className='text-sm'>
-                  Log In / Sign Up
-                </Link>
-              )}
-            </div>
-          </div>
-        </nav>
+        {/* side menu */}
       </header>
+      <nav
+        ref={navRef}
+        className={`fixed top-0 flex flex-col justify-between right-0 h-full w-56 bg-primary transition-all duration-300 ease-in-out border-l-primary ${
+          showMenu ? `translate-x-0 visible` : 'translate-x-full not-visible'
+        }`}
+      >
+        <div className='flex flex-col items-center mt-28'>
+          <div className='px-2 py-2'>
+            <Link
+              onClick={toggleMenu}
+              to='/'
+              className={`block px-2 py-1 text-primary border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-primary-dark ${active(
+                '/'
+              )}`}
+            >
+              Home
+            </Link>
+          </div>
+          <div className='px-2 py-2'>
+            <Link
+              onClick={toggleMenu}
+              to='/about'
+              className={`block px-2 py-1 text-primary border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-primary-dark ${active(
+                '/about'
+              )}`}
+            >
+              About
+            </Link>
+          </div>
+          {isAuthenticated && (
+            <div className='px-2 py-2'>
+              <Link
+                onClick={toggleMenu}
+                to='/my-products'
+                className={`block px-2 py-1 text-white border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-gray-100 ${active(
+                  '/my-products'
+                )}`}
+              >
+                My Products
+              </Link>
+            </div>
+          )}
+          <div className='px-2 py-2'>
+            <Link
+              onClick={toggleMenu}
+              to='/contact'
+              className={`block px-2 py-1 text-white border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-gray-100 ${active(
+                '/contact'
+              )}`}
+            >
+              Contact
+            </Link>
+          </div>
+        </div>
+
+        <div className='flex flex-col items-center mb-10'>
+          <Dropdown
+            buttonText='English'
+            options={['English', 'Lithuanian']}
+            buttonStyles='inline-flex w-full justify-center gap-x-1.5  px-3 py-2 text-sm font-semibold text-white'
+            replaceButtonText
+          />
+          <div className='flex items-center'>
+            {isAuthenticated ? (
+              <div className='flex items-center'>
+                <img
+                  src='./assets/imgs/icons/circle-user.svg'
+                  alt='user'
+                  className='w-4'
+                />
+                <Dropdown
+                  buttonText={user.firstName}
+                  replaceButtonText={false}
+                  onOptionClick={handleOptionClick}
+                  options={['Profile', 'Settings', `Logout`]}
+                />
+              </div>
+            ) : (
+              <Link
+                to='/login-register'
+                className='text-sm text-white'
+                onClick={toggleMenu}
+              >
+                Log In / Sign Up
+              </Link>
+            )}
+          </div>
+        </div>
+      </nav>
       {alert.message && (
         <div className='relative top-0 left-0 -z-10'>
           <Alert type={alert.status} message={alert.message} />

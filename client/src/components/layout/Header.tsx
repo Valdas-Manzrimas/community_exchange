@@ -29,7 +29,9 @@ const Header: React.FC = () => {
   };
 
   const active = (path: string) => {
-    return location.pathname === path ? 'border-primary' : 'border-light';
+    return location.pathname === path
+      ? 'border-secondary text-secondary'
+      : 'border-primary text-white';
   };
 
   const handleOptionClick = (option: string) => {
@@ -56,9 +58,9 @@ const Header: React.FC = () => {
     <div className={`sticky top-0 transition-all duration-500`}>
       {alert.message && <Alert type={alert.status} message={alert.message} />}
       <div
-        className={`hidden md:block bg-narvik-200 py-1 transition-all duration-1000 `}
+        className={`hidden md:block bg-primary text-white py-1 transition-all duration-1000 `}
       >
-        <div className='flex items-center justify-between mx-6'>
+        <div className='flex items-center justify-between mx-6 '>
           <div id='news-flash' className='inline-block'>
             <span>App is still in development. Please check back later.</span>
           </div>
@@ -74,7 +76,7 @@ const Header: React.FC = () => {
                   <img
                     src='./assets/imgs/icons/circle-user.svg'
                     alt='user'
-                    className='w-4'
+                    className='w-4 text-white'
                   />
                   <Dropdown
                     buttonText={user.firstName}
@@ -84,7 +86,7 @@ const Header: React.FC = () => {
                   />
                 </div>
               ) : (
-                <Link to='/login-register' className='text-sm'>
+                <Link to='/login-register' className='text-sm text-white'>
                   Log In / Sign Up
                 </Link>
               )}
@@ -94,12 +96,12 @@ const Header: React.FC = () => {
       </div>
 
       <header
-        className={` left-0 w-full bg-narvik-100 sm:justify-between sm:flex sm:items-center sm:px-4 sm:py-3`}
+        className={` left-0 w-full bg-primary sm:justify-between sm:flex sm:items-center sm:px-4 sm:py-3`}
       >
         <div className='flex items-center justify-self-start px-4 py-3 sm:p-0'>
           <div>
             <Link to='/'>
-              <span className='text-primary font-semibold font-serif text-4xl tracking-tight'>
+              <span className='text-white font-semibold font-serif text-4xl tracking-tight'>
                 Barter
               </span>
             </Link>
@@ -107,7 +109,7 @@ const Header: React.FC = () => {
           <div className='sm:hidden'>
             <button
               type='button'
-              className='block text-gray-500 hover:text-light focus:text-light focus:outline-none'
+              className='block text-gray-100 hover:text-white focus:text-white focus:outline-none'
               onClick={toggleMenu}
             >
               <svg className='h-6 w-6 fill-current' viewBox='0 0 24 24'>
@@ -127,7 +129,7 @@ const Header: React.FC = () => {
           <div className='px-2 py-2'>
             <Link
               to='/'
-              className={`block px-2 py-1 text-primary border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-primary-dark ${active(
+              className={`block px-2 py-1 border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-secondary ${active(
                 '/'
               )}`}
             >
@@ -137,7 +139,7 @@ const Header: React.FC = () => {
           <div className='px-2 py-2'>
             <Link
               to='/about'
-              className={`block px-2 py-1 text-primary border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-primary-dark ${active(
+              className={`block px-2 py-1 text-white border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-secondary ${active(
                 '/about'
               )}`}
             >
@@ -148,7 +150,7 @@ const Header: React.FC = () => {
             <div className='px-2 py-2'>
               <Link
                 to='/my-products'
-                className={`block px-2 py-1 text-primary border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-primary-dark ${active(
+                className={`block px-2 py-1 text-white border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-secondary ${active(
                   '/my-products'
                 )}`}
               >
@@ -159,7 +161,7 @@ const Header: React.FC = () => {
           <div className='px-2 py-2'>
             <Link
               to='/contact'
-              className={`block px-2 py-1 text-primary border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-primary-dark ${active(
+              className={`block px-2 py-1 text-white border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-secondary ${active(
                 '/contact'
               )}`}
             >
@@ -168,22 +170,22 @@ const Header: React.FC = () => {
           </div>
         </nav>
         <div className='hidden sm:flex sm:items-center sm:w-auto'>
-          <div className='header-action-icon-2'>
+          <div className='text-secondary'>
             <Link to='/shop-wishlist' className='flex items-center'>
               <img
                 alt='Wishlist'
                 src='./assets/imgs/theme/icons/icon-heart.svg'
-                className='w-7 m-2 text-primary'
+                className='w-7 m-2 text-secondary'
               />
               <span className='pro-count white'>{/*totalWishlistItems*/}</span>
             </Link>
           </div>
-          <div className='header-action-icon-2'>
+          <div className='text-secondary'>
             <Link to='/shop-cart' className='flex items-center'>
               <img
                 alt='Orders'
                 src='./assets/imgs/theme/icons/icon-cart.svg'
-                className='w-7 m-2 text-primary'
+                className='w-7 m-2 text-secondary'
               />
               <span className='pro-count white'>{/*totalCartItems*/}</span>
             </Link>

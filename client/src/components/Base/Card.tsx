@@ -27,7 +27,7 @@ const Card: React.FC<CardProps> = ({ product, myProduct, onDeleteClick }) => {
   };
 
   return (
-    <div className='bg-white rounded-lg shadow-md overflow-hidden border border-narvik-400 relative group'>
+    <div className='bg-white rounded-lg shadow-md overflow-hidden border border-narvik-400 relative group -z-10'>
       <ModalContainer
         title='Delete Product'
         isOpen={isModalOpen}

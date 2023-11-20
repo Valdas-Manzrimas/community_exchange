@@ -19,7 +19,6 @@ interface CardContainerProps {
   onPageChange?: (newPage: number) => void;
   currentPage?: number;
   isListView?: boolean;
-  refreshKey: number;
 }
 
 const CardContainer: React.FC<CardContainerProps> = ({
@@ -29,7 +28,6 @@ const CardContainer: React.FC<CardContainerProps> = ({
   token,
   onPageChange,
   isListView = false,
-  refreshKey,
 }) => {
   const [products, setProducts] = useState<Product[]>([]);
   // const [loading, setLoading] = useState<boolean>(true);
@@ -68,10 +66,6 @@ const CardContainer: React.FC<CardContainerProps> = ({
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
-
-  useEffect(() => {
-    fetchProducts();
-  }, [refreshKey, fetchProducts]);
 
   const handlePageChange = (newPage: number) => {
     if (onPageChange) {
