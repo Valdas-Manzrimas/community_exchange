@@ -19,7 +19,7 @@ type FormState = {
   location: string;
   isAvailable: string;
   wantedProducts: never[];
-  images: string[];
+  images: File[];
 };
 
 interface CreateProductProps {
@@ -55,10 +55,8 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState('');
-
-  const [resetImages, setResetImages] = useState(false);
-
   const { toggleModal, setRefreshKey } = props;
+  const [resetImages, setResetImages] = useState(false);
 
   const { isAuthenticated, token } = useSelector(
     (state: RootState) => state.persisted.auth
@@ -77,7 +75,8 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
     setIsSubmitting(false);
   };
 
-  const handleImagesChange = (images: string[]) => {
+  const handleImagesChange = (images: File[]) => {
+    setResetImages(false);
     setForm((prevForm) => ({ ...prevForm, images }));
   };
 
@@ -89,8 +88,33 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
     try {
       await schema.validate(form);
 
+      const imageUploadPromises = form.images
+        .map((image) => {
+          if (image) {
+            const formData = new FormData();
+            formData.append('images', image);
+
+            return axios.post(
+              'http://localhost:8080/api/product/uploadImage',
+              formData,
+              {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+              }
+            );
+          }
+        })
+        .filter(Boolean);
+
+      const imageResponses = await Promise.all(imageUploadPromises);
+      const uploadedImageLinks = imageResponses.map((res) => res && res.data);
+      const productForm = { ...form, images: uploadedImageLinks };
+
+      setResetImages(true);
+
       axios
-        .post('http://localhost:8080/api/product/create', form, {
+        .post('http://localhost:8080/api/product/create', productForm, {
           headers: isAuthenticated && token ? { 'x-access-token': token } : {},
         })
         .then(() => {
@@ -108,7 +132,6 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
             ...prevForm,
             images: [],
           }));
-          setResetImages(true);
         })
         .catch((error: unknown) => {
           setIsLoading(false);
@@ -303,8 +326,8 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
             />
           </div>
         </div>
-        {error && <p className='text-error'>{error}</p>}
-        {formError && <div className='text-error'>{formError}</div>}
+        {formError ||
+          (error && <div className='text-error'>{formError || error}</div>)}
         <div className='flex items-center justify-center'>
           <button
             className='bg-blue-500 hover:bg-blue-700 text-narvik-600 border-narvik-600 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'

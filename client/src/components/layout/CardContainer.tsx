@@ -90,6 +90,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
 
   return (
     <div className='h-100 bg-narvik-50 mt-4 p-4'>
+      {/* list view */}
       {isListView ? (
         <div className='w-full border-solid'>
           <div className='w-full'>
@@ -130,6 +131,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
                 product={product}
                 key={product._id}
                 myProduct={product.isMine}
+                onDeleteClick={handleDelete}
               />
             ))}
           </div>

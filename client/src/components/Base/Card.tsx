@@ -1,16 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Product } from '../../types/ProductTypes';
 import { Link } from 'react-router-dom';
+import ModalContainer from '../layout/ModalContainer';
 
 interface CardProps {
   product: Product;
   key: string;
   myProduct: boolean;
+  onDeleteClick: (productId: string, token: string) => void;
 }
 
-const Card: React.FC<CardProps> = ({ product, myProduct }) => {
+const Card: React.FC<CardProps> = ({ product, myProduct, onDeleteClick }) => {
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleDeleteClick = () => {
+    setModalOpen(true);
+  };
+
+  const handleConfirm = () => {
+    onDeleteClick(product._id, 'token');
+    setModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setModalOpen(false);
+  };
+
   return (
     <div className='bg-white rounded-lg shadow-md overflow-hidden border border-narvik-400 relative group'>
+      <ModalContainer
+        title='Delete Product'
+        isOpen={isModalOpen}
+        toggleModal={() => setModalOpen(!isModalOpen)}
+        confirm
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      >
+        Are you sure you want to delete this product?
+      </ModalContainer>
       {/* Hover box */}
       <div className='absolute opacity-0 top-0 left-0 group-hover:opacity-60 bg-dark w-full h-full transition-opacity duration-500 shadow-inner'></div>{' '}
       <div className='w-full h-full flex items-center justify-center flex-col absolute opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-2xl shadow-narvik-800'>
@@ -35,7 +62,10 @@ const Card: React.FC<CardProps> = ({ product, myProduct }) => {
         )}
         {myProduct && (
           <>
-            <div className='w-12 h-12 rounded-full border flex items-center justify-center border-white mt-4 bg-narvik-300/75 hover:bg-narvik-300 hover:shadow-2 hover:shadow-white transition-all duration-200'>
+            <div
+              className='w-12 h-12 rounded-full border flex items-center justify-center border-white mt-4 bg-narvik-300/75 hover:bg-narvik-300 hover:shadow-2 hover:shadow-white transition-all duration-200'
+              onClick={handleDeleteClick}
+            >
               <img
                 src='/assets/imgs/theme/icons/trash.svg'
                 alt='View details'

@@ -46,6 +46,8 @@ exports.uploadImage = async (req, res, next) => {
   // Wait for all uploads to finish
   imageUrls = await Promise.all(uploadPromises);
 
+  req.files = [];
+
   res.status(200).json({ imageUrls });
 };
 
@@ -90,6 +92,8 @@ exports.createProduct = async (req, res) => {
     if (!currentUser) {
       return res.status(400).json({ message: 'Bad request. User not found.' });
     }
+
+    imageUrls = [];
 
     res.status(201).json(newProduct);
   } catch (err) {

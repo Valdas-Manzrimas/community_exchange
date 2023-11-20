@@ -3,6 +3,9 @@ interface ModalContainerProps {
   children: React.ReactNode;
   isOpen: boolean;
   toggleModal: () => void;
+  confirm?: boolean;
+  onConfirm?: () => void;
+  onCancel?: () => void;
 }
 
 const ModalContainer: React.FC<ModalContainerProps> = ({
@@ -10,6 +13,9 @@ const ModalContainer: React.FC<ModalContainerProps> = ({
   children,
   isOpen,
   toggleModal,
+  confirm,
+  onConfirm,
+  onCancel,
 }) => {
   const visibilityClass = isOpen ? 'flex' : 'hidden';
 
@@ -57,6 +63,28 @@ const ModalContainer: React.FC<ModalContainerProps> = ({
           </div>
           {/* Body */}
           <div className='p-4 md:p-5'>{children}</div>
+          {/* Footer */}
+
+          {confirm && (
+            <div className='p-4 md:p-5 text-center'>
+              <button
+                data-modal-hide='popup-modal'
+                type='button'
+                className='text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2'
+                onClick={onConfirm}
+              >
+                Yes, I'm sure
+              </button>
+              <button
+                data-modal-hide='popup-modal'
+                type='button'
+                className='text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 '
+                onClick={onCancel}
+              >
+                No, cancel
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
