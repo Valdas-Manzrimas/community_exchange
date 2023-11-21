@@ -25,6 +25,7 @@ const App: React.FC = () => {
       <Router basename={publicUrl}>
         <AuthCheck />
         {isMediumScreen ? <ResHeader /> : <Header />}
+        {isMediumScreen ? <div className='h-16' /> : ''}
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/login-register' element={<LoginRegister />} />
