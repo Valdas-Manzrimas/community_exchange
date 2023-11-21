@@ -5,7 +5,7 @@ const Landing = () => {
     <>
       <div className='relative -z-10 h-[42rem] opacity-100 flex justify-center'>
         <div className='fixed w-full h-full md:p-4 flex flex-col md:flex-row justify-between items-center z-60 bg-gradient-to-b from-primary to-secondary'>
-          <div className='absolute bottom-0 md:top:1/4 md:w-1/2 opacity-40 md:relative z-0'>
+          <div className='absolute bottom-20 md:top:1/4 md:w-1/2 opacity-40 md:relative z-0'>
             <img
               className='w-full h-auto object-cover object-center'
               src='/assets/imgs/background/tree.svg'

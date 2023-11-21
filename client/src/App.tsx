@@ -9,6 +9,7 @@ import Home from './components/pages/Home';
 import LoginRegister from './components/pages/Login_Register';
 import MyProducts from './components/pages/MyProducts';
 import AllProducts from './components/pages/AllProducts';
+import About from './components/pages/About';
 import AuthCheck from './components/Base/functions/authCheck';
 import SingleProduct from './components/pages/SingleProduct';
 import ResHeader from './components/layout/ResHeader';
@@ -32,9 +33,9 @@ const App: React.FC = () => {
           <Route path='/all-products' element={<AllProducts />} />
           <Route path='/my-products' element={<MyProducts />} />
           <Route path='/product/:productId' element={<SingleProduct />} />
+          <Route path='/about' element={<About />} />
 
-          {/* <Route path='/about' element={<About />} />
-          <Route path='/contact' element={<Contact />} /> */}
+          {/* <Route path='/contact' element={<Contact />} /> */}
         </Routes>
       </Router>
     </div>
