@@ -13,7 +13,7 @@ const Landing = () => {
             />
           </div>
         </div>
-        <div className=' p-4 mt-4 md:p-0md:w-1/2 md:mb-0 text-center h-full flex flex-col items-center z-10'>
+        <div className='p-4 mt-4 text-center h-full flex flex-col items-center z-10 md:p-0 md:w-full md:mb-0 md:mt-[3rem] md:ml-[20rem] md:h-3/4 lg:mt-[6rem] lg:ml-[30rem]'>
           <div className='relative h-1/3 flex flex-col pt-12'>
             <h1 className='mb-3 text-3xl font-bold text-gray-100'>
               Welcome to
