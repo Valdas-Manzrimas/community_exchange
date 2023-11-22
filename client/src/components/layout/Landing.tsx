@@ -13,12 +13,13 @@ const Landing = () => {
             />
           </div>
         </div>
-        <div className='p-4 mt-4 text-center h-full flex flex-col items-center z-10 md:p-0 md:w-full md:mb-0 md:mt-[3rem] md:ml-[20rem] md:h-3/4 lg:mt-[6rem] lg:ml-[30rem]'>
-          <div className='relative h-1/3 flex flex-col pt-12'>
+        <div className='p-4 mt-4 text-center h-full flex items-center z-10 md:p-0 md:w-full md:mb-0 md:mt-[3rem] md:ml-[20rem] md:h-3/4 lg:mt-[6rem] lg:ml-[30rem]'>
+          <div className='hidden lg:block relative lg:w-1/3 h-1/3 pt-12' />
+          <div className='relative lg:w-1/2 h-1/3 flex flex-col pt-12 lg:mr-16 '>
             <h1 className='mb-3 text-3xl font-bold text-gray-100'>
               Welcome to
             </h1>
-            <h1 className={`mb-8 text-4xl font-bold text-gray-100 md:mb-6`}>
+            <h1 className={`mb-8 text-7xl font-bold text-gray-100 md:mb-6`}>
               Harmony Exchange
             </h1>
 
