@@ -14,7 +14,7 @@ const Home = () => {
           alt='wave'
           className='bottom w-full object-fill'
         />
-        <div className=' w-full h-auto flex flex-col lg:flex-row bg-white justify-center items-center pb-8 lg:pb-16'>
+        <div className=' w-full h-auto flex flex-col lg:flex-row bg-white justify-around items-center pb-8 lg:pb-16'>
           <div className='bg-white flex flex-col lg:flex-row w-full lg:w-1/2 h-full pb-8 md:pt-10 md:mx-10  max-w-xl'>
             <div className='w-full p-8 md:p-20 pt-16 md:pt-0  text-center'>
               <h1 className='mb-10 text-2xl text-secondary font-bold'>
