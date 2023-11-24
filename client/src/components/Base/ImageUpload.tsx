@@ -1,85 +1,46 @@
-import axios from 'axios';
-import { useState } from 'react';
-import LoadingSpinner from './LoadingSpinner';
-import { useDispatch } from 'react-redux';
-import { setAlert } from '../../store/slices/alertSlice';
+import { useState, useEffect } from 'react';
+import { useRef } from 'react';
 
 interface ImageUploadProps {
-  setPropImages: React.Dispatch<React.SetStateAction<string[]>>;
+  setPropImages: (images: File[]) => void;
+  reset: boolean;
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({ setPropImages }) => {
-  const [isUploading, setIsUploading] = useState(false);
-  const [images, setImages] = useState<string[]>([]);
+const ImageUpload: React.FC<ImageUploadProps> = ({ setPropImages, reset }) => {
+  const [images, setImages] = useState<File[]>([]);
 
-  const handleImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setIsUploading(true);
-    const formData = new FormData();
-    if (event.target.files) {
-      const files = event.target.files;
-      for (let i = 0; i < files.length; i++) {
-        formData.append('images', files[i]);
+  useEffect(() => {
+    if (reset) {
+      setImages([]);
+      if (inputRef.current) {
+        inputRef.current.value = '';
       }
+    }
+  }, [reset]);
 
-      try {
-        const response = await axios.post(
-          'http://localhost:8080/api/product/uploadImage',
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          }
-        );
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const files = Array.from(event.target.files);
 
-        // Assuming response.data is an array of image URLs
-        setImages((prevImages) => [...prevImages, ...response.data.imageUrls]);
-        setPropImages((prevImages) => [
-          ...prevImages,
-          ...response.data.imageUrls,
-        ]);
-      } catch (error) {
-        console.error('Error:', error);
-      } finally {
-        setIsUploading(false);
-      }
+      setImages(files);
+      setPropImages(files);
     } else {
-      setIsUploading(false);
+      setImages([]);
+      setPropImages([]);
+
       console.log('No files were selected');
     }
   };
 
-  const removeUploadedImage = async (imageName: string) => {
-    try {
-      const response = await fetch(
-        `http://localhost:8080/api/product/deleteImage/${imageName}`,
-        {
-          method: 'DELETE',
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Response is not OK');
-      }
-
-      const data = await response.json();
-      dispatch(setAlert({ status: 'success', message: data.message }));
-      // Remove the image from the images array
-      setImages((images) =>
-        images.filter((image) => {
-          const url = new URL(image);
-          const currentImageName = url.pathname.split('/').pop();
-          return currentImageName !== imageName;
-        })
-      );
-    } catch (error) {
-      console.error('Error:', error);
-    }
+  const removeUploadedImage = (index: number) => {
+    setImages((prevImages: File[]) => {
+      const newImages = prevImages.filter((_, i) => i !== index);
+      setPropImages(newImages);
+      return newImages;
+    });
   };
 
-  const dispatch = useDispatch();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   return (
     <>
@@ -88,70 +49,52 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ setPropImages }) => {
           className='w-full flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-narvik-600'
           htmlFor='file-upload'
         >
-          {isUploading ? (
-            <LoadingSpinner />
-          ) : (
-            <>
-              <svg
-                className='w-8 h-8'
-                fill='currentColor'
-                xmlns='http://www.w3.org/2000/svg'
-                viewBox='0 0 20 20'
-              >
-                <path
-                  fillRule='evenodd'
-                  d='M15 4h-3.586c-.32 0-.633.122-.866.342l-1.292 1.292c-.39.39-1.024.39-1.414 0L5.452 4.342A1.21 1.21 0 005.086 4H3c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1zm-1 10H6c-.55 0-1-.45-1-1V8h10v5c0 .55-.45 1-1 1zm-5-3a2 2 0 100-4 2 2 0 000 4z'
-                  clipRule='evenodd'
-                />
-              </svg>
-              <span className='mt-2 text-base leading-normal'>
-                Select Images
-              </span>
-              <input
-                id='file-upload'
-                type='file'
-                name='images'
-                className='hidden'
-                multiple
-                onChange={handleImageUpload}
+          <>
+            <svg
+              className='w-8 h-8'
+              fill='currentColor'
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 20 20'
+            >
+              <path
+                fillRule='evenodd'
+                d='M15 4h-3.586c-.32 0-.633.122-.866.342l-1.292 1.292c-.39.39-1.024.39-1.414 0L5.452 4.342A1.21 1.21 0 005.086 4H3c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1zm-1 10H6c-.55 0-1-.45-1-1V8h10v5c0 .55-.45 1-1 1zm-5-3a2 2 0 100-4 2 2 0 000 4z'
+                clipRule='evenodd'
               />
-            </>
-          )}
+            </svg>
+            <span className='mt-2 text-base leading-normal'>Select Images</span>
+            <input
+              ref={inputRef}
+              id='file-upload'
+              type='file'
+              name='images'
+              className='hidden'
+              multiple
+              onChange={handleImageUpload}
+            />
+          </>
         </label>
       </div>
       <div className='flex flex-wrap mt-4'>
-        {images.map((image, index) => {
-          let url;
-          let imageName: string | undefined;
-
-          try {
-            url = new URL(image);
-            imageName = url.pathname.split('/').pop();
-          } catch (_) {
-            // Handle the error here. For example, you might want to set `imageName` to a default value.
-            imageName = 'default';
-          }
-
-          return (
-            <div
-              key={index}
-              className='w-full p-2 flex items-center justify-between'
+        {images.map((image, index) => (
+          <div
+            key={index}
+            className='w-full p-2 flex items-center justify-between'
+          >
+            <img
+              src={URL.createObjectURL(image)}
+              alt={`Product Image ${index}`}
+              className='w-20 h-auto'
+            />
+            <p className='font-2'>{image.name}</p>
+            <span
+              onClick={() => removeUploadedImage(index)}
+              className='ml-2 cursor-pointer font-bold text-red-600'
             >
-              <img
-                src={image}
-                alt={`Product Image ${index}`}
-                className='w-20 h-auto'
-              />
-              <p className='font-2'>{imageName}</p>
-              <span
-                onClick={() => imageName && removeUploadedImage(imageName)}
-                className='ml-2 cursor-pointer font-bold text-red-600'
-              >
-                X
-              </span>
-            </div>
-          );
-        })}
+              X
+            </span>
+          </div>
+        ))}
       </div>
     </>
   );

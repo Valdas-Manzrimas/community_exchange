@@ -1,69 +1,162 @@
 import { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import axios, { AxiosError } from 'axios';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { handleErrors } from '../Base/functions/handleErrors';
 import { setAlert } from '../../store/slices/alertSlice';
 import ImageUpload from '../Base/ImageUpload';
+import LoadingSpinner from '../Base/LoadingSpinner';
+import * as yup from 'yup';
 
-const CreateProduct = () => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
-  const [tags, setTags] = useState<string[]>([]);
-  const [condition, setCondition] = useState('');
-  const [location, setLocation] = useState('');
-  const [isAvailable, setIsAvailable] = useState<string>('true');
-  const [wantedProducts, setWantedProducts] = useState<string[]>([]);
-  const [images, setImages] = useState<string[]>([]);
+type FormState = {
+  name: string;
+  description: string;
+  category: string;
+  tags: never[];
+  owner: string;
+  condition: string;
+  location: string;
+  isAvailable: string;
+  wantedProducts: never[];
+  images: File[];
+};
+
+interface CreateProductProps {
+  toggleModal: () => void;
+  setRefreshKey: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const schema = yup.object().shape({
+  name: yup.string().required('Name is required'),
+  description: yup.string().required('Description is required'),
+  category: yup.string().required('Category is required'),
+  condition: yup.string().required('Condition is required'),
+  location: yup.string().required('Location is required'),
+});
+
+const CreateProduct: React.FC<CreateProductProps> = (props) => {
+  const userId = useSelector((state: RootState) => state.persisted.user.id);
+
+  const [form, setForm] = useState<FormState>({
+    name: '',
+    description: '',
+    category: '',
+    tags: [],
+    condition: '',
+    owner: userId,
+    location: '',
+    isAvailable: 'true',
+    wantedProducts: [],
+    images: [],
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState('');
+  const { toggleModal, setRefreshKey } = props;
+  const [resetImages, setResetImages] = useState(false);
 
   const { isAuthenticated, token } = useSelector(
     (state: RootState) => state.persisted.auth
   );
 
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const userId = useSelector((state: RootState) => state.persisted.user.id);
+  const handleChange = (
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { id, value } = event.target;
+    setForm((prevForm) => ({ ...prevForm, [id]: value }));
+    setFormError('');
+    setIsSubmitting(false);
+  };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleImagesChange = (images: File[]) => {
+    setResetImages(false);
+    setForm((prevForm) => ({ ...prevForm, images }));
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const product = {
-      name,
-      description,
-      category,
-      owner: userId,
-      images: images,
-      tags,
-      condition,
-      location,
-      isAvailable,
-      wantedProducts: wantedProducts,
-    };
+    setIsLoading(true);
+    setIsSubmitting(true);
+
     try {
+      await schema.validate(form);
+
+      const imageUploadPromises = form.images
+        .map((image) => {
+          if (image) {
+            const formData = new FormData();
+            formData.append('images', image);
+
+            return axios.post(
+              'http://localhost:8080/api/product/uploadImage',
+              formData,
+              {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+              }
+            );
+          }
+        })
+        .filter(Boolean);
+
+      const imageResponses = await Promise.all(imageUploadPromises);
+      const uploadedImageLinks = imageResponses.map((res) => res && res.data);
+      const productForm = { ...form, images: uploadedImageLinks };
+
+      setResetImages(true);
+
       axios
-        .post('http://localhost:8080/api/product/create', product, {
+        .post('http://localhost:8080/api/product/create', productForm, {
           headers: isAuthenticated && token ? { 'x-access-token': token } : {},
         })
         .then(() => {
-          navigate('/my-products');
           dispatch(
             setAlert({
               status: 'success',
               message: 'Product created successfully',
             })
           );
+          setIsLoading(false);
+          setError(null);
+          setRefreshKey((prevKey) => prevKey + 1);
+          toggleModal();
+          setForm((prevForm) => ({
+            ...prevForm,
+            images: [],
+          }));
+        })
+        .catch((error: unknown) => {
+          setIsLoading(false);
+          if (error instanceof Error) {
+            setFormError(error.message);
+          }
+          if (axios.isAxiosError(error)) {
+            setError((error as AxiosError).message);
+            handleErrors(error as AxiosError, dispatch);
+          }
+        })
+        .finally(() => {
+          setIsSubmitting(false);
         });
-    } catch (error) {
-      handleErrors(error, dispatch);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setFormError(error.message);
+        setIsLoading(false);
+      }
     }
   };
 
   return (
-    <div className='flex flex-col items-center justify-center h-screen'>
-      <h1 className='text-3xl font-bold mb-4'>Create Product</h1>
+    <div className='flex flex-col items-center justify-center'>
+      {isLoading && <LoadingSpinner />}
       <form onSubmit={handleSubmit} className='w-full max-w-lg'>
         <div className='flex flex-wrap -mx-3 mb-6'>
           <div className='w-full px-3 mb-6 md:mb-0'>
@@ -78,8 +171,8 @@ const CreateProduct = () => {
               id='name'
               type='text'
               placeholder='Product Name'
-              value={name}
-              onChange={(event) => setName(event.target.value)}
+              value={form.name}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -95,8 +188,8 @@ const CreateProduct = () => {
               className='appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
               id='description'
               placeholder='Product Description'
-              value={description}
-              onChange={(event) => setDescription(event.target.value)}
+              value={form.description}
+              onChange={handleChange}
             ></textarea>
           </div>
         </div>
@@ -113,8 +206,8 @@ const CreateProduct = () => {
               id='category'
               type='text'
               placeholder='Product Category'
-              value={category}
-              onChange={(event) => setCategory(event.target.value)}
+              value={form.category}
+              onChange={handleChange}
             />
           </div>
           <div className='w-full md:w-1/2 px-3'>
@@ -129,8 +222,8 @@ const CreateProduct = () => {
               id='tags'
               type='text'
               placeholder='Product Tags'
-              value={tags}
-              onChange={(event) => setTags(event.target.value.split(','))}
+              value={form.tags}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -147,8 +240,8 @@ const CreateProduct = () => {
               id='condition'
               type='text'
               placeholder='Product Condition'
-              value={condition}
-              onChange={(event) => setCondition(event.target.value)}
+              value={form.condition}
+              onChange={handleChange}
             />
           </div>
           <div className='w-full md:w-1/2 px-3'>
@@ -163,8 +256,8 @@ const CreateProduct = () => {
               id='location'
               type='text'
               placeholder='Product Location'
-              value={location}
-              onChange={(event) => setLocation(event.target.value)}
+              value={form.location}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -180,8 +273,8 @@ const CreateProduct = () => {
               <select
                 className='block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
                 id='isAvailable'
-                value={isAvailable}
-                onChange={(event) => setIsAvailable(event.target.value)}
+                value={form.isAvailable}
+                onChange={handleChange}
               >
                 <option value='true'>Available</option>
                 <option value='false'>Not Available</option>
@@ -214,10 +307,8 @@ const CreateProduct = () => {
               id='wantedProducts'
               type='text'
               placeholder='Wanted Products'
-              value={wantedProducts}
-              onChange={(event) =>
-                setWantedProducts(event.target.value.split(','))
-              }
+              value={form.wantedProducts}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -229,13 +320,19 @@ const CreateProduct = () => {
             >
               Images
             </label>
-            <ImageUpload setPropImages={setImages} />
+            <ImageUpload
+              setPropImages={handleImagesChange}
+              reset={resetImages}
+            />
           </div>
         </div>
+        {formError ||
+          (error && <div className='text-error'>{formError || error}</div>)}
         <div className='flex items-center justify-center'>
           <button
             className='bg-blue-500 hover:bg-blue-700 text-narvik-600 border-narvik-600 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
             type='submit'
+            disabled={isSubmitting}
           >
             Create Product
           </button>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import Card from '../Base/Card';
 import { useNavigate } from 'react-router-dom';
@@ -38,7 +38,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       const response = await axios.get(fetchUrl, {
         headers: token ? { 'x-access-token': token } : {},
@@ -61,11 +61,11 @@ const CardContainer: React.FC<CardContainerProps> = ({
         navigate('/');
       }
     }
-  };
+  }, [fetchUrl, token, dispatch, userId]);
 
   useEffect(() => {
     fetchProducts();
-  }, [fetchUrl, token, dispatch, userId]);
+  }, [fetchProducts]);
 
   const handlePageChange = (newPage: number) => {
     if (onPageChange) {
@@ -84,6 +84,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
 
   return (
     <div className='h-100 bg-narvik-50 mt-4 p-4'>
+      {/* list view */}
       {isListView ? (
         <div className='w-full border-solid'>
           <div className='w-full'>
@@ -124,6 +125,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
                 product={product}
                 key={product._id}
                 myProduct={product.isMine}
+                onDeleteClick={handleDelete}
               />
             ))}
           </div>

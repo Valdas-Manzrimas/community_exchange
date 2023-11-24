@@ -10,7 +10,7 @@ type DropdownProps = {
 
 const Dropdown = ({
   buttonText,
-  buttonStyles = 'text-narvik-800 inline-flex w-full justify-center gap-x-0.5 pl-1 pr-3 text-sm font-semibold hover:bg-gray-50',
+  buttonStyles = 'text-white inline-flex w-full justify-center gap-x-0.5 pl-1 pr-3 text-sm font-semibold hover:bg-primary',
   options,
   replaceButtonText = true,
   onOptionClick,
@@ -44,7 +44,7 @@ const Dropdown = ({
   }, []);
 
   return (
-    <div className='relative text-left' ref={dropdownRef}>
+    <div className='relative text-left z-10' ref={dropdownRef}>
       <div>
         <button
           type='button'
@@ -83,7 +83,7 @@ const Dropdown = ({
             {options.map((option) => (
               <button
                 key={option}
-                className='block px-4 py-2 text-sm text-narvik-800 hover:bg-gray-100 hover:text-gray-900 w-full text-left'
+                className='block px-4 py-2 text-sm text-primary hover:bg-gray-200 w-full text-left'
                 role='menuitem'
                 onClick={() => handleOptionClick(option)}
               >

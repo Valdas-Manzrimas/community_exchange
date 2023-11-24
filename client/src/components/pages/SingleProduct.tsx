@@ -30,16 +30,14 @@ const SingleProduct = () => {
 
   return (
     <div className='w-full flex flex-col justify-center max-w-screen-2xl mx-auto py-6 px-4 sm:px-6 lg:px-8'>
-      <h1 className='text-2xl font-bold my-8 text-center'>{product.name}</h1>
-
       <div className='flex flex-col md:flex-row ml-4 mr-16'>
         <div className='w-1/2 flex flex-col items-center justify-center'>
-          <div className='w-3/4 h-[460px] rounded-lg flex flex-col items-center justify-center'>
+          <div className='w-3/4 h-[660px] mt-8 rounded-lg flex flex-col items-center justify-center'>
             {mainImage ? (
               <img
                 src={mainImage}
                 alt={product.name}
-                className=' h-full object-cover'
+                className=' h-4/6 object-cover mt-8'
               />
             ) : (
               <img
@@ -62,6 +60,9 @@ const SingleProduct = () => {
           </div>
         </div>
         <div className='w-1/2 pl-4'>
+          <h1 className='text-2xl font-bold my-8 text-center'>
+            {product.name}
+          </h1>
           <div className='mb-6'>
             <span className='font-bold text-gray-700'>
               Product Description:
