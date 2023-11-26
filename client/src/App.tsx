@@ -1,5 +1,4 @@
 // App.tsx
-import React, { useEffect, useState } from 'react';
 import { useMediaQuery } from '@react-hook/media-query';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/layout/Header';
@@ -38,23 +37,20 @@ const App: React.FC = () => {
   return (
     <div className='relative'>
       {/* App background */}
-      <div className='-z-10 fixed w-full h-full md:p-4 flex flex-col md:flex-row justify-between items-center z-60 bg-gradient-to-b from-primary to-secondary'>
-        <div className=' w-full h-full flex flex-col md:flex-row justify-end md:justify-normal'>
-          <div
-            className={`absolute md:top-32  w-full flex justify-center md:justify-normal opacity-40`}
-          >
-            <img
-              className='w-full h-auto object-cover object-center max-w-md md:max-w-lg lg:max-w-2xl'
-              src='/assets/imgs/background/tree.svg'
-              alt='Community Exchange'
-            />
-          </div>
+      <div className='-z-10 fixed w-full h-full md:p-4 flex flex-col md:flex-row justify-between items-center z-60 bg-gradient-to-b from-primary from-15% to-secondary'>
+        <div
+          className={`relative md:top-32 w-full h-full flex flex-col md:flex-row justify-end items-center md:justify-normal opacity-40`}
+        >
+          <img
+            className='w-full h-auto object-cover object-center max-w-md md:max-w-lg lg:max-w-2xl'
+            src='/assets/imgs/background/tree.svg'
+            alt='Community Exchange'
+          />
         </div>
       </div>
       <Router basename={publicUrl}>
         <AuthCheck />
         {isMediumScreen ? <ResHeader /> : <Header />}
-        {isMediumScreen ? <div className='h-16' /> : ''}
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/login-register' element={<LoginRegister />} />
