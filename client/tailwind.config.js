@@ -7,7 +7,7 @@ export default {
       xsm: '300px',
       // => @media (min-width: 300px) { ... }
 
-      sm: '640px',
+      sm: '370px',
       // => @media (min-width: 640px) { ... }
 
       md: '768px',

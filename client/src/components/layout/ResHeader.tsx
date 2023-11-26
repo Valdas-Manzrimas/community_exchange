@@ -16,6 +16,7 @@ interface RootState {
 
 const ResHeader: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
+
   const location = useLocation();
   const navRef = useRef<HTMLDivElement>(null);
 
@@ -33,7 +34,6 @@ const ResHeader: React.FC = () => {
   const handleOptionClick = () => {
     dispatch(logout());
     dispatch(clearUser());
-    console.log('logout');
     setShowMenu(false);
   };
 
@@ -60,7 +60,7 @@ const ResHeader: React.FC = () => {
 
   return (
     <>
-      <nav className='fixed top-0 z-60 w-full bg-primary'>
+      <nav className='fixed top-0 z-[1000] w-full bg-primary'>
         <div className='px-3 py-3 lg:px-5 lg:pl-3'>
           <div className='flex items-center justify-between'>
             {/* Logo box */}
