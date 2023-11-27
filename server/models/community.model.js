@@ -55,14 +55,6 @@ const communitySchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
-    createDate: {
-      type: Date,
-      default: Date.now,
-    },
-    updateDate: {
-      type: Date,
-      default: Date.now,
-    },
   },
   { timestamps: true }
 );

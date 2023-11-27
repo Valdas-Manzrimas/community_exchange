@@ -20,14 +20,16 @@ exports.getBucketFolderName = (communityName) => {
 };
 
 const createCommunityAndUser = async (req, res) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
   try {
     // Check if user already exists
     const existingUser = await User.findOne({ email: req.body.email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     // Create new user
     const user = new User({
       firstName: req.body.firstName,
@@ -36,19 +38,16 @@ const createCommunityAndUser = async (req, res) => {
       password: bcrypt.hashSync(req.body.password, 8),
     });
 
-    if (req.body.roles) {
-      const roles = await Role.find({ name: { $in: req.body.roles } });
-      user.roles = roles.map((role) => role._id);
-    } else {
-      const role = await Role.findOne({ name: 'user' });
-      user.roles = [role._id];
-    }
+    // Get roles
+    const rolesPromise = req.body.roles
+      ? Role.find({ name: { $in: req.body.roles } })
+      : Role.findOne({ name: 'user' });
 
-    await user.populate('roles');
+    const [roles] = await Promise.all([rolesPromise]);
 
-    const authorities = user.roles.map(
-      (role) => 'ROLE_' + role.name.toUpperCase()
-    );
+    user.roles = Array.isArray(roles)
+      ? roles.map((role) => role._id)
+      : [roles._id];
 
     await user.save({ session });
 
@@ -86,7 +85,6 @@ const createCommunityAndUser = async (req, res) => {
     res.status(201).json({
       message: 'User and community were registered successfully!',
       token: token,
-      roles: authorities,
     });
   } catch (error) {
     console.error('Error during user and community registration:', error);
