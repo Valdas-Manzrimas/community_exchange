@@ -35,9 +35,10 @@ db.mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => {
+  .then((mongooseInstance) => {
     console.log('Successfully connect to MongoDB.');
     initial();
+    return mongooseInstance.connection;
   })
   .catch((err) => {
     console.error('Connection error', err);
@@ -73,6 +74,7 @@ require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);
 require('./routes/product.routes')(app);
 require('./routes/order.routes')(app);
+require('./routes/community.routes')(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

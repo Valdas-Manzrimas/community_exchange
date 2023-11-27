@@ -1,55 +1,75 @@
 const mongoose = require('mongoose');
 
-const communitySchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  description: {
-    type: Text,
-  },
-  pictures: [
-    {
+const generateId = () => {
+  const numbers = [...Array(10)]
+    .map(() => Math.floor(Math.random() * 10))
+    .join('');
+  return numbers;
+};
+
+const communitySchema = new mongoose.Schema(
+  {
+    id: {
+      type: String,
+      default: generateId,
+      unique: true,
+    },
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    description: {
       type: String,
     },
-  ],
-  country: {
-    type: String,
-  },
-  city: {
-    type: String,
-  },
-  users: [
-    {
-      user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        role: {
-          type: String,
-          enum: ['moderator', 'member'],
-          default: 'member',
+    pictures: [
+      {
+        type: String,
+      },
+    ],
+    country: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    users: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+          role: {
+            type: String,
+            enum: ['moderator', 'member'],
+            default: 'member',
+          },
         },
       },
+    ],
+    plan: {
+      type: String,
+      required: true,
     },
-  ],
-  plan: {
-    type: String,
-    required: true,
+    moderator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    createDate: {
+      type: Date,
+      default: Date.now,
+    },
+    updateDate: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  moderator: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  createDate: {
-    type: Date,
-    default: Date.now,
-  },
-  updateDate: {
-    type: Date,
-    default: Date.now,
-  },
+  { timestamps: true }
+);
+
+communitySchema.pre('save', function (next) {
+  this.increment();
+  next();
 });
 
 const Community = mongoose.model('Community', communitySchema);

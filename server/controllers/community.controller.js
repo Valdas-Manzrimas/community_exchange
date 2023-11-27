@@ -1,13 +1,33 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const config = require('../config/auth.config');
 const User = require('../models/user.model');
 const Role = require('../models/role.model');
+const { Storage } = require('@google-cloud/storage');
 
 const Community = require('../models/community.model');
 
-exports.createCommunityAndUser = async (req, res) => {
+const storage = new Storage({
+  projectId: 'norse-bond-299713',
+  keyFilename: './norse-bond-299713-7470e7a36420.json',
+});
+
+const bucketName = 'community_exchange';
+
+exports.getBucketFolderName = (communityName) => {
+  return `${communityName.replace(/ /g, '-')}`;
+};
+
+const createCommunityAndUser = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
   try {
+    // Check if user already exists
+    const existingUser = await User.findOne({ email: req.body.email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
     // Create new user
     const user = new User({
       firstName: req.body.firstName,
@@ -30,11 +50,11 @@ exports.createCommunityAndUser = async (req, res) => {
       (role) => 'ROLE_' + role.name.toUpperCase()
     );
 
-    await user.save();
+    await user.save({ session });
 
     // Create new community
     const community = new Community({
-      name: req.body.communityName,
+      name: req.body.name,
       plan: req.body.plan,
       moderator: user._id,
       users: [
@@ -45,9 +65,20 @@ exports.createCommunityAndUser = async (req, res) => {
       ],
     });
 
-    await community.save();
+    const folderName = exports.getBucketFolderName(req.body.name);
+    const file = storage.bucket(bucketName).file(`${folderName}/`);
+    await file.save(''); // Create folder
 
-    const token = jwt.sign({ id: user.id }, config.secret, {
+    await community.save({ session });
+
+    // Add community._id to the communityRef for the moderator role
+    const moderatorRole = await Role.findOne({ name: 'moderator' });
+    user.roles.push({ _id: moderatorRole._id, communityRef: community._id });
+    await user.save({ session });
+
+    await session.commitTransaction();
+
+    const token = jwt.sign({ id: user._id }, config.secret, {
       algorithm: 'HS256',
       expiresIn: 86400, //24h
     });
@@ -136,7 +167,7 @@ const deleteCommunity = (req, res) => {
 };
 
 module.exports = {
-  createCommunity,
+  createCommunityAndUser,
   updateCommunity,
   deleteCommunity,
 };
