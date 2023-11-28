@@ -9,7 +9,7 @@ const generateId = () => {
 
 const communitySchema = new mongoose.Schema(
   {
-    id: {
+    harmonyId: {
       type: String,
       default: generateId,
       unique: true,
@@ -35,14 +35,12 @@ const communitySchema = new mongoose.Schema(
     },
     users: [
       {
-        user: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'User',
-          role: {
-            type: String,
-            enum: ['moderator', 'member'],
-            default: 'member',
-          },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        role: {
+          type: String,
+          enum: ['moderator', 'member'],
+          default: 'member',
         },
       },
     ],

@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const config = require('../config/auth.config');
 const User = require('../models/user.model');
 const Role = require('../models/role.model');
+const { signup } = require('./auth.controller.js');
+
 const { Storage } = require('@google-cloud/storage');
 
 const Community = require('../models/community.model');
@@ -21,66 +23,31 @@ exports.getBucketFolderName = (communityName) => {
 
 const createCommunityAndUser = async (req, res) => {
   try {
-    // Check if user already exists
     const existingUser = await User.findOne({ email: req.body.email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
+    const existingCommunity = await Community.findOne({ name: req.body.name });
+    if (existingCommunity) {
+      return res
+        .status(400)
+        .json({ message: 'Community with provided name already exists' });
+    }
+
     const session = await mongoose.startSession();
     session.startTransaction();
 
-    // Create new user
-    const user = new User({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: bcrypt.hashSync(req.body.password, 8),
-    });
+    const { user, token } = await signup(req, session);
 
-    // Get roles
-    const rolesPromise = req.body.roles
-      ? Role.find({ name: { $in: req.body.roles } })
-      : Role.findOne({ name: 'user' });
+    req.body.owner = user._id;
+    const community = await createCommunity(req, session);
 
-    const [roles] = await Promise.all([rolesPromise]);
-
-    user.roles = Array.isArray(roles)
-      ? roles.map((role) => role._id)
-      : [roles._id];
-
-    await user.save({ session });
-
-    // Create new community
-    const community = new Community({
-      name: req.body.name,
-      plan: req.body.plan,
-      moderator: user._id,
-      users: [
-        {
-          user: user._id,
-          role: 'moderator',
-        },
-      ],
-    });
-
-    const folderName = exports.getBucketFolderName(req.body.name);
-    const file = storage.bucket(bucketName).file(`${folderName}/`);
-    await file.save(''); // Create folder
-
-    await community.save({ session });
-
-    // Add community._id to the communityRef for the moderator role
     const moderatorRole = await Role.findOne({ name: 'moderator' });
     user.roles.push({ _id: moderatorRole._id, communityRef: community._id });
     await user.save({ session });
 
     await session.commitTransaction();
-
-    const token = jwt.sign({ id: user._id }, config.secret, {
-      algorithm: 'HS256',
-      expiresIn: 86400, //24h
-    });
 
     res.status(201).json({
       message: 'User and community were registered successfully!',
@@ -95,7 +62,7 @@ const createCommunityAndUser = async (req, res) => {
 };
 
 // Create a new community
-const createCommunity = (req, res) => {
+const createCommunity = async (req, session) => {
   const { name, description, pictures, country, city, plan, owner } = req.body;
 
   const newCommunity = new Community({
@@ -103,19 +70,19 @@ const createCommunity = (req, res) => {
     description,
     pictures,
     country,
+    users: [owner],
     city,
     plan,
-    owner,
+    moderator: owner,
   });
 
-  newCommunity
-    .save()
-    .then((community) => {
-      res.status(201).json(community);
-    })
-    .catch((error) => {
-      res.status(500).json({ error: 'Failed to create community' });
-    });
+  const folderName = exports.getBucketFolderName(name);
+  const file = storage.bucket(bucketName).file(`${folderName}/`);
+  await file.save('');
+
+  await newCommunity.save({ session });
+
+  return newCommunity;
 };
 
 // Update an existing community

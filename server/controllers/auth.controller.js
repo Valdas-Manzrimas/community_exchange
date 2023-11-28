@@ -7,40 +7,41 @@ const Role = db.role;
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 
-exports.signup = async (req, res) => {
+exports.signup = async (req, session) => {
+  const user = new User({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    password: bcrypt.hashSync(req.body.password, 8),
+  });
+
+  const rolesPromise = req.body.roles
+    ? Role.find({ name: { $in: req.body.roles } })
+    : Role.findOne({ name: 'user' });
+
+  const [roles] = await Promise.all([rolesPromise]);
+
+  user.roles = Array.isArray(roles)
+    ? roles.map((role) => role._id)
+    : [roles._id];
+
+  await user.save({ session });
+
+  const token = jwt.sign({ id: user.id }, config.secret, {
+    algorithm: 'HS256',
+    expiresIn: 86400, //24h
+  });
+
+  return { user, token };
+};
+
+exports.signupAndRespond = async (req, res) => {
   try {
-    const user = new User({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: bcrypt.hashSync(req.body.password, 8),
-    });
-
-    if (req.body.roles) {
-      const roles = await Role.find({ name: { $in: req.body.roles } });
-      user.roles = roles.map((role) => role._id);
-    } else {
-      const role = await Role.findOne({ name: 'user' });
-      user.roles = [role._id];
-    }
-
-    await user.populate('roles');
-
-    const authorities = user.roles.map(
-      (role) => 'ROLE_' + role.name.toUpperCase()
-    );
-
-    await user.save();
-
-    const token = jwt.sign({ id: user.id }, config.secret, {
-      algorithm: 'HS256',
-      expiresIn: 86400, //24h
-    });
+    const { user, token } = await exports.signup(req);
 
     res.status(201).json({
       message: 'User was registered successfully!',
       token: token,
-      roles: authorities,
     });
   } catch (error) {
     console.error('Error during user registration:', error);
