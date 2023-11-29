@@ -1,9 +1,11 @@
 // auth.controller.js
 const config = require('../config/auth.config');
 const db = require('../models');
+
 const User = db.user;
 const Role = db.role;
 const Community = db.community;
+const Invitation = db.invitation;
 
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
@@ -78,7 +80,7 @@ exports.signin = async (req, res) => {
       return res.status(401).send({ message: 'Invalid Password!' });
     }
 
-    const token = jwt.sign({ id: user.id }, config.secret, {
+    const token = jwt.sign({ _id: user._id }, config.secret, {
       algorithm: 'HS256',
       expiresIn: 86400,
     });
@@ -108,5 +110,63 @@ exports.signout = async (req, res) => {
   } catch (err) {
     console.error('Error during signout:', err);
     res.status(500).json({ message: 'An error occurred during signout.' });
+  }
+};
+
+exports.sendInvitation = async (req, res) => {
+  try {
+    // Check if the user is a moderator of the community
+    const community = await Community.findById(req.body.communityId);
+    if (!community.moderator.equals(req.user._id)) {
+      return res
+        .status(403)
+        .send({ message: 'User is not a moderator of this community.' });
+    }
+
+    // Create a new invitation
+    const invitation = new Invitation({
+      email: req.body.email,
+      communityId: req.body.communityId,
+    });
+
+    // Save the invitation to the database
+    const savedInvitation = await invitation.save();
+
+    const token = jwt.sign({ _id: savedInvitation._id }, config.secret, {
+      expiresIn: 86400, // 24 hours
+    });
+
+    savedInvitation.token = token;
+    await savedInvitation.save();
+
+    const url = `${req.protocol}://${req.get('host')}/join?token=${token}`;
+
+    console.log(url);
+
+    // Send the URL to the user's email address
+    // You can use a package like nodemailer to send the email
+    // await sendEmail(invitation.email, 'Join our community', `Click on this link to join our community: ${url}`);
+
+    res.status(200).send({ message: 'Invitation sent successfully.' });
+  } catch (error) {
+    console.error('Error sending invitation:', error);
+    res.status(500).send({ message: 'Error sending invitation.' });
+  }
+};
+
+exports.getInvitation = async (req, res) => {
+  const token = req.query.token;
+
+  try {
+    const decoded = jwt.verify(token, config.secret);
+    const invitation = await Invitation.findById(decoded._id);
+    const community = await Community.findById(invitation.communityId);
+
+    res.redirect(
+      res.redirect(`http://127.0.0.1:5173/invitation?id=${invitation._id}`)
+    );
+  } catch (error) {
+    console.error(error); // log the error
+    res.status(500).send({ message: 'Error processing invitation.' });
   }
 };
