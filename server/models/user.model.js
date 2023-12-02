@@ -34,6 +34,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    communities: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Community',
+      },
+    ],
     roles: [
       {
         type: mongoose.Schema.Types.ObjectId,

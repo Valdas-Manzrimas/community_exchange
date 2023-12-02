@@ -12,41 +12,44 @@ const Invitation = db.invitation;
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 
-exports.signup = async (req, res, session = null) => {
-  try {
-    const user = new User({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: bcrypt.hashSync(req.body.password, 8),
-    });
+exports.signup = async (req, session = null) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const user = new User({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        password: bcrypt.hashSync(req.body.password, 8),
+        communities: [req.body.communityId],
+      });
 
-    const rolesPromise = req.body.roles
-      ? Role.find({ name: { $in: req.body.roles } })
-      : Role.findOne({ name: 'user' });
+      const rolesPromise = req.body.roles
+        ? Role.find({ name: { $in: req.body.roles } })
+        : Role.findOne({ name: 'user' });
 
-    const [roles] = await Promise.all([rolesPromise]);
+      const [roles] = await Promise.all([rolesPromise]);
 
-    user.roles = Array.isArray(roles)
-      ? roles.map((role) => role._id)
-      : [roles._id];
+      user.roles = Array.isArray(roles)
+        ? roles.map((role) => role._id)
+        : [roles._id];
 
-    if (session && session.inTransaction && session.inTransaction()) {
-      await user.save({ session });
-    } else {
-      await user.save();
+      if (session && session.inTransaction && session.inTransaction()) {
+        await user.save({ session });
+      } else {
+        await user.save();
+      }
+
+      const token = jwt.sign({ id: user.id }, config.secret, {
+        algorithm: 'HS256',
+        expiresIn: 86400, //24h
+      });
+
+      resolve({ user, token });
+    } catch (error) {
+      console.error('Error during signup:', error);
+      throw new Error('Error during signup.');
     }
-
-    const token = jwt.sign({ id: user.id }, config.secret, {
-      algorithm: 'HS256',
-      expiresIn: 86400, //24h
-    });
-
-    return { user, token };
-  } catch (error) {
-    console.error('Error during signup:', error);
-    res.status(500).send({ message: 'Error during signup.' });
-  }
+  });
 };
 
 exports.signupAndRespond = async (req, res) => {
@@ -175,6 +178,7 @@ exports.getInvitation = async (req, res) => {
     res.json({
       email: invitation.email,
       communityName: community.name,
+      communityId: community._id,
       invitedBy: invitedBy.firstName + ' ' + invitedBy.lastName,
     });
   } catch (error) {

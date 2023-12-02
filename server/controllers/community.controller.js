@@ -25,14 +25,19 @@ const createCommunityAndUser = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email: req.body.email });
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res
+        .status(400)
+        .json({ message: 'Provided email address is alredy in use' });
     }
 
     const existingCommunity = await Community.findOne({ name: req.body.name });
     if (existingCommunity) {
       return res
         .status(400)
-        .json({ message: 'Community with provided name already exists' });
+        .json({
+          message:
+            'Community with provided name already exists. Unique name is required. ',
+        });
     }
 
     const session = await mongoose.startSession();

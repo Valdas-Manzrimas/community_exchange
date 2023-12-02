@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import Register from '../Base/Register';
 
 const InvitationRegister: React.FC = () => {
   const location = useLocation();
   const [email, setEmail] = useState<string>('');
   const [communityName, setCommunityName] = useState<string>('');
+  const [communityId, setCommunityId] = useState<string>('');
   const [invitationOwner, setInvitationOwner] = useState<string>('');
 
   useEffect(() => {
@@ -22,6 +24,7 @@ const InvitationRegister: React.FC = () => {
         .then((data) => {
           setEmail(data.email);
           setCommunityName(data.communityName);
+          setCommunityId(data.communityId);
           setInvitationOwner(data.invitedBy);
         })
         .catch((error) => {
@@ -38,7 +41,8 @@ const InvitationRegister: React.FC = () => {
         You received an invitation from <b>{invitationOwner}</b> to join{' '}
         <span className='font-bold'>{communityName}</span> community!
       </h1>
-      <p>Email: {email}</p>
+
+      <Register invitationEmail={email} community={communityId} />
     </div>
   );
 };
