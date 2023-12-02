@@ -29,5 +29,5 @@ module.exports = function (app) {
   app.post('/api/auth/sendInvitation', verifyToken, controller.sendInvitation);
 
   // get invitation
-  app.get('/join', controller.getInvitation);
+  app.get('/invitation', controller.getInvitation);
 };

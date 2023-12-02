@@ -1,6 +1,8 @@
 // auth.controller.js
 const config = require('../config/auth.config');
 const db = require('../models');
+const mongoose = require('mongoose');
+const { jwtDecode } = require('jwt-decode');
 
 const User = db.user;
 const Role = db.role;
@@ -40,7 +42,7 @@ exports.signup = async (req, res, session = null) => {
       expiresIn: 86400, //24h
     });
 
-    res.status(200).send({ user, token });
+    return { user, token };
   } catch (error) {
     console.error('Error during signup:', error);
     res.status(500).send({ message: 'Error during signup.' });
@@ -133,21 +135,21 @@ exports.sendInvitation = async (req, res) => {
     const savedInvitation = await invitation.save();
 
     const token = jwt.sign({ _id: savedInvitation._id }, config.secret, {
-      expiresIn: 86400, // 24 hours
+      expiresIn: 604800, // 1 week
     });
 
     savedInvitation.token = token;
     await savedInvitation.save();
 
-    const url = `${req.protocol}://${req.get('host')}/join?token=${token}`;
-
-    console.log(url);
-
+    const frontendHost = 'http://127.0.0.1:5173';
+    const url = `${frontendHost}/invitation?token=${token}`;
     // Send the URL to the user's email address
     // You can use a package like nodemailer to send the email
     // await sendEmail(invitation.email, 'Join our community', `Click on this link to join our community: ${url}`);
 
-    res.status(200).send({ message: 'Invitation sent successfully.' });
+    res
+      .status(200)
+      .send({ message: 'Invitation sent successfully.', url: url });
   } catch (error) {
     console.error('Error sending invitation:', error);
     res.status(500).send({ message: 'Error sending invitation.' });
@@ -158,15 +160,22 @@ exports.getInvitation = async (req, res) => {
   const token = req.query.token;
 
   try {
-    const decoded = jwt.verify(token, config.secret);
+    const decoded = jwtDecode(token);
     const invitation = await Invitation.findById(decoded._id);
     const community = await Community.findById(invitation.communityId);
 
-    res.redirect(
-      res.redirect(`http://127.0.0.1:5173/invitation?id=${invitation._id}`)
-    );
+    if (!invitation || !community) {
+      return res
+        .status(404)
+        .send({ message: 'Invitation or community not found.' });
+    }
+
+    res.json({
+      email: invitation.email,
+      communityName: community.name,
+    });
   } catch (error) {
-    console.error(error); // log the error
-    res.status(500).send({ message: 'Error processing invitation.' });
+    console.error('Error fetching invitation details:', error);
+    res.status(500).send({ message: 'Error fetching invitation details.' });
   }
 };

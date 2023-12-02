@@ -66,6 +66,7 @@ const createCommunity = async (req, session) => {
   const { name, description, pictures, country, city, plan, owner } = req.body;
 
   const newCommunity = new Community({
+    _id: new mongoose.Types.ObjectId(),
     name,
     description,
     pictures,

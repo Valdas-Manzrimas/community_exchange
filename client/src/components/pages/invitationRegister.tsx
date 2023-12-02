@@ -1,27 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-
-interface InvitationParams {
-  id: string;
-}
+import { useLocation } from 'react-router-dom';
 
 const InvitationRegister: React.FC = () => {
-  const { id } = useParams<InvitationParams>();
+  const location = useLocation();
   const [email, setEmail] = useState<string>('');
   const [communityName, setCommunityName] = useState<string>('');
 
   useEffect(() => {
-    // Fetch the invitation details using the ID
-    fetch(`http://127.0.0.1:5173/invitation?id=${id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setEmail(data.email);
-        setCommunityName(data.communityName);
-      })
-      .catch((error) => {
-        console.error('Error fetching invitation details:', error);
-      });
-  }, [id]);
+    const token = new URLSearchParams(location.search).get('token');
+
+    if (token) {
+      fetch(`http://localhost:8080/invitation?token=${token}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          return response.json();
+        })
+        .then((data) => {
+          setEmail(data.email);
+          setCommunityName(data.communityName);
+        })
+        .catch((error) => {
+          console.error('Error fetching invitation details:', error);
+        });
+    } else {
+      console.error('No invitation token provided.');
+    }
+  }, [location]);
 
   return (
     <div>
