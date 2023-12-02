@@ -14,6 +14,15 @@ const invitationSchema = new mongoose.Schema(
     token: {
       type: String,
     },
+    invitedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    used: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

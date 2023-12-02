@@ -5,6 +5,7 @@ const InvitationRegister: React.FC = () => {
   const location = useLocation();
   const [email, setEmail] = useState<string>('');
   const [communityName, setCommunityName] = useState<string>('');
+  const [invitationOwner, setInvitationOwner] = useState<string>('');
 
   useEffect(() => {
     const token = new URLSearchParams(location.search).get('token');
@@ -21,6 +22,7 @@ const InvitationRegister: React.FC = () => {
         .then((data) => {
           setEmail(data.email);
           setCommunityName(data.communityName);
+          setInvitationOwner(data.invitedBy);
         })
         .catch((error) => {
           console.error('Error fetching invitation details:', error);
@@ -31,10 +33,12 @@ const InvitationRegister: React.FC = () => {
   }, [location]);
 
   return (
-    <div>
-      <h1>Invitation Registration</h1>
+    <div className='w-full h-full bg-white px-4 pt-24 md:pt-8 pb-8'>
+      <h1 className='text-center text-2xl'>
+        You received an invitation from <b>{invitationOwner}</b> to join{' '}
+        <span className='font-bold'>{communityName}</span> community!
+      </h1>
       <p>Email: {email}</p>
-      <p>Community Name: {communityName}</p>
     </div>
   );
 };

@@ -129,6 +129,7 @@ exports.sendInvitation = async (req, res) => {
     const invitation = new Invitation({
       email: req.body.email,
       communityId: req.body.communityId,
+      invitedBy: req.user._id,
     });
 
     // Save the invitation to the database
@@ -163,16 +164,18 @@ exports.getInvitation = async (req, res) => {
     const decoded = jwtDecode(token);
     const invitation = await Invitation.findById(decoded._id);
     const community = await Community.findById(invitation.communityId);
+    const invitedBy = await User.findById(invitation.invitedBy);
 
-    if (!invitation || !community) {
+    if (!invitation || !community || !invitedBy) {
       return res
         .status(404)
-        .send({ message: 'Invitation or community not found.' });
+        .send({ message: 'Invitation, community or invitor not found.' });
     }
 
     res.json({
       email: invitation.email,
       communityName: community.name,
+      invitedBy: invitedBy.firstName + ' ' + invitedBy.lastName,
     });
   } catch (error) {
     console.error('Error fetching invitation details:', error);
