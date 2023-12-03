@@ -1,3 +1,5 @@
+// file: invitationRegister.tsx
+
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Register from '../Base/Register';

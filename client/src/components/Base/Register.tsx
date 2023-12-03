@@ -1,3 +1,4 @@
+// file: Register.tsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
@@ -51,16 +52,16 @@ const Register = ({ invitationEmail, community, invitationToken }: Props) => {
       if (response.status === 201) {
         dispatch(login(token));
 
-        dispatch(
+        await dispatch(
           setUser({
             email: email,
-            id: response.data.id,
+            id: response.data.user._id,
             firstName: firstName,
             lastName: lastName,
-            roles: response.data.roles,
+            roles: response.data.user.roles,
           })
         );
-        navigate('/');
+        await navigate('/');
         dispatch(
           setAlert({ status: 'success', message: 'User created successfully' })
         );
@@ -73,6 +74,7 @@ const Register = ({ invitationEmail, community, invitationToken }: Props) => {
         );
       }
     } catch (error) {
+      console.error(error);
       handleErrors(error, dispatch, {
         400: 'Email is already in use. Please try again with a different email.',
       });

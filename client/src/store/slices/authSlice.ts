@@ -1,4 +1,4 @@
-// authSlice.js
+// file: authSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface AuthState {
