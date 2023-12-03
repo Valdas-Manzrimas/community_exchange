@@ -2,15 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Register from '../Base/Register';
 
+// TODO: add error handling
+// TODO: add loading state
+// TODO: add success state
+// TODO: set invitation as used after registration is successful. And provide message to user if invitation is already used.
+
 const InvitationRegister: React.FC = () => {
   const location = useLocation();
   const [email, setEmail] = useState<string>('');
   const [communityName, setCommunityName] = useState<string>('');
   const [communityId, setCommunityId] = useState<string>('');
   const [invitationOwner, setInvitationOwner] = useState<string>('');
+  const [invitationToken, setInvitationToken] = useState<string>('');
 
   useEffect(() => {
-    const token = new URLSearchParams(location.search).get('token');
+    const token = new URLSearchParams(location.search).get('token') || '';
+    setInvitationToken(token);
 
     if (token) {
       fetch(`http://localhost:8080/invitation?token=${token}`)
@@ -42,7 +49,11 @@ const InvitationRegister: React.FC = () => {
         <span className='font-bold'>{communityName}</span> community!
       </h1>
 
-      <Register invitationEmail={email} community={communityId} />
+      <Register
+        invitationEmail={email}
+        community={communityId}
+        invitationToken={invitationToken}
+      />
     </div>
   );
 };

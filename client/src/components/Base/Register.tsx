@@ -11,9 +11,10 @@ import { handleErrors } from './functions/handleErrors';
 interface Props {
   invitationEmail?: string;
   community: string;
+  invitationToken?: string;
 }
 
-const Register = ({ invitationEmail, community }: Props) => {
+const Register = ({ invitationEmail, community, invitationToken }: Props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -40,6 +41,7 @@ const Register = ({ invitationEmail, community }: Props) => {
           lastName: lastName,
           password: password,
           communities: [community],
+          token: invitationToken,
         },
         { timeout: 10000 } // 10 seconds
       );
