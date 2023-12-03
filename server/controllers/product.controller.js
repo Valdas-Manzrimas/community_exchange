@@ -84,7 +84,7 @@ exports.createProduct = async (req, res) => {
     wantedProducts: req.body.wantedProducts,
   });
 
-  const currentUser = await User.findById(req.userId).exec();
+  const currentUser = await User.findById(req.body.owner).exec();
 
   try {
     const newProduct = await product.save();

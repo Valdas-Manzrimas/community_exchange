@@ -2,7 +2,7 @@ const db = require('../models');
 const ROLES = db.ROLES;
 const User = db.user;
 
-const checkDuplicateEmail = (req, res, next) => {
+const checkDuplicateEmail = async (req, res, next) => {
   const { email, firstName, lastName, password } = req.body;
 
   if (!email) {
@@ -15,21 +15,18 @@ const checkDuplicateEmail = (req, res, next) => {
     return res.status(400).send({ message: 'Password is required' });
   }
 
-  User.findOne({ email })
-    .exec()
-    .then((user) => {
-      if (user) {
-        return res
-          .status(400)
-          .send({ message: 'Failed! Email is already in use!' });
-      }
-
-      next();
-    })
-    .catch((err) => {
-      console.error('Error checking duplicate email:', err);
-      res.status(500).send({ message: 'Internal server error.' });
-    });
+  try {
+    const user = await User.findOne({ email }).exec();
+    if (user) {
+      return res
+        .status(400)
+        .send({ message: 'Failed! Email is already in use!' });
+    }
+    next();
+  } catch (err) {
+    console.error('Error checking duplicate email:', err);
+    res.status(500).send({ message: 'Internal server error.' });
+  }
 };
 
 const checkRolesExisted = (req, res, next) => {

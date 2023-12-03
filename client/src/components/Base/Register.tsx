@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
@@ -8,7 +8,13 @@ import { setAlert } from '../../store/slices/alertSlice';
 
 import { handleErrors } from './functions/handleErrors';
 
-const Register = () => {
+interface Props {
+  invitationEmail?: string;
+  community: string;
+  invitationToken?: string;
+}
+
+const Register = ({ invitationEmail, community, invitationToken }: Props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -17,17 +23,27 @@ const Register = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (invitationEmail) {
+      setEmail(invitationEmail);
+    }
+  }, [invitationEmail]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     try {
       const response = await axios.post(
         'http://localhost:8080/api/auth/register',
         {
+          email: email,
           firstName: firstName,
           lastName: lastName,
-          email: email,
           password: password,
-        }
+          communities: [community],
+          token: invitationToken,
+        },
+        { timeout: 10000 } // 10 seconds
       );
 
       const token = response.data.token;
@@ -37,9 +53,10 @@ const Register = () => {
 
         dispatch(
           setUser({
+            email: email,
+            id: response.data.id,
             firstName: firstName,
             lastName: lastName,
-            email: email,
             roles: response.data.roles,
           })
         );
@@ -67,9 +84,28 @@ const Register = () => {
       <div className='w-full bg-white rounded-lg shadow border'>
         <div className='p-6 space-y-4 md:space-y-6 sm:p-8'>
           <h1 className='text-xl font-bold leading-tight tracking-tight text-dark md:text-2xl'>
-            Create an account
+            Create an account to join the community
           </h1>
           <form className='space-y-2 md:space-y-3' onSubmit={handleSubmit}>
+            <div>
+              <label
+                htmlFor='email'
+                className='block mb-2 text-sm font-medium text-dark'
+              >
+                Your email
+              </label>
+              <input
+                type='email'
+                name='email'
+                id='email'
+                className='bg-narvik-100 border border-narvik-300 text-dark sm:text-sm rounded-lg focus:ring-narvik-800 focus:border-narvik-800 block w-full p-2.5'
+                placeholder='name@company.com'
+                required
+                value={invitationEmail ? invitationEmail : email}
+                disabled={!!invitationEmail}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
             <div>
               <label
                 htmlFor='firstName'
@@ -107,24 +143,6 @@ const Register = () => {
               />
             </div>
 
-            <div>
-              <label
-                htmlFor='email'
-                className='block mb-2 text-sm font-medium text-dark'
-              >
-                Your email
-              </label>
-              <input
-                type='email'
-                name='email'
-                id='email'
-                className='bg-narvik-100 border border-narvik-300 text-dark sm:text-sm rounded-lg focus:ring-narvik-800 focus:border-narvik-800 block w-full p-2.5'
-                placeholder='name@company.com'
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
             <div>
               <label
                 htmlFor='password'

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Product } from '../../types/ProductTypes';
 import { Link } from 'react-router-dom';
 import ModalContainer from '../layout/ModalContainer';
+import { useNavigate } from 'react-router-dom';
 
 interface CardProps {
   product: Product;
@@ -24,6 +25,11 @@ const Card: React.FC<CardProps> = ({ product, myProduct, onDeleteClick }) => {
 
   const handleCancel = () => {
     setModalOpen(false);
+  };
+  const navigate = useNavigate();
+
+  const navigateToProduct = () => {
+    navigate(`/product/${product._id}`);
   };
 
   return (
@@ -95,13 +101,14 @@ const Card: React.FC<CardProps> = ({ product, myProduct, onDeleteClick }) => {
         {/* Hover box end */}
         <Link
           to={`/product/${product._id}`}
-          className='h-full flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100'
+          className='h-full flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 z-10'
         >
           {product.images[0].length > 10 && (
             <img
               className='object-cover w-full rounded-t-lg h-1/3 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg'
               src={product.images[0]}
               alt={product.name}
+              onClick={navigateToProduct}
             />
           )}
 
