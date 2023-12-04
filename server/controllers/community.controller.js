@@ -32,12 +32,10 @@ const createCommunityAndUser = async (req, res) => {
 
     const existingCommunity = await Community.findOne({ name: req.body.name });
     if (existingCommunity) {
-      return res
-        .status(400)
-        .json({
-          message:
-            'Community with provided name already exists. Unique name is required. ',
-        });
+      return res.status(400).json({
+        message:
+          'Community with provided name already exists. Unique name is required. ',
+      });
     }
 
     const session = await mongoose.startSession();
@@ -83,7 +81,9 @@ const createCommunity = async (req, session) => {
   });
 
   const folderName = exports.getBucketFolderName(name);
-  const file = storage.bucket(bucketName).file(`${folderName}/`);
+  const file = storage
+    .bucket(bucketName)
+    .file(`/Product-Images/${folderName}/`);
   await file.save('');
 
   await newCommunity.save({ session });

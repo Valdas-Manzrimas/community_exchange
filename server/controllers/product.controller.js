@@ -35,7 +35,7 @@ exports.uploadImage = async (req, res, next) => {
       });
 
       blobStream.on('finish', async () => {
-        const publicUrl = `https://storage.googleapis.com/${bucketName}/${blob.name}`;
+        const publicUrl = `https://storage.googleapis.com/${bucketName}/${folderName}/${blob.name}`;
         resolve(publicUrl);
       });
 
@@ -58,7 +58,9 @@ exports.deleteUploadedImage = async (req, res, next) => {
     return res.status(400).json({ message: 'No image name provided.' });
   }
 
-  const file = storage.bucket(bucketName).file(`${folderName}/${imageName}`);
+  const file = storage
+    .bucket(bucketName)
+    .file(`${folderName}/${blob.name}/${imageName}/`);
 
   file
     .delete()
