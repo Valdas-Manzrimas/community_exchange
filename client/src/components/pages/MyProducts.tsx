@@ -13,7 +13,6 @@ const MyProducts: React.FC = () => {
   );
   const [isListView, setIsListView] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0);
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -34,10 +33,7 @@ const MyProducts: React.FC = () => {
           isOpen={isModalOpen}
           toggleModal={() => setIsModalOpen(!isModalOpen)}
         >
-          <CreateProduct
-            toggleModal={() => setIsModalOpen(false)}
-            setRefreshKey={setRefreshKey}
-          />
+          <CreateProduct toggleModal={() => setIsModalOpen(false)} />
         </ModalContainer>
       )}
       <CardContainer
@@ -47,7 +43,6 @@ const MyProducts: React.FC = () => {
         onPageChange={handlePageChange}
         currentPage={currentPage}
         isListView={isListView}
-        refreshKey={refreshKey}
       />
     </div>
   );
