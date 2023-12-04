@@ -20,7 +20,7 @@ const InvitationRegister: React.FC = () => {
     setInvitationToken(token);
 
     if (token) {
-      fetch(`http://localhost:8080/invitation?token=${token}`)
+      fetch(`${process.env.HARMONY_API_URL}/invitation?token=${token}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);

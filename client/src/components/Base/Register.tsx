@@ -34,7 +34,7 @@ const Register = ({ invitationEmail, community, invitationToken }: Props) => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/auth/register',
+        `${process.env.HARMONY_API_URL}/api/auth/register`,
         {
           email: email,
           firstName: firstName,

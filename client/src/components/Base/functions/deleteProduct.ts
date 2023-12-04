@@ -7,7 +7,7 @@ export const deleteProduct = async (
 ) => {
   try {
     const response = await axios.delete(
-      `http://localhost:8080/api/product/delete/${productId}`,
+      `${process.env.HARMONY_API_URL}/api/product/delete/${productId}`,
       {
         headers: token ? { 'x-access-token': token } : {},
       }

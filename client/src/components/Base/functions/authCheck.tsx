@@ -16,7 +16,7 @@ const AuthCheck: React.FC = () => {
     if (token) {
       axios
         .post(
-          'http://localhost:8080/api/auth/verifyToken',
+          `${process.env.HARMONY_API_URL}/api/auth/verifyToken`,
           {},
           { headers: { 'x-access-token': token } }
         )

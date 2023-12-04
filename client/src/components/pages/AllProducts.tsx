@@ -13,7 +13,7 @@ const AllProducts: React.FC = () => {
       <h1 className='text-3xl font-bold text-gray-900 mt-20'>Products</h1>
       <CardContainer
         pagination={true}
-        fetchUrl={`http://localhost:8080/api/product/all?page=${currentPage}&limit=18`}
+        fetchUrl={`${process.env.HARMONY_API_URL}/api/product/all?page=${currentPage}&limit=18`}
         currentPage={currentPage}
         isListView={false}
         onPageChange={handlePageChange}

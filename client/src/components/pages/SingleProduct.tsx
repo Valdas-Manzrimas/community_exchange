@@ -14,7 +14,7 @@ const SingleProduct = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/product/${productId}`)
+      .get(`${process.env.HARMONY_API_URL}/api/product/${productId}`)
       .then((response) => {
         setProduct(response.data);
         setMainImage(response.data.images[0]);

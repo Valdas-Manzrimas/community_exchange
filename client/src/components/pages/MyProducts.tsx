@@ -42,7 +42,7 @@ const MyProducts: React.FC = () => {
       )}
       <CardContainer
         pagination={true}
-        fetchUrl={`http://localhost:8080/api/product/owned?page=${currentPage}`}
+        fetchUrl={`${process.env.HARMONY_API_URL}/api/product/owned?page=${currentPage}`}
         token={isAuthenticated && token ? token : undefined}
         onPageChange={handlePageChange}
         currentPage={currentPage}
