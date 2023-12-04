@@ -3,8 +3,15 @@ const express = require('express');
 const cors = require('cors');
 const cookieSession = require('cookie-session');
 require('dotenv').config();
+const dotenv = require('dotenv');
 
 const app = express();
+
+if (process.env.NODE_ENV === 'production') {
+  dotenv.config({ path: '.env.production' });
+} else {
+  dotenv.config();
+}
 
 var corsOptions = {
   origin: [
@@ -22,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   cookieSession({
     name: 'communa_unity',
-    keys: ['COOKIE_SECRET'],
+    keys: [process.env.COOKIE_SECRET],
     httpOnly: true,
   })
 );
