@@ -9,5 +9,5 @@ module.exports = function (app) {
   });
 
   // Route for creating a community and user
-  app.post('/api/community/user', controller.createCommunityAndUser);
+  app.post('/api/register/community-user', controller.createCommunityAndUser);
 };

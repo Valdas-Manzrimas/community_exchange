@@ -13,6 +13,7 @@ import AuthCheck from './components/Base/functions/authCheck';
 import SingleProduct from './components/pages/SingleProduct';
 import ResHeader from './components/layout/ResHeader';
 import InvitationRegister from './components/pages/invitationRegister';
+import RegisterCommunity from './components/Base/RegisterCommunity';
 
 // import About from './About';
 // import Contact from './Contact';
@@ -55,6 +56,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/login-register' element={<LoginRegister />} />
+          <Route path='/register-community' element={<RegisterCommunity />} />
           <Route path='/all-products' element={<AllProducts />} />
           <Route path='/my-products' element={<MyProducts />} />
           <Route path='/product/:productId' element={<SingleProduct />} />
