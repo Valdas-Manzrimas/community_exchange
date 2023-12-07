@@ -47,10 +47,10 @@ const RegisterCommunity = () => {
         await dispatch(
           setUser({
             email: email,
-            id: response.data.user._id,
+            id: response.data.id,
             firstName: firstName,
             lastName: lastName,
-            roles: response.data.user.roles,
+            roles: response.data.roles,
           })
         );
         await navigate('/');

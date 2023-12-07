@@ -2,22 +2,29 @@
 import { Link } from 'react-router-dom';
 import Landing from '../layout/Landing';
 import PlanCard from '../Base/PlanCard';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
 // import CardContainer from '../layout/CardContainer';
 
 const Home = () => {
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.persisted.auth.isAuthenticated
+  );
+
   return (
     <>
       <Landing />
       {/* Plans */}
-      <div className='w-full h-auto flex justify-center items-center'>
-        <PlanCard
-          planName='Free'
-          price={0}
-          features={['1 user', '1 GB of storage', 'Email support']}
-        />
-      </div>
-
+      {!isAuthenticated && (
+        <div className='w-full h-auto flex justify-center items-center'>
+          <PlanCard
+            planName='Free'
+            price={0}
+            features={['1 user', '1 GB of storage', 'Email support']}
+          />
+        </div>
+      )}
       {/* About */}
       <div className='w-full flex flex-col items-center justify-center'>
         <img

@@ -11,11 +11,11 @@ const { Storage } = require('@google-cloud/storage');
 const Community = require('../models/community.model');
 
 const storage = new Storage({
-  projectId: 'norse-bond-299713',
-  keyFilename: './norse-bond-299713-7470e7a36420.json',
+  projectId: 'harmony-exchange',
+  keyFilename: './harmony-exchange-34a705b32842.json',
 });
 
-const bucketName = 'community_exchange';
+const bucketName = 'community-pictures';
 
 exports.getBucketFolderName = (communityName) => {
   return `${communityName.replace(/ /g, '-')}`;
@@ -32,12 +32,10 @@ const createCommunityAndUser = async (req, res) => {
 
     const existingCommunity = await Community.findOne({ name: req.body.name });
     if (existingCommunity) {
-      return res
-        .status(400)
-        .json({
-          message:
-            'Community with provided name already exists. Unique name is required. ',
-        });
+      return res.status(400).json({
+        message:
+          'Community with provided name already exists. Unique name is required. ',
+      });
     }
 
     const session = await mongoose.startSession();
