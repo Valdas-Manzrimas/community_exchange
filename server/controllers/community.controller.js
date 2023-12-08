@@ -17,7 +17,7 @@ const storage = new Storage({
 
 const bucketName = 'community-pictures';
 
-exports.getBucketFolderName = (communityName) => {
+const getBucketFolderName = (communityName) => {
   return `${communityName.replace(/ /g, '-')}`;
 };
 
@@ -90,6 +90,24 @@ const createCommunity = async (req, session) => {
   return newCommunity;
 };
 
+const getCommunityById = (req, res) => {
+  const { id } = req.params;
+
+  Community.findById(id)
+    .populate('users')
+    .populate('moderator')
+    .then((community) => {
+      if (community) {
+        res.json(community);
+      } else {
+        res.status(404).json({ error: 'Community not found' });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({ error: 'Failed to get community' });
+    });
+};
+
 // Update an existing community
 const updateCommunity = (req, res) => {
   const { id } = req.params;
@@ -137,7 +155,10 @@ const deleteCommunity = (req, res) => {
 };
 
 module.exports = {
+  getBucketFolderName,
   createCommunityAndUser,
+  createCommunity,
+  getCommunityById,
   updateCommunity,
   deleteCommunity,
 };

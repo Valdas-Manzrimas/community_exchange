@@ -11,6 +11,7 @@ import * as yup from 'yup';
 
 type FormState = {
   name: string;
+  community: string;
   description: string;
   category: string;
   tags: never[];
@@ -39,6 +40,7 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
 
   const [form, setForm] = useState<FormState>({
     name: '',
+    community: '', // here we need to get the community id from the state
     description: '',
     category: '',
     tags: [],
