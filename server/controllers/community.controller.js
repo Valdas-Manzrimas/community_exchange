@@ -12,7 +12,7 @@ const Community = require('../models/community.model');
 
 const storage = new Storage({
   projectId: 'harmony-exchange',
-  keyFilename: './harmony-exchange-34a705b32842.json',
+  keyFilename: './harmony-exchange-0b2b2d6f33e8.json',
 });
 
 const bucketName = 'community-pictures';
@@ -48,6 +48,7 @@ const createCommunityAndUser = async (req, res) => {
 
     const moderatorRole = await Role.findOne({ name: 'moderator' });
     user.roles.push({ _id: moderatorRole._id, communityRef: community._id });
+    user.communities.push(community._id);
     await user.save({ session });
 
     await session.commitTransaction();

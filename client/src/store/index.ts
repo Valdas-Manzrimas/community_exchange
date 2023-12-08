@@ -9,7 +9,6 @@ import alertReducer from './slices/alertSlice';
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth'],
 };
 
 const rootReducer = combineReducers({

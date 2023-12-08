@@ -46,12 +46,13 @@ exports.signup = async (req, session = null) => {
   }
 
   if (communityId) {
+    // joining community with user
     const community = await Community.findById(communityId);
     community.users.push(user._id);
     await community.save();
 
     user.communities.push(community._id);
-    await user.save();
+    user.save();
   }
 
   const token = jwt.sign({ id: user.id }, config.secret, {
