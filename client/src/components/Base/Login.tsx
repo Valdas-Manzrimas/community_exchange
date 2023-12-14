@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { login } from '../../store/slices/authSlice';
 import { setUser } from '../../store/slices/userSlice';
 import { setAlert } from '../../store/slices/alertSlice';
+import { setCommunity } from '../../store/slices/communitySlice';
 
 import { handleErrors } from './functions/handleErrors';
 
@@ -39,9 +40,11 @@ const Login = () => {
             lastName: response.data.lastName,
             email: response.data.email,
             roles: response.data.roles,
+            communities: response.data.communities,
           })
         );
-        navigate('/');
+        dispatch(setCommunity(response.data.communities[0]));
+        navigate(`/community/${response.data.communities[0]}`);
         dispatch(setAlert({ status: 'success', message: 'Login success' }));
       } else {
         dispatch(
