@@ -8,6 +8,7 @@ import { setUser } from '../../store/slices/userSlice';
 import { setAlert } from '../../store/slices/alertSlice';
 
 import { handleErrors } from './functions/handleErrors';
+import { setCommunity } from '../../store/slices/communitySlice';
 
 interface Props {
   invitationEmail?: string;
@@ -59,9 +60,13 @@ const Register = ({ invitationEmail, community, invitationToken }: Props) => {
             firstName: firstName,
             lastName: lastName,
             roles: response.data.user.roles,
+            communities: response.data.communities,
           })
         );
-        await navigate('/');
+        await dispatch(setCommunity(response.data.communities[0]));
+
+        await navigate(`/community/${response.data.communities[0]}`);
+
         dispatch(
           setAlert({ status: 'success', message: 'User created successfully' })
         );
