@@ -55,6 +55,8 @@ const createCommunityAndUser = async (req, res) => {
 
     res.status(201).json({
       message: 'User and community were registered successfully!',
+      user: user._id,
+      community: community._id,
       token: token,
     });
   } catch (error) {
