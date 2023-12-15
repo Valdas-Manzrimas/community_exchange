@@ -5,7 +5,7 @@ import { RootState } from '../../store';
 import { useEffect } from 'react';
 import { handleErrors } from './functions/handleErrors';
 import AllProducts from '../pages/AllProducts';
-import MyCommunity from '../pages/MyCommunity';
+import MyCommunity from '../pages/Dashboard';
 import SingleProduct from '../pages/SingleProduct';
 
 // interface AuthenticatedRouteProps {
