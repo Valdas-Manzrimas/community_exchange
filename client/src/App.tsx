@@ -2,19 +2,13 @@
 import { useMediaQuery } from '@react-hook/media-query';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/layout/navigation/Header';
-// import ResponsiveHeader from './components/layout/ResponsiveHeader';
 import 'tailwindcss/tailwind.css';
 import Home from './components/pages/Home';
-<<<<<<< HEAD
-import AllProducts from './components/pages/AllProducts';
-=======
-import LoginRegister from './components/pages/Login_Register';
->>>>>>> 64150000e997663ae826e1d22d1dc9864c9aec85
 import About from './components/pages/About';
 import ResHeader from './components/layout/navigation/ResHeader';
 import InvitationRegister from './components/pages/invitationRegister';
 import RegisterCommunity from './components/Base/RegisterCommunity';
-import AuthenticatedRoutes from './components/Base/AuthenticatedRoutes';
+import AuthenticatedRoutes from './routers/AuthenticatedRoutes';
 
 // import Contact from './Contact';
 

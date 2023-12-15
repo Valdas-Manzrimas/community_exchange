@@ -1,12 +1,12 @@
 // file: AuthenticatedRoute.tsx
 import { Route, Navigate, Routes } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../store';
+import { RootState } from '../store';
 import { useEffect } from 'react';
-import { handleErrors } from './functions/handleErrors';
-import AllProducts from '../pages/AllProducts';
-import MyCommunity from '../pages/Dashboard';
-import SingleProduct from '../pages/SingleProduct';
+import { handleErrors } from '../components/Base/functions/handleErrors';
+import AllProducts from '../components/pages/AllProducts';
+import MyCommunity from '../components/pages/Dashboard';
+import SingleProduct from '../components/pages/SingleProduct';
 
 // interface AuthenticatedRouteProps {
 //   path: string;
