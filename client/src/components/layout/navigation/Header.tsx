@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import Dropdown from '../Base/Dropdown';
+import Dropdown from '../../Base/Dropdown';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../store/slices/authSlice';
-import { clearUser } from '../../store/slices/userSlice';
-import { RootState } from '../../store';
-import Alert from './Alert';
+import { logout } from '../../../store/slices/authSlice';
+import { clearUser } from '../../../store/slices/userSlice';
+import { RootState } from '../../../store';
+import Alert from '../Alert';
 import { useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
