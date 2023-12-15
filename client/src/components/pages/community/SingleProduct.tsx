@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import { Product } from '../../types/ProductTypes';
+import { RootState } from '../../../store';
+import { Product } from '../../../types/ProductTypes';
 
 const SingleProduct = () => {
   const { productId } = useParams();

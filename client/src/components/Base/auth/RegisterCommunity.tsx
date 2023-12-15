@@ -1,22 +1,19 @@
 // file: Register.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
-import { login } from '../../store/slices/authSlice';
-import { setUser } from '../../store/slices/userSlice';
-import { setAlert } from '../../store/slices/alertSlice';
+import { login } from '../../../store/slices/authSlice';
+import { setUser } from '../../../store/slices/userSlice';
+import { setAlert } from '../../../store/slices/alertSlice';
 
-import { handleErrors } from './functions/handleErrors';
-import { setCommunity } from '../../store/slices/communitySlice';
+import { handleErrors } from '../functions/handleErrors';
+import { setCommunity } from '../../../store/slices/communitySlice';
 
-interface Props {
-  invitationEmail?: string;
-  community: string;
-  invitationToken?: string;
-}
-
-const Register = ({ invitationEmail, community, invitationToken }: Props) => {
+const RegisterCommunity = () => {
+  const [communityName, setCommunityName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -24,26 +21,21 @@ const Register = ({ invitationEmail, community, invitationToken }: Props) => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (invitationEmail) {
-      setEmail(invitationEmail);
-    }
-  }, [invitationEmail]);
+  const location = useLocation();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    const planName = location.state.planName;
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/auth/register',
+        'http://localhost:8080/api/register/community-user',
         {
           email: email,
           firstName: firstName,
           lastName: lastName,
           password: password,
-          communities: [community],
-          token: invitationToken,
+          name: communityName,
+          plan: planName,
         },
         { timeout: 10000 } // 10 seconds
       );
@@ -56,10 +48,10 @@ const Register = ({ invitationEmail, community, invitationToken }: Props) => {
         await dispatch(
           setUser({
             email: email,
-            id: response.data.user._id,
+            id: response.data.id,
             firstName: firstName,
             lastName: lastName,
-            roles: response.data.user.roles,
+            roles: response.data.roles,
             communities: response.data.communities,
           })
         );
@@ -91,9 +83,26 @@ const Register = ({ invitationEmail, community, invitationToken }: Props) => {
       <div className='w-full bg-white rounded-lg shadow border'>
         <div className='p-6 space-y-4 md:space-y-6 sm:p-8'>
           <h1 className='text-xl font-bold leading-tight tracking-tight text-dark md:text-2xl'>
-            Create an account to join the community
+            Create a community and your account
           </h1>
           <form className='space-y-2 md:space-y-3' onSubmit={handleSubmit}>
+            <div>
+              <label
+                htmlFor='communityName'
+                className='block mb-2 text-sm font-medium text-dark'
+              >
+                Community Name
+              </label>
+              <input
+                type='text'
+                name='communityName'
+                id='communityName'
+                className='bg-narvik-100 border border-narvik-300 text-dark sm:text-sm rounded-lg focus:ring-narvik-800 focus:border-narvik-800 block w-full p-2.5'
+                placeholder='Community Name'
+                required
+                onChange={(e) => setCommunityName(e.target.value)}
+              />
+            </div>
             <div>
               <label
                 htmlFor='email'
@@ -106,10 +115,8 @@ const Register = ({ invitationEmail, community, invitationToken }: Props) => {
                 name='email'
                 id='email'
                 className='bg-narvik-100 border border-narvik-300 text-dark sm:text-sm rounded-lg focus:ring-narvik-800 focus:border-narvik-800 block w-full p-2.5'
-                placeholder='name@company.com'
+                placeholder='name@community.com'
                 required
-                value={invitationEmail ? invitationEmail : email}
-                disabled={!!invitationEmail}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
@@ -173,7 +180,7 @@ const Register = ({ invitationEmail, community, invitationToken }: Props) => {
               type='submit'
               className='w-full text-dark bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center '
             >
-              Create account
+              Create Community
             </button>
           </form>
         </div>
@@ -182,4 +189,4 @@ const Register = ({ invitationEmail, community, invitationToken }: Props) => {
   );
 };
 
-export default Register;
+export default RegisterCommunity;

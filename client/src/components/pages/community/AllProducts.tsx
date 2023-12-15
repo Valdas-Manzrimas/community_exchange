@@ -1,4 +1,4 @@
-import CardContainer from '../layout/CardContainer';
+import CardContainer from '../../layout/containers/CardContainer';
 import { useState } from 'react';
 
 const AllProducts: React.FC = () => {

@@ -1,16 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import Card from '../Base/Card';
+import Card from '../../Base/Card';
 import { useNavigate } from 'react-router-dom';
-import { Product } from '../../types/ProductTypes';
-import Pagination from '../Base/Pagination';
-import { handleErrors } from '../Base/functions/handleErrors';
+import { Product } from '../../../types/ProductTypes';
+import Pagination from '../../Base/Pagination';
+import { handleErrors } from '../../Base/functions/handleErrors';
 import { useSelector } from 'react-redux';
 
 import { useDispatch } from 'react-redux';
-import { RootState } from '../../store';
-import InLineCard from '../Base/InLineCard';
-import { deleteProduct } from '../Base/functions/deleteProduct';
+import { RootState } from '../../../store';
+import InLineCard from '../../Base/InLineCard';
+import { deleteProduct } from '../../Base/functions/deleteProduct';
 
 interface CardContainerProps {
   fetchUrl: string;

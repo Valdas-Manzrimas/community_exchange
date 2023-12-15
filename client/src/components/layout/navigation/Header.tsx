@@ -18,6 +18,7 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
 
   const alert = useSelector((state: RootState) => state.alert);
+  const id = useSelector((state: RootState) => state.persisted.community);
 
   const isAuthenticated = useSelector(
     (state: RootState) => state.persisted.auth.isAuthenticated
@@ -101,9 +102,9 @@ const Header: React.FC = () => {
           {isAuthenticated && (
             <div className='px-2 py-2'>
               <Link
-                to='/community'
+                to={`/community/${id}`}
                 className={`block px-2 py-1 text-white border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-secondary ${active(
-                  '/community'
+                  `/community/${id}`
                 )}`}
               >
                 Community

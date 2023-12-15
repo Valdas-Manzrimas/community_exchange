@@ -4,7 +4,7 @@ import Landing from '../layout/Landing';
 import PlanCard from '../Base/PlanCard';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import Login from '../Base/Login';
+import Login from '../Base/auth/Login';
 
 // import CardContainer from '../layout/CardContainer';
 
