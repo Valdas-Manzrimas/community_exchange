@@ -11,6 +11,7 @@ import * as yup from 'yup';
 
 type FormState = {
   name: string;
+  community: string;
   description: string;
   category: string;
   tags: never[];
@@ -24,7 +25,6 @@ type FormState = {
 
 interface CreateProductProps {
   toggleModal: () => void;
-  setRefreshKey: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const schema = yup.object().shape({
@@ -40,6 +40,7 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
 
   const [form, setForm] = useState<FormState>({
     name: '',
+    community: '', // here we need to get the community id from the state
     description: '',
     category: '',
     tags: [],
@@ -55,7 +56,7 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState('');
-  const { toggleModal, setRefreshKey } = props;
+  const { toggleModal } = props;
   const [resetImages, setResetImages] = useState(false);
 
   const { isAuthenticated, token } = useSelector(
@@ -126,7 +127,7 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
           );
           setIsLoading(false);
           setError(null);
-          setRefreshKey((prevKey) => prevKey + 1);
+
           toggleModal();
           setForm((prevForm) => ({
             ...prevForm,

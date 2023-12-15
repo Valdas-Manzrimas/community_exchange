@@ -1,10 +1,11 @@
-// store.js
+// file: store/index.js
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import authReducer from './slices/authSlice';
 import userReducer from './slices/userSlice';
 import alertReducer from './slices/alertSlice';
+import communityReducer from './slices/communitySlice';
 
 const persistConfig = {
   key: 'root',
@@ -14,6 +15,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
+  community: communityReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

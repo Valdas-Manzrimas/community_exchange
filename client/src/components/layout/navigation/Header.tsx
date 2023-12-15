@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import Dropdown from '../Base/Dropdown';
+import Dropdown from '../../Base/Dropdown';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../store/slices/authSlice';
-import { clearUser } from '../../store/slices/userSlice';
-import { RootState } from '../../store';
-import Alert from './Alert';
+import { logout } from '../../../store/slices/authSlice';
+import { clearUser } from '../../../store/slices/userSlice';
+import { RootState } from '../../../store';
+import Alert from '../Alert';
 import { useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
@@ -41,18 +41,6 @@ const Header: React.FC = () => {
       navigate('/');
     }
   };
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     setIsScrolled(window.scrollY > 15);
-  //   };
-
-  //   window.addEventListener('scroll', handleScroll);
-
-  //   return () => {
-  //     window.removeEventListener('scroll', handleScroll);
-  //   };
-  // }, []);
 
   return (
     <div className={`sticky top-0 transition-all duration-500`}>
@@ -113,12 +101,12 @@ const Header: React.FC = () => {
           {isAuthenticated && (
             <div className='px-2 py-2'>
               <Link
-                to='/my-products'
+                to='/community'
                 className={`block px-2 py-1 text-white border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-secondary ${active(
-                  '/my-products'
+                  '/community'
                 )}`}
               >
-                My Products
+                Community
               </Link>
             </div>
           )}
@@ -135,7 +123,7 @@ const Header: React.FC = () => {
         </nav>
         <div className='hidden sm:flex sm:items-center sm:w-auto'>
           <div className='flex items-center'>
-            {isAuthenticated ? (
+            {isAuthenticated && (
               <>
                 <div className='text-secondary'>
                   <Link
@@ -205,10 +193,6 @@ const Header: React.FC = () => {
                   />
                 </div>
               </>
-            ) : (
-              <Link to='/login-register' className='text-sm text-white'>
-                Log In / Sign Up
-              </Link>
             )}
           </div>
         </div>

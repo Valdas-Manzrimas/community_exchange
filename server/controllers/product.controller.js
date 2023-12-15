@@ -1,14 +1,17 @@
 const Product = require('../models/product.model');
 const User = require('../models/user.model');
 const { Storage } = require('@google-cloud/storage');
+const { getBucketFolderName } = require('./community.controller');
 
 const storage = new Storage({
-  projectId: 'norse-bond-299713',
-  keyFilename: './norse-bond-299713-7470e7a36420.json',
+  projectId: 'harmony-exchange',
+  keyFilename: './harmony-exchange-0b2b2d6f33e8.json',
 });
 
-const bucketName = 'community_exchange';
-const folderName = 'Product-Images';
+const bucketName = 'Harmony-Exchange';
+
+// TODO - change to current community name
+const folderName = getBucketFolderName('harmony@exchange.com');
 
 let imageUrls = [];
 
@@ -73,6 +76,7 @@ exports.deleteUploadedImage = async (req, res, next) => {
 exports.createProduct = async (req, res) => {
   const product = new Product({
     name: req.body.name,
+    community: req.body.community,
     description: req.body.description,
     category: req.body.category,
     owner: req.body.owner,

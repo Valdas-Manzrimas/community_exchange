@@ -1,39 +1,26 @@
 // App.tsx
 import { useMediaQuery } from '@react-hook/media-query';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from './components/layout/Header';
+import Header from './components/layout/navigation/Header';
 // import ResponsiveHeader from './components/layout/ResponsiveHeader';
 import 'tailwindcss/tailwind.css';
 import Home from './components/pages/Home';
-import LoginRegister from './components/pages/Login_Register';
-import MyProducts from './components/pages/MyProducts';
+<<<<<<< HEAD
 import AllProducts from './components/pages/AllProducts';
+=======
+import LoginRegister from './components/pages/Login_Register';
+>>>>>>> 64150000e997663ae826e1d22d1dc9864c9aec85
 import About from './components/pages/About';
-import AuthCheck from './components/Base/functions/authCheck';
-import SingleProduct from './components/pages/SingleProduct';
-import ResHeader from './components/layout/ResHeader';
+import ResHeader from './components/layout/navigation/ResHeader';
 import InvitationRegister from './components/pages/invitationRegister';
+import RegisterCommunity from './components/Base/RegisterCommunity';
+import AuthenticatedRoutes from './components/Base/AuthenticatedRoutes';
 
-// import About from './About';
 // import Contact from './Contact';
 
 const App: React.FC = () => {
   const publicUrl = process.env.PUBLIC_URL || '';
   const isMediumScreen = useMediaQuery('(max-width: 768px)');
-
-  // const [scrollY, setScrollY] = useState(0);
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     setScrollY(window.scrollY);
-  //   };
-
-  //   window.addEventListener('scroll', handleScroll);
-
-  //   return () => {
-  //     window.removeEventListener('scroll', handleScroll);
-  //   };
-  // }, []);
 
   return (
     <div className='relative'>
@@ -50,14 +37,12 @@ const App: React.FC = () => {
         </div>
       </div>
       <Router basename={publicUrl}>
-        <AuthCheck />
         {isMediumScreen ? <ResHeader /> : <Header />}
         <Routes>
+          {/* For each authenticated route check the token in a backend */}
           <Route path='/' element={<Home />} />
-          <Route path='/login-register' element={<LoginRegister />} />
-          <Route path='/all-products' element={<AllProducts />} />
-          <Route path='/my-products' element={<MyProducts />} />
-          <Route path='/product/:productId' element={<SingleProduct />} />
+          <Route path='/register-community' element={<RegisterCommunity />} />
+          <Route path='*' element={<AuthenticatedRoutes />} />
           <Route path='/about' element={<About />} />
           <Route path='/invitation' element={<InvitationRegister />} />
 

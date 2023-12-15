@@ -11,13 +11,13 @@ const { Storage } = require('@google-cloud/storage');
 const Community = require('../models/community.model');
 
 const storage = new Storage({
-  projectId: 'norse-bond-299713',
-  keyFilename: './norse-bond-299713-7470e7a36420.json',
+  projectId: 'harmony-exchange',
+  keyFilename: './harmony-exchange-0b2b2d6f33e8.json',
 });
 
-const bucketName = 'community_exchange';
+const bucketName = 'community-pictures';
 
-exports.getBucketFolderName = (communityName) => {
+const getBucketFolderName = (communityName) => {
   return `${communityName.replace(/ /g, '-')}`;
 };
 
@@ -32,12 +32,10 @@ const createCommunityAndUser = async (req, res) => {
 
     const existingCommunity = await Community.findOne({ name: req.body.name });
     if (existingCommunity) {
-      return res
-        .status(400)
-        .json({
-          message:
-            'Community with provided name already exists. Unique name is required. ',
-        });
+      return res.status(400).json({
+        message:
+          'Community with provided name already exists. Unique name is required. ',
+      });
     }
 
     const session = await mongoose.startSession();
@@ -50,12 +48,15 @@ const createCommunityAndUser = async (req, res) => {
 
     const moderatorRole = await Role.findOne({ name: 'moderator' });
     user.roles.push({ _id: moderatorRole._id, communityRef: community._id });
+    user.communities.push(community._id);
     await user.save({ session });
 
     await session.commitTransaction();
 
     res.status(201).json({
       message: 'User and community were registered successfully!',
+      user: user._id,
+      community: community._id,
       token: token,
     });
   } catch (error) {
@@ -89,6 +90,24 @@ const createCommunity = async (req, session) => {
   await newCommunity.save({ session });
 
   return newCommunity;
+};
+
+const getCommunityById = (req, res) => {
+  const { id } = req.params;
+
+  Community.findById(id)
+    .populate('users')
+    .populate('moderator')
+    .then((community) => {
+      if (community) {
+        res.json(community);
+      } else {
+        res.status(404).json({ error: 'Community not found' });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({ error: 'Failed to get community' });
+    });
 };
 
 // Update an existing community
@@ -138,7 +157,10 @@ const deleteCommunity = (req, res) => {
 };
 
 module.exports = {
+  getBucketFolderName,
   createCommunityAndUser,
+  createCommunity,
+  getCommunityById,
   updateCommunity,
   deleteCommunity,
 };

@@ -46,12 +46,13 @@ exports.signup = async (req, session = null) => {
   }
 
   if (communityId) {
+    // joining community with user
     const community = await Community.findById(communityId);
     community.users.push(user._id);
     await community.save();
 
     user.communities.push(community._id);
-    await user.save();
+    user.save();
   }
 
   const token = jwt.sign({ id: user.id }, config.secret, {
@@ -113,13 +114,13 @@ exports.signin = async (req, res) => {
       return res.status(401).send({ message: 'Invalid Password!' });
     }
 
+    const communities = await Community.find({ users: user._id });
+    const communityIds = communities.map((community) => community._id);
+
     const token = jwt.sign({ _id: user._id }, config.secret, {
       algorithm: 'HS256',
       expiresIn: 86400,
     });
-
-    const communities = await Community.find({ users: user._id });
-    const communityIds = communities.map((community) => community._id);
 
     req.session.token = token;
 

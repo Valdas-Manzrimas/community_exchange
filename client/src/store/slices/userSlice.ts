@@ -7,6 +7,7 @@ export interface User {
   lastName: string;
   email: string;
   roles: [string];
+  communities: [string];
 }
 
 const initialState: User = {
@@ -15,6 +16,7 @@ const initialState: User = {
   lastName: '',
   email: '',
   roles: ['ROLE_USER'],
+  communities: [''],
 };
 
 export const userSlice = createSlice({

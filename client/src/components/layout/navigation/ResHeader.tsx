@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout, AuthState } from '../../store/slices/authSlice';
-import { clearUser, User } from '../../store/slices/userSlice';
-import { AlertState } from '../../store/slices/alertSlice';
-import Alert from './Alert';
+import { logout, AuthState } from '../../../store/slices/authSlice';
+import { clearUser, User } from '../../../store/slices/userSlice';
+import { AlertState } from '../../../store/slices/alertSlice';
+import Alert from '../Alert';
 
 interface RootState {
   persisted: {
