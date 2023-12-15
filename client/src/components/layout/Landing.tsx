@@ -7,9 +7,6 @@ const Landing = () => {
         <div className='p-4 mt-4 text-center h-full flex items-center z-10 md:p-0 md:w-full md:mb-0'>
           <div className='hidden md:block relative md:w-1/2 h-1/3 pt-12' />
           <div className='relative md:w-1/2 h-1/3 flex flex-col pt-12 mb-16 md:mr-8 md:mb-32 lg:mr-16 '>
-            <h1 className='mb-3 text-3xl font-bold text-gray-100'>
-              Welcome to
-            </h1>
             <h1
               className={`mb-8 text-3xl md:text-4xl  lg:text-7xl font-bold text-gray-100 md:mb-6`}
             >
@@ -20,9 +17,6 @@ const Landing = () => {
               <p className='text-xl text-secondary-200 mb-4'>
                 The place to connect
               </p>
-              {/* <button className='bg-blue-500 hover:bg-blue-700 text-narvik-800 font-bold py-2 px-4 rounded'>
-                Learn More
-              </button> */}
             </div>
           </div>
         </div>

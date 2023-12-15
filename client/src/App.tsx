@@ -5,7 +5,6 @@ import Header from './components/layout/Header';
 // import ResponsiveHeader from './components/layout/ResponsiveHeader';
 import 'tailwindcss/tailwind.css';
 import Home from './components/pages/Home';
-import LoginRegister from './components/pages/Login_Register';
 import AllProducts from './components/pages/AllProducts';
 import About from './components/pages/About';
 import AuthCheck from './components/Base/functions/authCheck';
@@ -55,7 +54,6 @@ const App: React.FC = () => {
         {isMediumScreen ? <ResHeader /> : <Header />}
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/login-register' element={<LoginRegister />} />
           <Route path='/register-community' element={<RegisterCommunity />} />
           <Route path='/all-products' element={<AllProducts />} />
           <Route path='/community' element={<MyCommunity />} />

@@ -123,7 +123,7 @@ const Header: React.FC = () => {
         </nav>
         <div className='hidden sm:flex sm:items-center sm:w-auto'>
           <div className='flex items-center'>
-            {isAuthenticated ? (
+            {isAuthenticated && (
               <>
                 <div className='text-secondary'>
                   <Link
@@ -193,10 +193,6 @@ const Header: React.FC = () => {
                   />
                 </div>
               </>
-            ) : (
-              <Link to='/login-register' className='text-sm text-white'>
-                Log In / Sign Up
-              </Link>
             )}
           </div>
         </div>
