@@ -1,4 +1,4 @@
-// handleErrors.ts
+// file: handleErrors.ts
 import { Dispatch, Action } from 'redux';
 import { setAlert } from '../../../store/slices/alertSlice';
 
