@@ -83,14 +83,18 @@ exports.signupAndRespond = async (req, res) => {
       await invitation.save();
     }
 
+    const community = await Community.findById(communityId);
+
     req.body.communityId = communityId;
     const { user, token } = await exports.signup(req);
 
-    res.status(201).json({
+    let response = {
       message: 'User was registered successfully!',
       user,
       token: token,
-    });
+    };
+
+    res.status(201).json(response);
   } catch (error) {
     console.error('Error during user registration:', error);
     res

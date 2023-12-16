@@ -16,7 +16,7 @@ const Home = () => {
   return (
     <>
       <Landing />
-      <div className='flex justify-center z-20'>
+      <div className='flex justify-end z-20 mb-20 -mt-40'>
         <Login />
       </div>
       {/* Plans */}

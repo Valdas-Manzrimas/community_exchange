@@ -1,35 +1,104 @@
-import { FC } from 'react';
-
+import { useEffect, useState, FC, useMemo } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import axios from 'axios';
 import Image from '../../Base/Image';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
+import { Community } from '../../../store/slices/communitySlice';
+import Layout from '../../layout/Layout';
 
-export interface SectionHero2Props {}
-const SectionHero2: FC<SectionHero2Props> = () => {
+export interface Main {}
+const Main: FC<Main> = () => {
+  const [community, setCommunity] = useState<Community | null>(null);
+  const { id } = useParams<{ id: string }>();
+  const { token } = useSelector((state: RootState) => state.persisted.auth);
+  const memoizedCommunity = useMemo(() => community, [community]);
+
+  useEffect(() => {
+    const fetchCommunity = async () => {
+      if (!memoizedCommunity) {
+        try {
+          const response = await axios.get(
+            `http://localhost:8080/api/community/${id}`,
+            {
+              headers: {
+                'x-access-token': token,
+              },
+            }
+          );
+          setCommunity(response.data);
+        } catch (error) {
+          console.error('Failed to fetch community', error);
+        }
+      }
+    };
+
+    fetchCommunity();
+  }, [id, token, memoizedCommunity]);
+
+  if (!community) {
+    return <div>Loading...</div>; // Replace with loading spinner
+  }
+
   return (
-    <div className='SectionHero2 relative pb-20 md:py-32 lg:py-60 bg-black'>
-      <div className='flex w-full mb-10 md:w-1/2 xl:w-3/5 md:absolute md:right-0 md:top-0 md:bottom-0 md:mb-0'>
-        <div className='hidden md:block absolute z-[1] top-0 left-0 bottom-0 w-44 from-black bg-gradient-to-r'></div>
+    <div className='bg-white h-screen'>
+      <div className='relative flex w-full h-2/5 mb-10 md:mb-0'>
         <Image
           fill
           className='object-cover'
-          src='https://images.pexels.com/photos/4666750/pexels-photo-4666750.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
+          src={community.pictures[0]}
           sizes='1260px'
           alt='hero'
         />
-      </div>
-      <div className='container relative z-10 text-neutral-100'>
-        <div className='max-w-3xl'>
-          <h1 className='font-bold text-4xl md:text-5xl xl:text-6xl mt-3 md:!leading-[110%] '>
-            The hidden world of whale culture
-          </h1>
-          <p className='mt-7 text-base lg:text-xl text-neutral-300 '>
-            From singing competitions to food preferences, scientists are
-            learning whales have cultural differences once thought to be unique
-            to humans.
-          </p>
+        <div className='z-10 text-secondary w-full flex items-center justify-center'>
+          <div className='max-w-3xl'>
+            <h1 className='font-bold text-4xl md:text-5xl xl:text-6xl mt-3 md:!leading-[110%] '>
+              {community.name}
+            </h1>
+          </div>
         </div>
+      </div>
+      <div className='flex w-full'>
+        <Layout
+          children={
+            <div className='flex'>
+              <div className='w-1/2 p-4 pr-6'>
+                <p className='mt-7 text-base lg:text-xl text-neutral-300 '>
+                  {community.description}
+                </p>
+              </div>
+              <div className='w-1/2'>
+                <h2 className='text-2xl font-bold mb-4'>Community Details</h2>
+                <div className='flex flex-col'>
+                  <div className='flex mb-4 flex-col'>
+                    <h3 className='text-lg font-bold mr-2'>Moderator:</h3>
+                    <p className='text-lg text-neutral-300'>
+                      {community.moderator.firstName +
+                        ' ' +
+                        community.moderator.lastName}
+                    </p>
+                    <p>{community.moderator.email}</p>
+                  </div>
+                  <div className='flex items-center mb-4'>
+                    <h3 className='text-lg font-bold mr-2'>Members:</h3>
+                    <p className='text-lg text-neutral-300'>
+                      {community.users.length}
+                    </p>
+                  </div>
+                </div>
+                <Link
+                  to={`/dashboard/${id}`}
+                  className='bg-primary text-white px-4 py-2 rounded-md'
+                >
+                  Dashboard
+                </Link>
+              </div>
+            </div>
+          }
+        />
       </div>
     </div>
   );
 };
 
-export default SectionHero2;
+export default Main;

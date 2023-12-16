@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useMediaQuery } from '@react-hook/media-query';
 import { Page } from './types';
@@ -11,12 +10,11 @@ import Home from '../components/pages/Home';
 import RegisterCommunity from '../components/Base/auth/RegisterCommunity';
 import About from '../components/pages/About';
 import InvitationRegister from '../components/pages/invitationRegister';
-import Dashboard from '../components/pages/community/Dashboard';
-import SingleProduct from '../components/pages/community/SingleProduct';
-import AllProducts from '../components/pages/community/AllProducts';
 import Page404 from '../components/pages/Page404';
 import ResHeader from '../components/layout/navigation/ResHeader';
 import Header from '../components/layout/navigation/Header';
+import Main from '../components/pages/community/Main';
+import DashboardRoutes from './DashboardRoutes';
 
 export const pages: Page[] = [
   { path: '/', component: Home },
@@ -31,9 +29,8 @@ export const pages: Page[] = [
 ];
 
 export const authPages: Page[] = [
-  { path: '/community/:id', component: Dashboard },
-  { path: '/community/items/all', component: AllProducts },
-  { path: '/community/items/:productId', component: SingleProduct },
+  { path: '/community/:id', component: Main },
+  { path: '/dashboard/*', component: DashboardRoutes },
 ];
 
 const MyRoutes = () => {

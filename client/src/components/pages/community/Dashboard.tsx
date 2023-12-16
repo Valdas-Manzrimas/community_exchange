@@ -5,7 +5,6 @@ import { RootState } from '../../../store';
 import FilterContainer from '../../layout/containers/FilterContainer';
 import ModalContainer from '../../layout/containers/ModalContainer';
 import CreateProduct from './CreateProduct';
-import Sidebar from '../../layout/navigation/Sidebar';
 import Layout from '../../layout/Layout';
 
 const Dashboard: React.FC = () => {
@@ -21,10 +20,7 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className='max-w-screen-2xl bg-gray-300 flex'>
-      <div className='relative w-80'>
-        <Sidebar />
-      </div>
+    <div className='w-full bg-gray-300 flex z-10'>
       <Layout
         children={
           <>

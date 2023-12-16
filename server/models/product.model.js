@@ -6,11 +6,11 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    community: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Community',
-      required: true,
-    },
+    // community: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: 'Community',
+    //   required: true,
+    // },
     description: {
       type: String,
       required: true,

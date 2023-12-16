@@ -55,9 +55,9 @@ const RegisterCommunity = () => {
             communities: response.data.communities,
           })
         );
-        await dispatch(setCommunity(response.data.communities[0]));
+        await dispatch(setCommunity(response.data.community));
 
-        await navigate(`/community/${response.data.communities[0]}`);
+        await navigate(`/community/${response.data.community}`);
 
         dispatch(
           setAlert({ status: 'success', message: 'User created successfully' })

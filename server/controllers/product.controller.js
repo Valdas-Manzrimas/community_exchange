@@ -1,4 +1,5 @@
 const Product = require('../models/product.model');
+const Community = require('../models/community.model');
 const User = require('../models/user.model');
 const { Storage } = require('@google-cloud/storage');
 const { getBucketFolderName } = require('./community.controller');
@@ -8,10 +9,11 @@ const storage = new Storage({
   keyFilename: './harmony-exchange-0b2b2d6f33e8.json',
 });
 
-const bucketName = 'Harmony-Exchange';
+const bucketName = 'harmony_communities';
 
 // TODO - change to current community name
-const folderName = getBucketFolderName('harmony@exchange.com');
+const communityName = getBucketFolderName('Harmony Community');
+const folderName = getBucketFolderName('product_images');
 
 let imageUrls = [];
 
@@ -26,7 +28,7 @@ exports.uploadImage = async (req, res, next) => {
     return new Promise((resolve, reject) => {
       const blob = storage
         .bucket(bucketName)
-        .file(`${folderName}/${file.originalname}`);
+        .file(`${communityName}/${folderName}/${file.originalname}`);
       const blobStream = blob.createWriteStream({
         metadata: {
           contentType: file.mimetype,
@@ -61,7 +63,9 @@ exports.deleteUploadedImage = async (req, res, next) => {
     return res.status(400).json({ message: 'No image name provided.' });
   }
 
-  const file = storage.bucket(bucketName).file(`${folderName}/${imageName}`);
+  const file = storage
+    .bucket(bucketName)
+    .file(`/${communityName}/${folderName}/${file.originalname}`);
 
   file
     .delete()
@@ -76,7 +80,6 @@ exports.deleteUploadedImage = async (req, res, next) => {
 exports.createProduct = async (req, res) => {
   const product = new Product({
     name: req.body.name,
-    community: req.body.community,
     description: req.body.description,
     category: req.body.category,
     owner: req.body.owner,
@@ -202,6 +205,42 @@ exports.getMyProducts = async (req, res) => {
       .exec();
 
     const count = await Product.countDocuments({ owner: req.userId }).exec();
+
+    res.status(200).json({
+      products,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// get all products by community
+exports.getProductsByCommunity = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 12;
+  const offset = (page - 1) * limit;
+
+  try {
+    // Fetch the community
+    const community = await Community.findById(req.params.communityId).exec();
+
+    if (!community) {
+      return res.status(404).json({ message: 'Community not found' });
+    }
+
+    // Fetch the products owned by the community members
+    const products = await Product.find({
+      owner: { $in: community.users },
+    })
+      .skip(offset)
+      .limit(limit)
+      .exec();
+
+    const count = await Product.countDocuments({
+      owner: { $in: community.users },
+    }).exec();
 
     res.status(200).json({
       products,

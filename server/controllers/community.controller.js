@@ -15,11 +15,11 @@ const storage = new Storage({
   keyFilename: './harmony-exchange-0b2b2d6f33e8.json',
 });
 
-const bucketName = 'community-pictures';
-
 const getBucketFolderName = (communityName) => {
   return `${communityName.replace(/ /g, '-')}`;
 };
+
+const bucketName = 'harmony_communities';
 
 const createCommunityAndUser = async (req, res) => {
   try {
@@ -83,8 +83,10 @@ const createCommunity = async (req, session) => {
     moderator: owner,
   });
 
-  const folderName = exports.getBucketFolderName(name);
-  const file = storage.bucket(bucketName).file(`${folderName}/`);
+  const communityName = getBucketFolderName(name);
+  const file = storage
+    .bucket(bucketName)
+    .file(`${communityName}/product_images/`);
   await file.save('');
 
   await newCommunity.save({ session });
@@ -96,8 +98,7 @@ const getCommunityById = (req, res) => {
   const { id } = req.params;
 
   Community.findById(id)
-    .populate('users')
-    .populate('moderator')
+    .populate('moderator', 'firstName lastName email')
     .then((community) => {
       if (community) {
         res.json(community);

@@ -4,6 +4,7 @@ import Dropdown from '../../Base/Dropdown';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../../store/slices/authSlice';
 import { clearUser } from '../../../store/slices/userSlice';
+import { clearCommunity } from '../../../store/slices/communitySlice';
 import { RootState } from '../../../store';
 import Alert from '../Alert';
 import { useNavigate } from 'react-router-dom';
@@ -39,12 +40,13 @@ const Header: React.FC = () => {
     if (option === 'Logout') {
       dispatch(logout());
       dispatch(clearUser());
+      dispatch(clearCommunity());
       navigate('/');
     }
   };
 
   return (
-    <div className={`sticky top-0 transition-all duration-500`}>
+    <div className={`sticky top-0 transition-all duration-500 z-50`}>
       {alert.message && <Alert type={alert.status} message={alert.message} />}
 
       <header
