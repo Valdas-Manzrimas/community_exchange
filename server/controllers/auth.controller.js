@@ -10,11 +10,9 @@
 const config = require('../config/auth.config');
 const jwtService = require('../services/jwtService');
 const userService = require('../services/userService');
+const invitationService = require('../services/invitationService');
 const db = require('../models');
 const jwt = require('jsonwebtoken');
-
-const Community = db.community;
-const Invitation = db.invitation;
 
 exports.signup = async (req, res) => {
   try {
@@ -68,7 +66,9 @@ exports.signupByInvitation = async (req, res) => {
     }
 
     const decoded = jwtService.decodeToken(invitationToken);
-    const invitation = await invitationService.getInvitation(decoded._id);
+    const invitation = await invitationService.getInvitationDetails(
+      decoded._id
+    );
 
     if (invitation.used) {
       return res
@@ -77,13 +77,13 @@ exports.signupByInvitation = async (req, res) => {
     }
 
     const communityId = invitation.communityId;
-    invitationService.markInvitationAsUsed(invitation);
+    await invitationService.markInvitationAsUsed(invitationToken);
 
     const user = await userService.createUserByInvitation(
       req.body,
       communityId
     );
-    const token = userService.generateToken(user);
+    const token = jwtService.generateToken({ _id: user._id });
 
     res.status(201).json({
       message: 'User was registered successfully!',
@@ -112,79 +112,47 @@ exports.signin = async (req, res) => {
 
 exports.signout = async (req, res) => {
   req.session = null;
-  return res.status(200).send({ message: "You've been signed out!" });
+  return res.status(204).send();
 };
 
+// INVITATION CONTROLLERS
 exports.sendInvitation = async (req, res) => {
   try {
-    const community = await Community.findById(req.body.communityId);
-    if (!community.moderator.equals(req.user._id)) {
-      return res
-        .status(403)
-        .send({ message: 'User is not a moderator of this community.' });
-    }
-
-    const invitation = new Invitation({
-      email: req.body.email,
-      communityId: req.body.communityId,
-      invitedBy: req.user._id,
-    });
-
-    const savedInvitation = await invitation.save();
-
-    const token = jwt.sign({ _id: savedInvitation._id }, config.secret, {
-      expiresIn: 604800, // 1 week
-    });
-
-    savedInvitation.token = token;
-    await savedInvitation.save();
-
-    res.status(200).send({
-      message: 'Invitation sent successfully.',
-      url: `http://127.0.0.1:5173/invitation?token=${token}`,
-    });
+    const result = await invitationService.sendInvitation(
+      req.body.communityId,
+      req.user._id,
+      req.body.email
+    );
+    res.status(200).send(result);
   } catch (error) {
-    res.status(500).send({ message: 'Error sending invitation.' });
+    res.status(500).send({ message: error.message });
   }
 };
 
 exports.getInvitation = async (req, res) => {
   try {
-    const decoded = jwt.decode(req.query.token);
-    const invitation = await Invitation.findById(decoded._id).populate(
-      'communityId invitedBy',
-      'name firstName lastName'
-    );
-
-    if (!invitation) {
-      return res.status(404).send({ message: 'Invitation not found.' });
+    const token = req.query.token;
+    if (!token) {
+      return res.status(400).send({ message: 'Token is required.' });
     }
 
-    res.json({
-      email: invitation.email,
-      communityName: invitation.communityId.name,
-      communityId: invitation.communityId._id,
-      invitedBy: `${invitation.invitedBy.firstName} ${invitation.invitedBy.lastName}`,
-    });
+    const decoded = jwtService.verifyToken(token, config.secret);
+    if (!decoded || !decoded._id) {
+      return res.status(400).send({ message: 'Invalid token.' });
+    }
+
+    const result = await invitationService.getInvitationDetails(decoded._id);
+    res.json(result);
   } catch (error) {
-    res.status(500).send({ message: 'Error getting invitation.' });
+    res.status(500).send({ message: error.message });
   }
 };
 
 exports.acceptInvitation = async (req, res) => {
   try {
-    const decoded = jwt.decode(req.body.token);
-    const invitation = await Invitation.findById(decoded._id);
-
-    if (!invitation || invitation.used) {
-      return res.status(400).send({ message: 'Invalid or used invitation.' });
-    }
-
-    invitation.used = true;
-    await invitation.save();
-
-    res.status(200).send({ message: 'Invitation accepted.' });
+    const result = await invitationService.acceptInvitation(req.body.token);
+    res.status(200).send(result);
   } catch (error) {
-    res.status(500).send({ message: 'Error accepting invitation.' });
+    res.status(500).send({ message: error.message });
   }
 };

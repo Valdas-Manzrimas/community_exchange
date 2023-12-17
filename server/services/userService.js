@@ -101,8 +101,10 @@ exports.createUserByInvitation = async (
   if (communityId) {
     user.communities.push(communityId);
     await user.save();
-  }
 
+    await communityService.joinCommunity(user._id, communityId);
+  }
+  await roleService.addUserRole(user._id, 'user');
   return user;
 };
 

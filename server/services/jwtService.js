@@ -2,11 +2,12 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/auth.config');
 
 // Function to generate a JWT token
-function generateToken(payload) {
-  return jwt.sign(payload, config.secret, {
-    algorithm: 'HS256',
-    expiresIn: 86400, //24h
-  });
+function generateToken(
+  payload,
+  secret = config.secret,
+  options = { expiresIn: 86400 }
+) {
+  return jwt.sign(payload, secret, options);
 }
 
 // Function to verify a JWT token
