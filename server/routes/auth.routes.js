@@ -15,7 +15,13 @@ module.exports = function (app) {
   app.post(
     '/api/auth/register',
     [verifySignUp.checkDuplicateEmail, verifySignUp.checkRolesExisted],
-    controller.signupAndRespond
+    controller.signup
+  );
+
+  app.post(
+    '/api/auth/invitation/register',
+    [verifySignUp.checkDuplicateEmail, verifySignUp.checkRolesExisted],
+    controller.signupByInvitation
   );
 
   app.post('/api/auth/login', controller.signin);

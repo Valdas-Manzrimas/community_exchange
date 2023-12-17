@@ -36,7 +36,9 @@ const Register = ({ invitationEmail, community, invitationToken }: Props) => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/auth/register',
+        !invitationToken
+          ? 'http://localhost:8080/api/auth/register'
+          : 'http://localhost:8080/api/auth/invitation/register',
         {
           email: email,
           firstName: firstName,

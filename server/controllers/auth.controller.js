@@ -8,6 +8,7 @@
 // TODO: add documentation
 
 const config = require('../config/auth.config');
+const jwtService = require('../services/jwtService');
 const db = require('../models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -17,84 +18,56 @@ const Role = db.role;
 const Community = db.community;
 const Invitation = db.invitation;
 
-exports.signup = async (req, session = null) => {
-  let communityId;
-  if (req.body.token) {
-    const decoded = jwt.decode(req.body.token);
-    const invitation = await Invitation.findOne({ _id: decoded._id });
-    communityId = invitation.communityId;
-  }
-
-  const user = new User({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8),
-    communities: [],
-  });
-
-  const roles = req.body.roles
-    ? await Role.find({ name: { $in: req.body.roles } })
-    : [await Role.findOne({ name: 'user' })];
-
-  user.roles = roles.map((role) => role._id);
-
-  if (session?.inTransaction?.()) {
-    await user.save({ session });
-  } else {
-    await user.save();
-  }
-
-  if (communityId) {
-    // joining community with user
-    const community = await Community.findById(communityId);
-    community.users.push(user._id);
-    await community.save();
-
-    user.communities.push(community._id);
-    user.save();
-  }
-
-  const token = jwt.sign({ id: user.id }, config.secret, {
-    algorithm: 'HS256',
-    expiresIn: 86400, //24h
-  });
-
-  return { user, token };
-};
-
-exports.signupAndRespond = async (req, res) => {
+exports.signup = async (req, res) => {
   try {
-    const invitationToken = req.body.token;
-    let communityId = null;
+    const user = await userService.createUser(req.body);
+    const token = jwtService.generateToken(user);
 
-    if (invitationToken) {
-      const decoded = jwt.decode(invitationToken);
-      const invitation = await Invitation.findOne({ _id: decoded._id });
-
-      if (invitation.used) {
-        return res
-          .status(400)
-          .json({ message: 'This invitation has already been used.' });
-      }
-
-      communityId = invitation.communityId;
-      invitation.used = true;
-      await invitation.save();
-    }
-
-    const community = await Community.findById(communityId);
-
-    req.body.communityId = communityId;
-    const { user, token } = await exports.signup(req);
-
-    let response = {
+    res.status(201).json({
       message: 'User was registered successfully!',
       user,
-      token: token,
-    };
+      token,
+    });
+  } catch (error) {
+    console.error('Error during user registration:', error);
+    res
+      .status(500)
+      .json({ message: 'An error occurred during user registration.' });
+  }
+};
 
-    res.status(201).json(response);
+exports.signupByInvitation = async (req, res) => {
+  try {
+    const invitationToken = req.body.token;
+
+    if (!invitationToken) {
+      return res.status(400).json({ message: 'Invitation token is required.' });
+    }
+
+    const decoded = jwtService.decodeToken(invitationToken);
+    const invitation = await invitationService.getInvitation(decoded._id);
+
+    if (invitation.used) {
+      return res
+        .status(400)
+        .json({ message: 'This invitation has already been used.' });
+    }
+
+    const communityId = invitation.communityId;
+    invitationService.markInvitationAsUsed(invitation);
+
+    const user = await userService.createUserByInvitation(
+      req.body,
+      communityId
+    );
+    const token = userService.generateToken(user);
+
+    res.status(201).json({
+      message: 'User was registered successfully!',
+      user,
+      token,
+      community: communityId,
+    });
   } catch (error) {
     console.error('Error during user registration:', error);
     res
