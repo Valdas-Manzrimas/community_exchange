@@ -4,8 +4,23 @@ const User = db.user;
 const Role = db.role;
 
 exports.checkUserRole = async (userId, roleName) => {
-  const user = await userService.getUser(userId);
+  const user = await userService.getUser(userId).populate({
+    path: 'roles',
+  });
   return user.roles.some((role) => role.name === roleName);
+};
+
+exports.checkUserRoleInCommunity = async (userId, communityId, roleName) => {
+  const user = await userService.getUser(userId).populate({
+    path: 'roles',
+    populate: {
+      path: 'community',
+    },
+  });
+  return user.roles.some(
+    (role) =>
+      role.name === roleName && role.community._id.toString() === communityId
+  );
 };
 
 exports.addUserRole = async (userId, roleName) => {

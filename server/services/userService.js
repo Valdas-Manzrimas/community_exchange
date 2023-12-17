@@ -63,7 +63,7 @@ exports.createUserByInvitation = async (
 };
 
 exports.getUser = async (userId) => {
-  const user = await User.findById(userId).populate('roles');
+  const user = await User.findById(userId);
   if (!user) {
     throw new Error(`User with id ${userId} does not exist`);
   }

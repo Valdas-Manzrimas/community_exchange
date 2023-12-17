@@ -1,6 +1,6 @@
 const db = require('../models');
 const mongoose = require('mongoose');
-const { Storage } = require('@google-cloud/storage');
+const cloudService = require('../services/cloudService');
 
 const Community = db.community;
 
@@ -12,17 +12,6 @@ exports.joinCommunity = async (userId, communityId) => {
   return community;
 };
 
-const storage = new Storage({
-  projectId: 'harmony-exchange',
-  keyFilename: './harmony-exchange-0b2b2d6f33e8.json',
-});
-
-exports.getBucketFolderName = (communityName) => {
-  return `${communityName.replace(/ /g, '-')}`;
-};
-
-const bucketName = 'harmony_communities';
-
 exports.createCommunity = async (communityDetails, session = null) => {
   const newCommunity = new Community({
     _id: new mongoose.Types.ObjectId(),
@@ -31,11 +20,8 @@ exports.createCommunity = async (communityDetails, session = null) => {
     moderator: communityDetails.owner,
   });
 
-  const communityName = getBucketFolderName(communityDetails.name);
-  const file = storage
-    .bucket(bucketName)
-    .file(`${communityName}/product_images/`);
-  await file.save('');
+  const communityName = cloudService.getBucketFolderName(communityDetails.name);
+  await cloudService.createFolder(`${communityName}/product_images/`);
 
   if (session?.inTransaction?.()) {
     await newCommunity.save({ session });
