@@ -1,5 +1,5 @@
-//community.routes.js
-const { verifyToken } = require('../middlewares/authJwt');
+// community.routes.js
+const { verifyToken, isAdmin } = require('../middlewares/authJwt');
 const controller = require('../controllers/community.controller');
 
 module.exports = function (app) {
@@ -8,8 +8,15 @@ module.exports = function (app) {
     next();
   });
 
-  // Route for creating a community and user
-  app.post('/api/register/community-user', controller.createCommunityAndUser);
-
   app.get('/api/community/:id', verifyToken, controller.getCommunityById);
+  app.post(
+    '/api/community',
+    [verifyToken, isAdmin],
+    controller.createCommunity
+  );
+  app.put(
+    '/api/community/:id',
+    [verifyToken, isAdmin],
+    controller.updateCommunity
+  );
 };

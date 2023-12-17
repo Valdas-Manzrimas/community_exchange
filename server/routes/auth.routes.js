@@ -1,10 +1,6 @@
 const { verifySignUp } = require('../middlewares');
 const { verifyToken } = require('../middlewares/authJwt');
 const controller = require('../controllers/auth.controller');
-const jwt = require('jsonwebtoken');
-const config = require('../config/auth.config');
-const Invitation = require('../models/invitation.model');
-const Community = require('../models/community.model');
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -22,6 +18,11 @@ module.exports = function (app) {
     '/api/auth/invitation/register',
     [verifySignUp.checkDuplicateEmail, verifySignUp.checkRolesExisted],
     controller.signupByInvitation
+  );
+
+  app.post(
+    '/api/auth/register/communityAndUser',
+    controller.signupUserAndCommunity
   );
 
   app.post('/api/auth/login', controller.signin);

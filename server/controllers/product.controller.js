@@ -2,7 +2,7 @@ const Product = require('../models/product.model');
 const Community = require('../models/community.model');
 const User = require('../models/user.model');
 const { Storage } = require('@google-cloud/storage');
-const { getBucketFolderName } = require('./community.controller');
+const { getBucketFolderName } = require('../services/communityService');
 
 const storage = new Storage({
   projectId: 'harmony-exchange',

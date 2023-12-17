@@ -1,9 +1,10 @@
 const db = require('../models');
+const userService = require('./userService');
 const User = db.user;
 const Role = db.role;
 
 exports.checkUserRole = async (userId, roleName) => {
-  const user = await User.findById(userId).populate('roles');
+  const user = await userService.getUser(userId);
   return user.roles.some((role) => role.name === roleName);
 };
 

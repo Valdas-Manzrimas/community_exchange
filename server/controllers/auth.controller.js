@@ -9,12 +9,12 @@
 
 const config = require('../config/auth.config');
 const jwtService = require('../services/jwtService');
+const userService = require('../services/userService');
 const db = require('../models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 const User = db.user;
-const Role = db.role;
 const Community = db.community;
 const Invitation = db.invitation;
 
@@ -33,6 +33,30 @@ exports.signup = async (req, res) => {
     res
       .status(500)
       .json({ message: 'An error occurred during user registration.' });
+  }
+};
+
+exports.signupUserAndCommunity = async (req, res) => {
+  try {
+    const { user, community } = await userService.createUserAndCommunity(
+      req.body.user,
+      req.body.community
+    );
+
+    const token = jwt.sign({ id: user.id }, config.secret, {
+      expiresIn: 86400, // 24 hours
+    });
+
+    res.status(201).json({
+      message: 'User and community were registered successfully!',
+      user: user._id,
+      community: community._id,
+      token: token,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'An error occurred during user and community registration.',
+    });
   }
 };
 
