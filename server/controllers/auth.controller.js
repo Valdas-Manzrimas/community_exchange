@@ -54,9 +54,10 @@ exports.signupUserAndCommunity = async (req, res) => {
       token: token,
     });
   } catch (error) {
-    res.status(500).json({
-      message: 'An error occurred during user and community registration.',
-    });
+    console.error('error', error),
+      res.status(500).json({
+        message: 'An error occurred during user and community registration.',
+      });
   }
 };
 

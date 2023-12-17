@@ -2,6 +2,7 @@ const db = require('../models');
 const bcrypt = require('bcryptjs');
 const communityService = require('./communityService');
 const roleService = require('./roleService');
+const mongoose = require('mongoose');
 
 const User = db.user;
 
@@ -13,19 +14,16 @@ exports.createUser = async (userDetails, session = null) => {
     password: bcrypt.hashSync(userDetails.password, 8),
     communities: [],
   });
-
-  if (userDetails.roles) {
-    for (const roleName of userDetails.roles) {
-      await roleService.addUserRole(user._id, roleName);
+  // save user
+  try {
+    if (session?.inTransaction?.()) {
+      await user.save({ session });
+    } else {
+      await user.save();
     }
-  } else {
-    await roleService.addUserRole(user._id, 'user');
-  }
-
-  if (session?.inTransaction?.()) {
-    await user.save({ session });
-  } else {
-    await user.save();
+  } catch (error) {
+    console.error('Error saving user:', error);
+    throw error;
   }
 
   return user;
@@ -42,7 +40,21 @@ exports.createUserAndCommunity = async (userDetails, communityDetails) => {
     session
   );
 
+  // Add the community id to the user
+  user.communities.push(community._id);
+  await user.save({ session });
+
   await session.commitTransaction();
+
+  // add user roles
+  if (userDetails.roles) {
+    for (const roleName of userDetails.roles) {
+      await roleService.addUserRole(user._id, roleName);
+    }
+  } else {
+    await roleService.addUserRole(user._id, 'user');
+    await roleService.addUserRole(user._id, 'moderator');
+  }
 
   return { user, community };
 };

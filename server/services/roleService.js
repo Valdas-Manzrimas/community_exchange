@@ -30,6 +30,10 @@ exports.addUserRole = async (userId, roleName) => {
   }
 
   const user = await User.findById(userId);
+  if (!user) {
+    throw new Error(`User with id ${userId} does not exist`);
+  }
+
   if (!user.roles.includes(roleToAdd._id)) {
     user.roles.push(roleToAdd._id);
     await user.save();
