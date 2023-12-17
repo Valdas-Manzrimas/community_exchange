@@ -12,9 +12,7 @@ const jwtService = require('../services/jwtService');
 const userService = require('../services/userService');
 const db = require('../models');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
 
-const User = db.user;
 const Community = db.community;
 const Invitation = db.invitation;
 
@@ -101,41 +99,14 @@ exports.signupByInvitation = async (req, res) => {
   }
 };
 
+// SIGN IN
 exports.signin = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
-    if (!user) {
-      return res.status(404).send({ message: 'User Not found.' });
-    }
-
-    const passwordIsValid = bcrypt.compareSync(
-      req.body.password,
-      user.password
-    );
-    if (!passwordIsValid) {
-      return res.status(401).send({ message: 'Invalid Password!' });
-    }
-
-    const communities = await Community.find({ users: user._id });
-    const communityIds = communities.map((community) => community._id);
-
-    const token = jwt.sign({ _id: user._id }, config.secret, {
-      algorithm: 'HS256',
-      expiresIn: 86400,
-    });
-
-    req.session.token = token;
-
-    res.status(200).send({
-      id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      communities: communityIds,
-      token: token,
-    });
+    const user = await userService.signin(req.body.email, req.body.password);
+    req.session.token = user.token;
+    res.status(200).send(user);
   } catch (error) {
-    res.status(500).json({ message: 'An error occurred during signin.' });
+    res.status(500).json({ message: error.message });
   }
 };
 
