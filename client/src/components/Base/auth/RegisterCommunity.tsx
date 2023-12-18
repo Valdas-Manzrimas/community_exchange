@@ -5,12 +5,12 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
-import { login } from '../../store/slices/authSlice';
-import { setUser } from '../../store/slices/userSlice';
-import { setAlert } from '../../store/slices/alertSlice';
+import { login } from '../../../store/slices/authSlice';
+import { setUser } from '../../../store/slices/userSlice';
+import { setAlert } from '../../../store/slices/alertSlice';
 
-import { handleErrors } from './functions/handleErrors';
-import { setCommunity } from '../../store/slices/communitySlice';
+import { handleErrors } from '../functions/handleErrors';
+import { setCommunity } from '../../../store/slices/communitySlice';
 
 const RegisterCommunity = () => {
   const [communityName, setCommunityName] = useState('');
@@ -55,9 +55,9 @@ const RegisterCommunity = () => {
             communities: response.data.communities,
           })
         );
-        await dispatch(setCommunity(response.data.communities[0]));
+        await dispatch(setCommunity(response.data.community));
 
-        await navigate(`/community/${response.data.communities[0]}`);
+        await navigate(`/community/${response.data.community}`);
 
         dispatch(
           setAlert({ status: 'success', message: 'User created successfully' })

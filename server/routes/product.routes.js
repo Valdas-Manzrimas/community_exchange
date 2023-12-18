@@ -13,6 +13,11 @@ module.exports = function (app) {
   app.get('/api/product/all', productController.getAllProducts);
   app.get('/api/product/owned', verifyToken, productController.getMyProducts);
   app.get('/api/product/:productId', productController.getProductById);
+  app.get(
+    '/api/community/products/:communityId',
+    verifyToken,
+    productController.getProductsByCommunity
+  );
 
   app.post(
     '/api/product/uploadImage',

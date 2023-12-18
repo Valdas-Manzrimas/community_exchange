@@ -3,12 +3,12 @@ import axios from 'axios';
 import { useNavigate } from 'react-router';
 
 import { useDispatch } from 'react-redux';
-import { login } from '../../store/slices/authSlice';
-import { setUser } from '../../store/slices/userSlice';
-import { setAlert } from '../../store/slices/alertSlice';
-import { setCommunity } from '../../store/slices/communitySlice';
+import { login } from '../../../store/slices/authSlice';
+import { setUser } from '../../../store/slices/userSlice';
+import { setAlert } from '../../../store/slices/alertSlice';
+import { setCommunity } from '../../../store/slices/communitySlice';
 
-import { handleErrors } from './functions/handleErrors';
+import { handleErrors } from '../functions/handleErrors';
 
 const Login = () => {
   const [email, setEmail] = useState('');

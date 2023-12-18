@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import Register from '../Base/Register';
+import Register from '../Base/auth/Register';
 
 // TODO: add error handling
 // TODO: add loading state

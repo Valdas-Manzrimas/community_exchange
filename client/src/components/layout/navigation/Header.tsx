@@ -4,6 +4,7 @@ import Dropdown from '../../Base/Dropdown';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../../store/slices/authSlice';
 import { clearUser } from '../../../store/slices/userSlice';
+import { clearCommunity } from '../../../store/slices/communitySlice';
 import { RootState } from '../../../store';
 import Alert from '../Alert';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +19,7 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
 
   const alert = useSelector((state: RootState) => state.alert);
+  const id = useSelector((state: RootState) => state.persisted.community);
 
   const isAuthenticated = useSelector(
     (state: RootState) => state.persisted.auth.isAuthenticated
@@ -38,12 +40,13 @@ const Header: React.FC = () => {
     if (option === 'Logout') {
       dispatch(logout());
       dispatch(clearUser());
+      dispatch(clearCommunity());
       navigate('/');
     }
   };
 
   return (
-    <div className={`sticky top-0 transition-all duration-500`}>
+    <div className={`sticky top-0 transition-all duration-500 z-50`}>
       {alert.message && <Alert type={alert.status} message={alert.message} />}
 
       <header
@@ -101,9 +104,9 @@ const Header: React.FC = () => {
           {isAuthenticated && (
             <div className='px-2 py-2'>
               <Link
-                to='/community'
+                to={`/community/${id}`}
                 className={`block px-2 py-1 text-white border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-secondary ${active(
-                  '/community'
+                  `/community/${id}`
                 )}`}
               >
                 Community

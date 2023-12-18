@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import CardContainer from '../layout/CardContainer';
+import CardContainer from '../../layout/containers/CardContainer';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import FilterContainer from '../layout/FilterContainer';
-import ModalContainer from '../layout/ModalContainer';
+import { RootState } from '../../../store';
+import FilterContainer from '../../layout/containers/FilterContainer';
+import ModalContainer from '../../layout/containers/ModalContainer';
 import CreateProduct from './CreateProduct';
-import Sidebar from '../layout/navigation/Sidebar';
-import Layout from '../layout/Layout';
+import Layout from '../../layout/Layout';
 
-const MyCommunity: React.FC = () => {
+const Dashboard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { isAuthenticated, token } = useSelector(
     (state: RootState) => state.persisted.auth
@@ -21,10 +20,7 @@ const MyCommunity: React.FC = () => {
   };
 
   return (
-    <div className='max-w-screen-2xl bg-gray-300 flex'>
-      <div className='relative w-80'>
-        <Sidebar />
-      </div>
+    <div className='w-full bg-gray-300 flex z-10'>
       <Layout
         children={
           <>
@@ -57,4 +53,4 @@ const MyCommunity: React.FC = () => {
   );
 };
 
-export default MyCommunity;
+export default Dashboard;

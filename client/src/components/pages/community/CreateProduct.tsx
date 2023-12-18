@@ -2,16 +2,15 @@ import { useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import { handleErrors } from '../Base/functions/handleErrors';
-import { setAlert } from '../../store/slices/alertSlice';
-import ImageUpload from '../Base/ImageUpload';
-import LoadingSpinner from '../Base/LoadingSpinner';
+import { RootState } from '../../../store';
+import { handleErrors } from '../../Base/functions/handleErrors';
+import { setAlert } from '../../../store/slices/alertSlice';
+import ImageUpload from '../../Base/ImageUpload';
+import LoadingSpinner from '../../Base/LoadingSpinner';
 import * as yup from 'yup';
 
 type FormState = {
   name: string;
-  community: string;
   description: string;
   category: string;
   tags: never[];
@@ -37,10 +36,8 @@ const schema = yup.object().shape({
 
 const CreateProduct: React.FC<CreateProductProps> = (props) => {
   const userId = useSelector((state: RootState) => state.persisted.user.id);
-
   const [form, setForm] = useState<FormState>({
     name: '',
-    community: '', // here we need to get the community id from the state
     description: '',
     category: '',
     tags: [],
@@ -110,7 +107,10 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
 
       const imageResponses = await Promise.all(imageUploadPromises);
       const uploadedImageLinks = imageResponses.map((res) => res && res.data);
-      const productForm = { ...form, images: uploadedImageLinks };
+      const productForm = {
+        ...form,
+        images: uploadedImageLinks,
+      };
 
       setResetImages(true);
 

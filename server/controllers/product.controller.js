@@ -1,19 +1,6 @@
-const Product = require('../models/product.model');
-const User = require('../models/user.model');
-const { Storage } = require('@google-cloud/storage');
-const { getBucketFolderName } = require('./community.controller');
-
-const storage = new Storage({
-  projectId: 'harmony-exchange',
-  keyFilename: './harmony-exchange-0b2b2d6f33e8.json',
-});
-
-const bucketName = 'Harmony-Exchange';
-
-// TODO - change to current community name
-const folderName = getBucketFolderName('harmony@exchange.com');
-
-let imageUrls = [];
+const productService = require('../services/productService');
+const cloudService = require('../services/cloudService');
+const communityService = require('../services/communityService');
 
 exports.uploadImage = async (req, res, next) => {
   const files = req.files;
@@ -22,36 +9,12 @@ exports.uploadImage = async (req, res, next) => {
     return res.status(400).json({ message: 'No files uploaded.' });
   }
 
-  const uploadPromises = files.map((file) => {
-    return new Promise((resolve, reject) => {
-      const blob = storage
-        .bucket(bucketName)
-        .file(`${folderName}/${file.originalname}`);
-      const blobStream = blob.createWriteStream({
-        metadata: {
-          contentType: file.mimetype,
-        },
-      });
-
-      blobStream.on('error', (err) => {
-        reject(err);
-      });
-
-      blobStream.on('finish', async () => {
-        const publicUrl = `https://storage.googleapis.com/${bucketName}/${blob.name}`;
-        resolve(publicUrl);
-      });
-
-      blobStream.end(file.buffer);
-    });
-  });
-
-  // Wait for all uploads to finish
-  imageUrls = await Promise.all(uploadPromises);
-
-  req.files = [];
-
-  res.status(200).json({ imageUrls });
+  try {
+    const imageUrls = await cloudService.uploadImage(files);
+    res.status(200).json({ imageUrls });
+  } catch (error) {
+    next(error);
+  }
 };
 
 exports.deleteUploadedImage = async (req, res, next) => {
@@ -61,154 +24,95 @@ exports.deleteUploadedImage = async (req, res, next) => {
     return res.status(400).json({ message: 'No image name provided.' });
   }
 
-  const file = storage.bucket(bucketName).file(`${folderName}/${imageName}`);
-
-  file
-    .delete()
-    .then(() => {
-      res.status(200).json({ message: 'Image deleted successfully.' });
-    })
-    .catch((err) => {
-      return next(err);
-    });
+  try {
+    await cloudService.deleteUploadedImage(imageName);
+    res.status(200).json({ message: 'Image deleted successfully.' });
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.createProduct = async (req, res) => {
-  const product = new Product({
-    name: req.body.name,
-    community: req.body.community,
-    description: req.body.description,
-    category: req.body.category,
-    owner: req.body.owner,
-    images: imageUrls,
-    tags: req.body.tags,
-    condition: req.body.condition,
-    location: req.body.location,
-    isAvailable: req.body.isAvailable,
-    wantedProducts: req.body.wantedProducts,
-  });
-
-  const currentUser = await User.findById(req.body.owner).exec();
-
+exports.createProduct = async (req, res, next) => {
   try {
-    const newProduct = await product.save();
-
-    if (!currentUser) {
-      return res.status(400).json({ message: 'Bad request. User not found.' });
-    }
-
-    imageUrls = [];
-
-    res.status(201).json(newProduct);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
+    const product = await productService.createProduct(req.body);
+    res.status(201).json(product);
+  } catch (error) {
+    next(error);
   }
 };
 
 exports.getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.productId);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
+    const product = await productService.getProductById(req.params.productId);
     res.status(200).json(product);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
 exports.updateProduct = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.productId);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-    product.name = req.body.name || product.name;
-    product.description = req.body.description || product.description;
-    product.category = req.body.category || product.category;
-    product.owner = req.body.owner || product.owner;
-    product.images = req.body.images || product.images;
-    product.tags = req.body.tags || product.tags;
-    product.condition = req.body.condition || product.condition;
-    product.location = req.body.location || product.location;
-    product.isAvailable = req.body.isAvailable || product.isAvailable;
-    product.wantedProducts = req.body.wantedProducts || product.wantedProducts;
-
-    const updatedProduct = await product.save();
+    const updatedProduct = await productService.updateProduct(
+      req.params.productId,
+      req.body
+    );
     res.status(200).json(updatedProduct);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
 exports.deleteProduct = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.productId);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-
-    for (const imageUrl of product.images) {
-      const imageName = imageUrl.split('/').pop();
-
-      const file = storage
-        .bucket(bucketName)
-        .file(`${folderName}/${imageName}`);
-      try {
-        await file.delete();
-      } catch (err) {
-        console.error(`Failed to delete image ${imageName}: ${err.message}`);
-      }
-    }
-
-    await Product.deleteOne({ _id: req.params.productId });
+    await productService.deleteProduct(req.params.productId);
     res
       .status(200)
       .json({ message: 'Product and its images deleted successfully' });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
 exports.getAllProducts = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 4;
-  const offset = (page - 1) * limit;
 
   try {
-    const products = await Product.find().skip(offset)?.limit(limit).exec();
-
-    const count = await Product.countDocuments().exec();
-
-    res.status(200).json({
-      products,
-      totalPages: Math.ceil(count / limit),
-      currentPage: page,
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    const productsData = await productService.getAllProducts(page, limit);
+    res.status(200).json(productsData);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
 exports.getMyProducts = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 12;
-  const offset = (page - 1) * limit;
 
   try {
-    const products = await Product.find({ owner: req.userId })
-      .skip(offset)
-      ?.limit(limit)
-      .exec();
+    const productsData = await productService.getMyProducts(
+      req.userId,
+      page,
+      limit
+    );
+    res.status(200).json(productsData);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
-    const count = await Product.countDocuments({ owner: req.userId }).exec();
+exports.getProductsByCommunity = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 12;
 
-    res.status(200).json({
-      products,
-      totalPages: Math.ceil(count / limit),
-      currentPage: page,
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  try {
+    const productsData = await productService.getProductsByCommunity(
+      req.params.communityId,
+      page,
+      limit
+    );
+    res.status(200).json(productsData);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

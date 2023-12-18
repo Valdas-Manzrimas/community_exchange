@@ -3,12 +3,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
-import { login } from '../../store/slices/authSlice';
-import { setUser } from '../../store/slices/userSlice';
-import { setAlert } from '../../store/slices/alertSlice';
+import { login } from '../../../store/slices/authSlice';
+import { setUser } from '../../../store/slices/userSlice';
+import { setAlert } from '../../../store/slices/alertSlice';
 
-import { handleErrors } from './functions/handleErrors';
-import { setCommunity } from '../../store/slices/communitySlice';
+import { handleErrors } from '../functions/handleErrors';
+import { setCommunity } from '../../../store/slices/communitySlice';
 
 interface Props {
   invitationEmail?: string;
@@ -36,7 +36,9 @@ const Register = ({ invitationEmail, community, invitationToken }: Props) => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/auth/register',
+        !invitationToken
+          ? 'http://localhost:8080/api/auth/register'
+          : 'http://localhost:8080/api/auth/invitation/register',
         {
           email: email,
           firstName: firstName,
@@ -63,9 +65,9 @@ const Register = ({ invitationEmail, community, invitationToken }: Props) => {
             communities: response.data.communities,
           })
         );
-        await dispatch(setCommunity(response.data.communities[0]));
+        await dispatch(setCommunity(response.data.community));
 
-        await navigate(`/community/${response.data.communities[0]}`);
+        await navigate(`/community/${response.data.community}`);
 
         dispatch(
           setAlert({ status: 'success', message: 'User created successfully' })
