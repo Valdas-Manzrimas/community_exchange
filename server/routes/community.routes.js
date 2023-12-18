@@ -19,4 +19,9 @@ module.exports = function (app) {
     [verifyToken, isAdmin],
     controller.updateCommunity
   );
+  app.delete(
+    '/api/community/removeMember/:userId',
+    verifyToken,
+    controller.removeUserFromCommunity
+  );
 };

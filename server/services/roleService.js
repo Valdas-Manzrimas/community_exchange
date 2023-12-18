@@ -17,6 +17,11 @@ exports.checkUserRoleInCommunity = async (userId, communityId, roleName) => {
       path: 'community',
     },
   });
+
+  if (!user) {
+    throw new Error(`User with id ${userId} does not exist`);
+  }
+
   return user.roles.some(
     (role) =>
       role.name === roleName && role.community._id.toString() === communityId

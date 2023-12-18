@@ -1,6 +1,7 @@
 //user.controller.js
 const User = require('../models/user.model.js');
 const Role = require('../models/role.model');
+const userService = require('../services/userService');
 
 exports.changePassword = async (req, res) => {
   try {
@@ -16,13 +17,14 @@ exports.changePassword = async (req, res) => {
   }
 };
 
-exports.getAllUsers = async (req, res) => {
+exports.getAllCommunityMembers = async (req, res) => {
   try {
-    const users = await User.find().exec();
+    const { communityId } = req.body.id;
+    const users = await userService.getAllCommunityMembers(communityId);
     res.status(200).json(users);
   } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).send({ message: 'Error fetching users.' });
+    console.error('Error fetching community members:', error);
+    res.status(500).send({ message: 'Error fetching community members.' });
   }
 };
 

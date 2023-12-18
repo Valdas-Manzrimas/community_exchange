@@ -33,7 +33,7 @@ exports.createCommunity = async (communityDetails, session = null) => {
 };
 
 exports.getCommunityById = async (id) => {
-  const community = await Community.findById(id).populate('moderator', 'id');
+  const community = await Community.findById(id).populate('moderator', '_id');
   if (!community) {
     throw new Error(`Community with id ${id} does not exist`);
   }
@@ -47,5 +47,20 @@ exports.updateCommunity = async (id, communityDetails) => {
   if (!community) {
     throw new Error(`Community with id ${id} does not exist`);
   }
+  return community;
+};
+
+exports.removeUserFromCommunity = async (communityId, userId) => {
+  const community = await Community.findById(communityId);
+  if (!community) {
+    throw new Error('Community not found');
+  }
+
+  const userIndex = community.members.indexOf(userId);
+  if (userIndex > -1) {
+    community.members.splice(userIndex, 1);
+    await community.save();
+  }
+
   return community;
 };

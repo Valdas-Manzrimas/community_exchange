@@ -118,12 +118,8 @@ exports.createUserByInvitation = async (
 };
 
 // GET user by id
-exports.getUser = async (userId) => {
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new Error(`User with id ${userId} does not exist`);
-  }
-  return user;
+exports.getUser = (userId) => {
+  return User.findById(userId);
 };
 
 // UPDATE user
@@ -177,4 +173,9 @@ exports.changePassword = async (userId, currentPassword, newPassword) => {
 
   user.password = bcrypt.hashSync(newPassword, 8);
   await user.save();
+};
+
+exports.getAllCommunityMembers = async (communityId) => {
+  const users = await User.find({ community: communityId }).exec();
+  return users;
 };
