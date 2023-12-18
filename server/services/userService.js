@@ -4,9 +4,18 @@ const bcrypt = require('bcryptjs');
 const communityService = require('./communityService');
 const roleService = require('./roleService');
 const jwtService = require('./jwtService');
+const yup = require('yup');
 
 const Community = db.community;
 const User = db.user;
+
+const changePasswordSchema = yup.object().shape({
+  // Used in changePassword
+  newPassword: yup
+    .string()
+    .required('New password is required')
+    .min(6, 'Password must be at least 6 characters long'),
+});
 
 // SIGNIN User
 exports.signin = async (email, password) => {
@@ -144,4 +153,28 @@ exports.deleteUser = async (userId) => {
 
   await user.remove();
   return user;
+};
+
+// Change password
+exports.changePassword = async (userId, currentPassword, newPassword) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new Error('User not found.');
+  }
+
+  const currentPasswordMatch = bcrypt.compareSync(
+    currentPassword,
+    user.password
+  );
+
+  if (!currentPasswordMatch) {
+    throw new Error('Current password is incorrect.');
+  }
+
+  // Validate the new password
+  await changePasswordSchema.validate({ newPassword });
+
+  user.password = bcrypt.hashSync(newPassword, 8);
+  await user.save();
 };

@@ -1,51 +1,18 @@
 //user.controller.js
-const bcrypt = require('bcryptjs');
 const User = require('../models/user.model.js');
 const Role = require('../models/role.model');
 
-const yup = require('yup');
-
-const changePasswordSchema = yup.object().shape({
-  newPassword: yup
-    .string()
-    .required('New password is required')
-    .min(6, 'Password must be at least 6 characters long'),
-});
-
 exports.changePassword = async (req, res) => {
   try {
-    const user = await User.findById(req.userId);
-
-    if (!user) {
-      return res.status(404).send({ message: 'User not found.' });
-    }
-
-    const { currentPassword, newPassword } = req.body;
-
-    const currentPasswordMatch = bcrypt.compareSync(
-      currentPassword,
-      user.password
+    await userService.changePassword(
+      req.userId,
+      req.body.currentPassword,
+      req.body.newPassword
     );
-
-    if (!currentPasswordMatch) {
-      return res
-        .status(401)
-        .json({ message: 'Current password is incorrect.' });
-    }
-
-    try {
-      await changePasswordSchema.validate({ newPassword });
-
-      user.password = bcrypt.hashSync(newPassword, 8);
-      await user.save();
-
-      res.status(200).json({ message: 'Password changed successfully!' });
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
+    res.status(200).json({ message: 'Password changed successfully!' });
   } catch (error) {
     console.error('Error changing password:', error);
-    res.status(500).json({ message: 'Error changing password.' });
+    res.status(500).json({ message: error.message });
   }
 };
 
