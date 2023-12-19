@@ -81,20 +81,10 @@ exports.createUserAndCommunity = async (userDetails, communityDetails) => {
   );
 
   // Add the community id to the user
-  user.communities.push(community._id);
+  user.communities.push({ community: community._id, role: 'Moderator' });
   await user.save({ session });
 
   await session.commitTransaction();
-
-  // add user roles
-  if (userDetails.roles) {
-    for (const roleName of userDetails.roles) {
-      await roleService.addUserRole(user._id, roleName);
-    }
-  } else {
-    await roleService.addUserRole(user._id, 'user');
-    await roleService.addUserRole(user._id, 'moderator');
-  }
 
   return { user, community };
 };

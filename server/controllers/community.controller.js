@@ -1,6 +1,7 @@
 const communityService = require('../services/communityService');
 const roleService = require('../services/roleService');
 const userService = require('../services/userService');
+const jwtService = require('../services/jwtService');
 
 const createCommunity = async (req, res) => {
   try {
@@ -51,14 +52,16 @@ const updateCommunity = async (req, res) => {
 
 const removeUserFromCommunity = async (req, res) => {
   try {
-    const communityId = req.body.communityId;
-    const userId = req.params.userId;
+    const { communityId, userId: deleteUserID } = req.body;
+    const { _id: requesterId } = jwtService.decodeToken(
+      req.headers['x-access-token']
+    );
 
     // Check if the current user is a moderator of the community
     const isModerator = await roleService.checkUserRoleInCommunity(
-      req.user.id,
+      requesterId,
       communityId,
-      'moderator'
+      'Moderator'
     );
     if (!isModerator) {
       return res.status(403).json({
@@ -66,20 +69,17 @@ const removeUserFromCommunity = async (req, res) => {
       });
     }
 
-    const user = await userService.getUser(userId);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
     // Remove the user from the community
-    const updatedCommunity = await communityService.removeUserFromCommunity(
+    const updatedUser = await userService.removeUserFromCommunity(
       communityId,
-      userId
+      deleteUserID
     );
-    res.json(updatedCommunity);
+    return res.json(updatedUser);
   } catch (error) {
     console.error('Failed to remove user from community:', error);
-    res.status(500).json({ message: 'Failed to remove user from community' });
+    return res
+      .status(500)
+      .json({ message: 'Failed to remove user from community' });
   }
 };
 

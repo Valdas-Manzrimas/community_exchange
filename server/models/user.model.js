@@ -36,14 +36,15 @@ const userSchema = new mongoose.Schema(
     },
     communities: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Community',
-      },
-    ],
-    roles: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Role',
+        community: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Community',
+        },
+        role: {
+          type: String,
+          enum: ['User', 'Moderator', 'Admin'],
+          default: 'User',
+        },
       },
     ],
   },

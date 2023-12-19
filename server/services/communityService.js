@@ -50,7 +50,19 @@ exports.updateCommunity = async (id, communityDetails) => {
   return community;
 };
 
-exports.removeUserFromCommunity = async (communityId, userId) => {
+exports.removeUserFromCommunity = async (communityId, userId, requesterId) => {
+  // Check if the requester is a moderator
+  const requester = await User.findById(requesterId);
+  const requesterRoleInCommunity = requester.communities.find(
+    (c) => c.community.toString() === communityId.toString()
+  );
+  if (
+    !requesterRoleInCommunity ||
+    requesterRoleInCommunity.role !== 'Moderator'
+  ) {
+    throw new Error('Only a moderator can remove a user from a community');
+  }
+
   const community = await Community.findById(communityId);
   if (!community) {
     throw new Error('Community not found');

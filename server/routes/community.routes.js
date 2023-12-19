@@ -20,7 +20,7 @@ module.exports = function (app) {
     controller.updateCommunity
   );
   app.delete(
-    '/api/community/removeMember/:userId',
+    '/api/community/removeMember/',
     verifyToken,
     controller.removeUserFromCommunity
   );
