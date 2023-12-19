@@ -1,4 +1,5 @@
 const db = require('../models');
+const Community = require('../models/community.model');
 const userService = require('./userService');
 const User = db.user;
 const Role = db.role;

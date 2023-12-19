@@ -15,7 +15,7 @@ const invitationService = require('../services/invitationService');
 exports.signup = async (req, res) => {
   try {
     const user = await userService.createUser(req.body);
-    const token = jwtService.generateToken(user);
+    const token = jwtService.generateToken({ id: user._id });
 
     res.status(201).json({
       message: 'User was registered successfully!',
