@@ -29,12 +29,12 @@ const updateCommunity = async (req, res) => {
     }
 
     // Check if the current user is a moderator of the community
-    const isModerator = await roleService.checkUserRoleInCommunity(
-      req.user.id,
+    const isModerator = await roleService.checkUserRole(
+      req.user._id,
       req.params.id,
       'moderator'
     );
-    if (!isModerator) {
+    if (isModerator === false) {
       return res
         .status(403)
         .json({ message: 'Only a moderator can update the community' });
@@ -46,6 +46,7 @@ const updateCommunity = async (req, res) => {
     );
     res.json(updatedCommunity);
   } catch (error) {
+    console.error('Failed to update community:', error);
     res.status(500).json({ message: 'Failed to update community' });
   }
 };
