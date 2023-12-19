@@ -4,9 +4,18 @@ const bcrypt = require('bcryptjs');
 const communityService = require('./communityService');
 const roleService = require('./roleService');
 const jwtService = require('./jwtService');
+const yup = require('yup');
 
 const Community = db.community;
 const User = db.user;
+
+const changePasswordSchema = yup.object().shape({
+  // Used in changePassword
+  newPassword: yup
+    .string()
+    .required('New password is required')
+    .min(6, 'Password must be at least 6 characters long'),
+});
 
 // SIGNIN User
 exports.signin = async (email, password) => {
@@ -37,6 +46,11 @@ exports.signin = async (email, password) => {
 
 // CREATE User
 exports.createUser = async (userDetails, session = null) => {
+  const existingUser = await User.findOne({ email: userDetails.email });
+  if (existingUser) {
+    throw new Error('User with this email already exists');
+  }
+
   const user = new User({
     firstName: userDetails.firstName,
     lastName: userDetails.lastName,
@@ -65,6 +79,7 @@ exports.createUserAndCommunity = async (userDetails, communityDetails) => {
   session.startTransaction();
 
   const user = await this.createUser(userDetails, session);
+
   communityDetails.owner = user._id;
   const community = await communityService.createCommunity(
     communityDetails,
@@ -72,22 +87,14 @@ exports.createUserAndCommunity = async (userDetails, communityDetails) => {
   );
 
   // Add the community id to the user
-  user.communities.push(community._id);
+  user.communities.push({ community: community._id, role: 'Moderator' });
   await user.save({ session });
+
+  const token = jwtService.generateToken({ id: user._id });
 
   await session.commitTransaction();
 
-  // add user roles
-  if (userDetails.roles) {
-    for (const roleName of userDetails.roles) {
-      await roleService.addUserRole(user._id, roleName);
-    }
-  } else {
-    await roleService.addUserRole(user._id, 'user');
-    await roleService.addUserRole(user._id, 'moderator');
-  }
-
-  return { user, community };
+  return { user, community, token };
 };
 
 // CREATE User by invitation
@@ -109,12 +116,8 @@ exports.createUserByInvitation = async (
 };
 
 // GET user by id
-exports.getUser = async (userId) => {
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new Error(`User with id ${userId} does not exist`);
-  }
-  return user;
+exports.getUser = (userId) => {
+  return User.findById(userId);
 };
 
 // UPDATE user
@@ -144,4 +147,33 @@ exports.deleteUser = async (userId) => {
 
   await user.remove();
   return user;
+};
+
+// Change password
+exports.changePassword = async (userId, currentPassword, newPassword) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new Error('User not found.');
+  }
+
+  const currentPasswordMatch = bcrypt.compareSync(
+    currentPassword,
+    user.password
+  );
+
+  if (!currentPasswordMatch) {
+    throw new Error('Current password is incorrect.');
+  }
+
+  // Validate the new password
+  await changePasswordSchema.validate({ newPassword });
+
+  user.password = bcrypt.hashSync(newPassword, 8);
+  await user.save();
+};
+
+exports.getAllCommunityMembers = async (communityId) => {
+  const users = await User.find({ community: communityId }).exec();
+  return users;
 };

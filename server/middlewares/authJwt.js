@@ -12,7 +12,8 @@ const verifyToken = (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, config.secret);
-    req.user = { _id: decoded._id };
+    // changed from decoded._id to decoded.id
+    req.user = { _id: decoded.id };
     next();
   } catch (error) {
     return res.status(401).send({ message: 'Unauthorized!' });

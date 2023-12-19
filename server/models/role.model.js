@@ -5,10 +5,6 @@ const roleSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  community: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Community',
-  },
 });
 
 module.exports = mongoose.model('Role', roleSchema);

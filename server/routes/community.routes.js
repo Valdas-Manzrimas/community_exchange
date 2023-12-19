@@ -14,9 +14,11 @@ module.exports = function (app) {
     [verifyToken, isAdmin],
     controller.createCommunity
   );
-  app.put(
-    '/api/community/:id',
-    [verifyToken, isAdmin],
-    controller.updateCommunity
+  app.put('/api/community/update/:id', verifyToken, controller.updateCommunity);
+
+  app.delete(
+    '/api/community/removeMember/',
+    verifyToken,
+    controller.removeUserFromCommunity
   );
 };

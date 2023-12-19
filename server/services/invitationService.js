@@ -2,10 +2,10 @@ const config = require('../config/auth.config');
 const Community = require('../models/community.model');
 const Invitation = require('../models/invitation.model');
 const jwtService = require('./jwtService');
+const roleService = require('./roleService');
 
 exports.sendInvitation = async (communityId, userId, email) => {
-  const community = await Community.findById(communityId);
-  if (!community.moderator.equals(userId)) {
+  if (roleService.checkUserRole(userId, communityId, 'moderator') === false) {
     throw new Error('User is not a moderator of this community.');
   }
 

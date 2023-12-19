@@ -11,13 +11,11 @@ const config = require('../config/auth.config');
 const jwtService = require('../services/jwtService');
 const userService = require('../services/userService');
 const invitationService = require('../services/invitationService');
-const db = require('../models');
-const jwt = require('jsonwebtoken');
 
 exports.signup = async (req, res) => {
   try {
     const user = await userService.createUser(req.body);
-    const token = jwtService.generateToken(user);
+    const token = jwtService.generateToken({ id: user._id });
 
     res.status(201).json({
       message: 'User was registered successfully!',
@@ -34,14 +32,10 @@ exports.signup = async (req, res) => {
 
 exports.signupUserAndCommunity = async (req, res) => {
   try {
-    const { user, community } = await userService.createUserAndCommunity(
+    const { user, community, token } = await userService.createUserAndCommunity(
       req.body.user,
       req.body.community
     );
-
-    const token = jwt.sign({ id: user.id }, config.secret, {
-      expiresIn: 86400, // 24 hours
-    });
 
     res.status(201).json({
       message: 'User and community were registered successfully!',
@@ -50,10 +44,10 @@ exports.signupUserAndCommunity = async (req, res) => {
       token: token,
     });
   } catch (error) {
-    console.error('error', error),
-      res.status(500).json({
-        message: 'An error occurred during user and community registration.',
-      });
+    console.error('Error during user and community registration:', error);
+    res.status(500).json({
+      message: 'An error occurred during user and community registration.',
+    });
   }
 };
 

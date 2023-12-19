@@ -13,6 +13,15 @@ exports.joinCommunity = async (userId, communityId) => {
 };
 
 exports.createCommunity = async (communityDetails, session = null) => {
+  const existingCommunity = await Community.findOne({
+    name: communityDetails.name,
+  });
+  if (existingCommunity) {
+    throw new Error(
+      'Community with this name already exists. Name must be unique.'
+    );
+  }
+
   const newCommunity = new Community({
     _id: new mongoose.Types.ObjectId(),
     ...communityDetails,
@@ -33,7 +42,7 @@ exports.createCommunity = async (communityDetails, session = null) => {
 };
 
 exports.getCommunityById = async (id) => {
-  const community = await Community.findById(id).populate('moderator', 'id');
+  const community = await Community.findById(id).populate('moderator', '_id');
   if (!community) {
     throw new Error(`Community with id ${id} does not exist`);
   }
@@ -47,5 +56,32 @@ exports.updateCommunity = async (id, communityDetails) => {
   if (!community) {
     throw new Error(`Community with id ${id} does not exist`);
   }
+  return community;
+};
+
+exports.removeUserFromCommunity = async (communityId, userId, requesterId) => {
+  // Check if the requester is a moderator
+  const requester = await User.findById(requesterId);
+  const requesterRoleInCommunity = requester.communities.find(
+    (c) => c.community.toString() === communityId.toString()
+  );
+  if (
+    !requesterRoleInCommunity ||
+    requesterRoleInCommunity.role !== 'Moderator'
+  ) {
+    throw new Error('Only a moderator can remove a user from a community');
+  }
+
+  const community = await Community.findById(communityId);
+  if (!community) {
+    throw new Error('Community not found');
+  }
+
+  const userIndex = community.members.indexOf(userId);
+  if (userIndex > -1) {
+    community.members.splice(userIndex, 1);
+    await community.save();
+  }
+
   return community;
 };
