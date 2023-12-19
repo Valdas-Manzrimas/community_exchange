@@ -46,6 +46,11 @@ exports.signin = async (email, password) => {
 
 // CREATE User
 exports.createUser = async (userDetails, session = null) => {
+  const existingUser = await User.findOne({ email: userDetails.email });
+  if (existingUser) {
+    throw new Error('User with this email already exists');
+  }
+
   const user = new User({
     firstName: userDetails.firstName,
     lastName: userDetails.lastName,
@@ -74,6 +79,7 @@ exports.createUserAndCommunity = async (userDetails, communityDetails) => {
   session.startTransaction();
 
   const user = await this.createUser(userDetails, session);
+
   communityDetails.owner = user._id;
   const community = await communityService.createCommunity(
     communityDetails,
@@ -84,9 +90,11 @@ exports.createUserAndCommunity = async (userDetails, communityDetails) => {
   user.communities.push({ community: community._id, role: 'Moderator' });
   await user.save({ session });
 
+  const token = jwtService.generateToken({ id: user._id });
+
   await session.commitTransaction();
 
-  return { user, community };
+  return { user, community, token };
 };
 
 // CREATE User by invitation

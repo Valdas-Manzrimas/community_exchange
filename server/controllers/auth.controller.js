@@ -32,12 +32,10 @@ exports.signup = async (req, res) => {
 
 exports.signupUserAndCommunity = async (req, res) => {
   try {
-    const { user, community } = await userService.createUserAndCommunity(
+    const { user, community, token } = await userService.createUserAndCommunity(
       req.body.user,
       req.body.community
     );
-
-    const token = jwtService.generateToken(user);
 
     res.status(201).json({
       message: 'User and community were registered successfully!',

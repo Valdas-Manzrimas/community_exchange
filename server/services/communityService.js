@@ -13,6 +13,15 @@ exports.joinCommunity = async (userId, communityId) => {
 };
 
 exports.createCommunity = async (communityDetails, session = null) => {
+  const existingCommunity = await Community.findOne({
+    name: communityDetails.name,
+  });
+  if (existingCommunity) {
+    throw new Error(
+      'Community with this name already exists. Name must be unique.'
+    );
+  }
+
   const newCommunity = new Community({
     _id: new mongoose.Types.ObjectId(),
     ...communityDetails,
