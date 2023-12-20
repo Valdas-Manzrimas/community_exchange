@@ -16,8 +16,34 @@ const Home = () => {
   return (
     <>
       <Landing />
-      <div className='flex justify-end z-20 mb-20 -mt-40'>
-        <Login />
+      <div className='relative flex z-20 mb-20 pt-12 items-center'>
+        <div className='absolute top-0 left-0 w-full h-full bg-gray-50 -z-10'></div>
+        <div className='w-1/2 p-16'>
+          <img
+            src='https://as1.ftcdn.net/v2/jpg/02/71/62/78/1000_F_271627824_fDcoRAoWvgoVmb08mwJt485inYcaPzUv.jpg'
+            alt='bartering'
+            className='w-full object-fill rounded-s-3xl'
+          />
+        </div>
+
+        <div className='w-1/2 h-full flex flex-col items-center justify-center'>
+          <div className='mb-32'>
+            <h1
+              className={`mb-8 text-3xl md:text-4xl  lg:text-7xl font-bold text-primary md:mb-6`}
+            >
+              Harmony Exchange
+            </h1>
+
+            <div className='transition-all duration-500 w-full'>
+              <p className='text-xl text-secondary-200 mb-4 text-center'>
+                The place to connect
+              </p>
+            </div>
+          </div>
+          <div className='w-full flex items-center justify-center'>
+            <Login />
+          </div>
+        </div>
       </div>
       {/* Plans */}
       {!isAuthenticated && (
