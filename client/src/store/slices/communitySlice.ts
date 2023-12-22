@@ -7,7 +7,8 @@ export interface Community {
   description?: string;
   members?: string[];
   posts?: string[];
-  moderator?: string[];
+  moderator?: string;
+  users?: string[];
 }
 
 const initialState: Community = {
