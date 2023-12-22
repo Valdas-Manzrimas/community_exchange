@@ -6,8 +6,8 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
-  roles: [string];
-  communities: [string];
+  roles?: [string];
+  communities?: [string];
 }
 
 const initialState: User = {
