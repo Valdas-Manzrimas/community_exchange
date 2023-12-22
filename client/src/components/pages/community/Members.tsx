@@ -5,6 +5,8 @@ import { RootState } from '../../../store';
 interface Member {
   _id: string;
   firstName: string;
+  lastName: string;
+  email: string;
   // Add other properties as needed
 }
 
@@ -34,10 +36,16 @@ const Members = () => {
 
   return (
     <div>
-      <h1>Community Members</h1>
-      <ul>
+      <h1 className='font-bold text-lg'>Community Members</h1>
+      <ul className='p-4 w-full flex flex-wrap'>
         {members.map((member) => (
-          <li key={member._id}>{member.firstName}</li>
+          <li
+            key={member._id}
+            className='px-6 py-2 border border-primary rounded-xl mr-4 text-center'
+          >
+            {member.firstName + ' ' + member.lastName}
+            <p>{member.email}</p>
+          </li>
         ))}
       </ul>
     </div>
