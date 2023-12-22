@@ -15,39 +15,48 @@ const PlanCard: React.FC<PlanCardProps> = ({ planName, price, features }) => {
   };
 
   return (
-    <div className='plan-card bg-white rounded-lg shadow-md p-4'>
-      <h3 className='text-xl font-bold mb-2'>{planName}</h3>
-      <p className='text-gray-600 mb-4'>${price}/month</p>
-      <ul className='mb-4'>
-        {features.map((feature, index) => (
-          <li key={index} className='flex items-center'>
+    <div className='h-full bg-gray-100 p-12 rounded-2xl'>
+      <h5 className='mb-4 text-xl font-medium text-gray-500'>{planName}</h5>
+      <div className='flex items-baseline text-gray-900'>
+        <span className='text-3xl font-semibold'>€</span>
+        <span className='text-5xl font-extrabold tracking-tight'>{price}</span>
+        <span className='ml-1 text-xl font-normal text-gray-500'>/month</span>
+      </div>
+      <hr className='my-5 text-brown-700' />
+      <ul className='my-7 space-y-5 h-[150px]'>
+        {features.map((feature) => (
+          <li className='flex space-x-3'>
             <svg
-              className='w-4 h-4 mr-2 text-green-500'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
+              className='h-5 w-5 shrink-0 text-cyan-600'
+              fill='currentColor'
+              viewBox='0 0 20 20'
               xmlns='http://www.w3.org/2000/svg'
             >
               <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth='2'
-                d='M5 13l4 4L19 7'
+                fillRule='evenodd'
+                d='M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z'
+                clipRule='evenodd'
               />
             </svg>
-            <span>{feature}</span>
+            <span className='text-base font-normal leading-tight text-gray-500'>
+              {feature}
+            </span>
           </li>
         ))}
       </ul>
       <button
-        className='bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded'
-        onClick={(event) => {
-          event.preventDefault();
-          selectPlan(planName);
-        }}
+        type='button'
+        onClick={() => selectPlan(planName)}
+        className={`inline-flex w-full justify-center rounded-lg bg-primary px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-200 ${
+          planName !== 'Free' && 'opacity-50'
+        }`}
+        disabled={planName !== 'Free'}
       >
-        Create Community
+        Choose plan
       </button>
+      {planName !== 'Free' && (
+        <p className='text-center text-error pt-2'>Comming soon</p>
+      )}
     </div>
   );
 };

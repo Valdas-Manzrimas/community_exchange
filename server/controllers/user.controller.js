@@ -87,6 +87,21 @@ exports.userBoard = (req, res) => {
     });
 };
 
+exports.getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).exec();
+
+    if (!user) {
+      return res.status(404).send({ message: 'User not found.' });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    res.status(500).send({ message: 'Error fetching user data.' });
+  }
+};
+
 exports.adminBoard = (req, res) => {
   res.status(200).send('Admin Content.');
 };

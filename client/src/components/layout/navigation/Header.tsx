@@ -115,9 +115,9 @@ const Header: React.FC = () => {
           )}
           <div className='px-2 py-2'>
             <Link
-              to='/contact'
+              to='/contact-us'
               className={`block px-2 py-1 text-white border-b-2 font-semibold hover:transition-color hover:duration-500 hover:ease-in-out hover:text-secondary ${active(
-                '/contact'
+                '/contact-us'
               )}`}
             >
               Contact

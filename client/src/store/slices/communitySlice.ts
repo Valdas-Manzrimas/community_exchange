@@ -2,6 +2,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface Community {
   id: string;
+  pictures?: string[];
+  name?: string;
+  description?: string;
+  members?: string[];
+  posts?: string[];
+  moderator?: string;
+  users?: string[];
 }
 
 const initialState: Community = {

@@ -15,8 +15,14 @@ module.exports = function (app) {
     authJwt.verifyToken,
     controller.getAllCommunityMembers
   );
+
+  //current user
   app.get('/api/user/', [authJwt.verifyToken], controller.userBoard);
+  // user by id
+  app.get('/api/user/:id', [authJwt.verifyToken], controller.getUserById);
+
   app.put('/api/user/update', [authJwt.verifyToken], controller.updateUser);
+
   app.put(
     '/api/user/changePassword',
     [authJwt.verifyToken],

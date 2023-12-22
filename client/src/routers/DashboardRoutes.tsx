@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
-import Dashboard from '../components/pages/community/Dashboard';
 import Sidebar from '../components/layout/navigation/Sidebar';
 import AllProducts from '../components/pages/community/AllProducts';
 import SingleProduct from '../components/pages/community/SingleProduct';
+import MySpace from '../components/pages/community/MySpace';
 
 const DashboardRoutes: React.FC = () => {
   return (
@@ -12,7 +12,7 @@ const DashboardRoutes: React.FC = () => {
       </div>
 
       <Routes>
-        <Route path='/:id' element={<Dashboard />} />
+        <Route path='/:id' element={<MySpace />} />
         <Route path='/items/all' element={<AllProducts />} />
         <Route path='/items/:productId' element={<SingleProduct />} />
       </Routes>
