@@ -9,6 +9,7 @@ import { handleErrors } from '../components/Base/functions/handleErrors';
 import Home from '../components/pages/Home';
 import RegisterCommunity from '../components/Base/auth/RegisterCommunity';
 import About from '../components/pages/About';
+import ContactUs from '../components/pages/ContactUs';
 import InvitationRegister from '../components/pages/invitationRegister';
 import Page404 from '../components/pages/Page404';
 import ResHeader from '../components/layout/navigation/ResHeader';
@@ -22,7 +23,7 @@ export const pages: Page[] = [
 
   // other pages -------------------------------------------------------
   { path: '/about', component: About },
-  //   { path: "/contact", component: Contact },
+  { path: '/contact-us', component: ContactUs },
   { path: '/page404', component: Page404 },
   { path: '/register-community', component: RegisterCommunity },
   { path: '/invitation', component: InvitationRegister },
