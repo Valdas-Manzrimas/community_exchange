@@ -86,14 +86,14 @@ const Sidebar = () => {
             </li>
             <li>
               <Link
-                to='/all-products'
+                to='/dashboard/members'
                 className={`flex items-center p-2 rounded-lg  group ${active(
-                  '/all-products'
+                  '/dashboard/members'
                 )}`}
               >
                 <svg
                   className={`w-5 h-5 transition duration-7 ${active(
-                    '/all-products'
+                    '/dashboard/members'
                   )}`}
                   aria-hidden='true'
                   xmlns='http://www.w3.org/2000/svg'

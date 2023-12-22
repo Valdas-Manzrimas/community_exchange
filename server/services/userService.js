@@ -174,6 +174,8 @@ exports.changePassword = async (userId, currentPassword, newPassword) => {
 };
 
 exports.getAllCommunityMembers = async (communityId) => {
-  const users = await User.find({ community: communityId }).exec();
+  const users = await User.find({ community: communityId })
+    .populate('communities')
+    .select('firstName lastName email communities');
   return users;
 };

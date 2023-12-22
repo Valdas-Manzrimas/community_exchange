@@ -3,6 +3,7 @@ import Sidebar from '../components/layout/navigation/Sidebar';
 import AllProducts from '../components/pages/community/AllProducts';
 import SingleProduct from '../components/pages/community/SingleProduct';
 import MySpace from '../components/pages/community/MySpace';
+import Members from '../components/pages/community/Members';
 
 const DashboardRoutes: React.FC = () => {
   return (
@@ -15,6 +16,7 @@ const DashboardRoutes: React.FC = () => {
         <Route path='/:id' element={<MySpace />} />
         <Route path='/items/all' element={<AllProducts />} />
         <Route path='/items/:productId' element={<SingleProduct />} />
+        <Route path='/members' element={<Members />} />
       </Routes>
     </div>
   );

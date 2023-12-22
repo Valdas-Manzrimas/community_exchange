@@ -19,7 +19,7 @@ exports.changePassword = async (req, res) => {
 
 exports.getAllCommunityMembers = async (req, res) => {
   try {
-    const { communityId } = req.body.id;
+    const { communityId } = req.params.communityId;
     const users = await userService.getAllCommunityMembers(communityId);
     res.status(200).json(users);
   } catch (error) {
