@@ -21,6 +21,18 @@ const getCommunityById = async (req, res) => {
   }
 };
 
+const getAllUserCommunities = async (req, res) => {
+  try {
+    const communities = await communityService.getAllUserCommunities(
+      req.user._id
+    );
+    res.json(communities);
+  } catch (error) {
+    console.error('Failed to get communities:', error);
+    res.status(500).json({ message: 'Failed to get communities' });
+  }
+};
+
 const updateCommunity = async (req, res) => {
   try {
     const community = await communityService.getCommunityById(req.params.id);
@@ -87,6 +99,7 @@ const removeUserFromCommunity = async (req, res) => {
 module.exports = {
   createCommunity,
   getCommunityById,
+  getAllUserCommunities,
   updateCommunity,
   removeUserFromCommunity,
 };

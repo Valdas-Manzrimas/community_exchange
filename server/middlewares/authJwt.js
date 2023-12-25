@@ -13,7 +13,7 @@ const verifyToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, config.secret);
     // changed from decoded._id to decoded.id
-    req.user = { _id: decoded.id };
+    req.user = { _id: decoded.id || decoded._id };
     next();
   } catch (error) {
     return res.status(401).send({ message: 'Unauthorized!' });

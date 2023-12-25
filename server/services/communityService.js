@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cloudService = require('../services/cloudService');
 
 const Community = db.community;
+const User = db.user;
 
 exports.joinCommunity = async (userId, communityId) => {
   const community = await Community.findById(communityId);
@@ -47,6 +48,19 @@ exports.getCommunityById = async (id) => {
     throw new Error(`Community with id ${id} does not exist`);
   }
   return community;
+};
+
+exports.getAllUserCommunities = async (userId) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  const communities = await Community.find({
+    users: { $in: [userId] },
+  }).select('name _id');
+  return communities;
 };
 
 exports.updateCommunity = async (id, communityDetails) => {

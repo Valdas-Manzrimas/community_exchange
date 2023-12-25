@@ -1,17 +1,63 @@
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootState } from '../../../store';
+import { useEffect, useState } from 'react';
+import { Community } from '../../../store/slices/communitySlice';
+import Dropdown from '../../Base/Dropdown';
+
+interface DataItem {
+  _id: string;
+  name: string;
+}
 
 const Sidebar = () => {
   const { user } = useSelector((state: RootState) => state.persisted);
+  const { community } = useSelector((state: RootState) => state.persisted);
+  const { token } = useSelector((state: RootState) => state.persisted.auth);
 
+  const [communityData, setCommunityData] = useState<Community[]>([]);
   const active = (path: string) => {
     return location.pathname === path
       ? 'border-secondary text-secondary'
       : 'border-primary text-white';
   };
 
-  const { id } = useSelector((state: RootState) => state.persisted.user);
+  useEffect(() => {
+    if (!user) {
+      console.error('User is null');
+      return;
+    }
+
+    if (!community) {
+      console.error('Community is null');
+      return;
+    }
+
+    const fetchUserCommunities = async () => {
+      if (!token) {
+        console.error('Token is null');
+        return;
+      }
+      try {
+        const response = await fetch(`http://localhost:8080/api/communities`, {
+          method: 'GET',
+          headers: {
+            'x-access-token': token,
+          },
+        });
+        let data = await response.json();
+        data = data.map((item: DataItem) => {
+          const { _id, ...rest } = item;
+          return { id: _id, ...rest };
+        });
+        setCommunityData(data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserCommunities();
+  }, [community, token, user]);
 
   return (
     <div>
@@ -21,36 +67,29 @@ const Sidebar = () => {
         <div className='h-full px-3 pb-4 overflow-y-auto bg-primary flex flex-col'>
           <div className='flex flex-col items-center justify-center border-b border-brown'>
             <div className='flex items-center justify-center'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                id='Layer_1'
-                data-name='Layer 1'
-                viewBox='0 0 24 24'
-                width='512'
-                height='512'
-                className='w-5 h-5 mr-2 text-gray-100'
-                fill='currentColor'
-              >
-                <path d='m12,0C5.383,0,0,5.383,0,12s5.383,12,12,12,12-5.383,12-12S18.617,0,12,0Zm-5,21.797v-.797c0-2.757,2.243-5,5-5s5,2.243,5,5v.797c-1.501.769-3.201,1.203-5,1.203s-3.499-.434-5-1.203Zm11-.582v-.215c0-3.309-2.691-6-6-6s-6,2.691-6,6v.215c-3.008-1.965-5-5.362-5-9.215C1,5.935,5.935,1,12,1s11,4.935,11,11c0,3.853-1.992,7.25-5,9.215ZM12,5c-2.206,0-4,1.794-4,4s1.794,4,4,4,4-1.794,4-4-1.794-4-4-4Zm0,7c-1.654,0-3-1.346-3-3s1.346-3,3-3,3,1.346,3,3-1.346,3-3,3Z' />
-              </svg>
-              <p className='text-xl font-semibold text-gray-100'>
-                {user.firstName}
-              </p>
+              <Dropdown
+                buttonText={communityData[0]?.name}
+                options={communityData
+                  .map((community) => community.name)
+                  .filter((name): name is string => !!name)}
+                key={communityData[0]?.id || ''}
+                replaceButtonText
+                buttonStyles='px-2 py-1 text-sm font-semibold text-white bg-primary rounded-lg hover:opacity-80'
+              />
             </div>
-            <span className='text-brown pb-2'>{user.email}</span>
           </div>
 
           <ul className='space-y-2 pb-4 font-medium self-stretch border-b border-brown'>
             <li className='mt-2'>
               <Link
-                to={`/dashboard/${id}`}
-                className={`flex items-center p-2 rounded-lg  group ${active(
-                  `/dashboard/${id}`
+                to={`/dashboard/${user.id}`}
+                className={`flex items-center p-2 rounded-lg group ${active(
+                  `/dashboard/${user.id}`
                 )}`}
               >
                 <svg
                   className={`w-5 h-5 transition duration-7 ${active(
-                    `/dashboard/${id}`
+                    `/dashboard/${user.id}`
                   )}`}
                   aria-hidden='true'
                   xmlns='http://www.w3.org/2000/svg'
@@ -86,14 +125,14 @@ const Sidebar = () => {
             </li>
             <li>
               <Link
-                to='/all-products'
+                to='/dashboard/members'
                 className={`flex items-center p-2 rounded-lg  group ${active(
-                  '/all-products'
+                  '/dashboard/members'
                 )}`}
               >
                 <svg
                   className={`w-5 h-5 transition duration-7 ${active(
-                    '/all-products'
+                    '/dashboard/members'
                   )}`}
                   aria-hidden='true'
                   xmlns='http://www.w3.org/2000/svg'
@@ -109,28 +148,6 @@ const Sidebar = () => {
           {/* User menu */}
 
           <ul className='space-y-2 font-medium mt-4'>
-            <li>
-              <Link
-                to='/profile'
-                className={`flex items-center p-2 rounded-lg  group ${active(
-                  '/profile'
-                )}`}
-              >
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  id='Layer_1'
-                  data-name='Layer 1'
-                  viewBox='0 0 24 24'
-                  fill='currentColor'
-                  className={`w-5 h-5 transition duration-7 ${active(
-                    '/profile'
-                  )}`}
-                >
-                  <path d='M9,12c3.309,0,6-2.691,6-6S12.309,0,9,0,3,2.691,3,6s2.691,6,6,6Zm0-10c2.206,0,4,1.794,4,4s-1.794,4-4,4-4-1.794-4-4,1.794-4,4-4Zm14.122,9.879c-1.134-1.134-3.11-1.134-4.243,0l-7.879,7.878v4.243h4.243l7.878-7.878c.567-.567,.879-1.32,.879-2.122s-.312-1.555-.878-2.121Zm-1.415,2.828l-7.292,7.293h-1.415v-1.415l7.293-7.292c.377-.378,1.036-.378,1.414,0,.189,.188,.293,.439,.293,.707s-.104,.518-.293,.707Zm-9.778,1.293H5c-1.654,0-3,1.346-3,3v5H0v-5c0-2.757,2.243-5,5-5H13c.289,0,.568,.038,.844,.085l-1.915,1.915Z' />
-                </svg>
-                <span className='flex-1 ms-3 whitespace-nowrap'>Profile</span>
-              </Link>
-            </li>
             <li>
               <Link
                 to='/settings'

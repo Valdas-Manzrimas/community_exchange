@@ -31,7 +31,7 @@ const MySpace = () => {
     };
 
     fetchUserData();
-  }, []);
+  }, [token]);
 
   return (
     <div>
