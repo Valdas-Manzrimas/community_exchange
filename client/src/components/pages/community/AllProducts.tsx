@@ -20,7 +20,6 @@ const AllProducts: React.FC = () => {
   );
   const { token } = useSelector((state: RootState) => state.persisted.auth);
 
-  console.log(community);
   return (
     <div className='w-full py-6 mx-4 sm:px-6 lg:px-8 z-10'>
       <h1 className='text-3xl font-bold text-gray-900'>Products</h1>
