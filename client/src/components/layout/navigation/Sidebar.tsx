@@ -57,7 +57,7 @@ const Sidebar = () => {
     };
 
     fetchUserCommunities();
-  }, []);
+  }, [community, token, user]);
 
   return (
     <div>

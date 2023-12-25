@@ -57,11 +57,9 @@ exports.getAllUserCommunities = async (userId) => {
     throw new Error('User not found');
   }
 
-  const communityIds = user.communities.map((uc) => uc._id);
   const communities = await Community.find({
-    _id: { $in: communityIds },
+    users: { $in: [userId] },
   }).select('name _id');
-
   return communities;
 };
 
