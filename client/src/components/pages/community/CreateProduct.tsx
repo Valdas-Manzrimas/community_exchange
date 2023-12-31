@@ -20,6 +20,7 @@ type FormState = {
   isAvailable: string;
   wantedProducts: never[];
   images: File[];
+  communityId: string;
 };
 
 interface CreateProductProps {
@@ -36,6 +37,16 @@ const schema = yup.object().shape({
 
 const CreateProduct: React.FC<CreateProductProps> = (props) => {
   const userId = useSelector((state: RootState) => state.persisted.user.id);
+  const { isAuthenticated, token } = useSelector(
+    (state: RootState) => state.persisted.auth
+  );
+
+  const community = useSelector(
+    (state: RootState) => state.persisted.community
+  );
+
+  const communityId = community as unknown as string;
+
   const [form, setForm] = useState<FormState>({
     name: '',
     description: '',
@@ -47,6 +58,7 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
     isAvailable: 'true',
     wantedProducts: [],
     images: [],
+    communityId: communityId,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -55,10 +67,6 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
   const [formError, setFormError] = useState('');
   const { toggleModal } = props;
   const [resetImages, setResetImages] = useState(false);
-
-  const { isAuthenticated, token } = useSelector(
-    (state: RootState) => state.persisted.auth
-  );
 
   const dispatch = useDispatch();
 
@@ -91,6 +99,7 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
           if (image) {
             const formData = new FormData();
             formData.append('images', image);
+            formData.append('communityId', communityId);
 
             return axios.post(
               'http://localhost:8080/api/product/uploadImage',

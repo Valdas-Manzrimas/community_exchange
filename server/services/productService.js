@@ -3,8 +3,11 @@ const User = require('../models/user.model');
 const cloudService = require('../services/cloudService');
 
 exports.createProduct = async (productDetails) => {
+  const { communityId } = productDetails;
+
   const product = new Product({
     ...productDetails,
+    community: communityId,
     images: cloudService.getImageUrls(),
   });
 
@@ -75,5 +78,6 @@ exports.getProductsByCommunity = async (communityId, page, limit) => {
     .skip((page - 1) * limit)
     .limit(limit)
     .exec();
+
   return products;
 };

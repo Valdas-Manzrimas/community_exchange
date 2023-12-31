@@ -12,18 +12,20 @@ exports.getBucketFolderName = (communityName) =>
   `${communityName.replace(/ /g, '-')}`;
 
 exports.createFolder = async (folderName) => {
-  const file = storage.bucket(bucketName).file(`${folderName}/`);
+  const file = storage.bucket(bucketName).file(`${folderName}`);
   await file.save('');
 };
 
 exports.deleteFolder = async (folderName) => {
   const [files] = await storage
     .bucket(bucketName)
-    .getFiles({ prefix: `${folderName}/` });
+    .getFiles({ prefix: `${folderName}` });
   files.forEach((file) => file.delete());
 };
 
-exports.uploadImage = async (files) => {
+exports.uploadImage = async (files, communityName, folderName) => {
+  folderName = this.getBucketFolderName(folderName);
+
   const uploadPromises = files.map((file) => {
     const blob = storage
       .bucket(bucketName)

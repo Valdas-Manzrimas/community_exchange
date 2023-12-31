@@ -12,7 +12,6 @@ interface Moderator {
   firstName: string;
   lastName: string;
   email: string;
-  // Add other properties as needed
 }
 
 export interface Main {}
@@ -37,7 +36,15 @@ const Main: FC<Main> = () => {
             }
           );
           setCommunity(response.data);
-          setModerator(response.data.moderator);
+          const moderatorResponse = await axios.get(
+            `http://localhost:8080/api/user/${response.data.moderator._id}`,
+            {
+              headers: {
+                'x-access-token': token,
+              },
+            }
+          );
+          setModerator(moderatorResponse.data);
         } catch (error) {
           console.error('Failed to fetch community', error);
         }
@@ -46,30 +53,6 @@ const Main: FC<Main> = () => {
 
     fetchCommunity();
   }, [id, token, memoizedCommunity]);
-
-  useEffect(() => {
-    const fetchModerator = async () => {
-      if (moderator) {
-        try {
-          const response = await axios.get(
-            `http://localhost:8080/api/user/${moderator._id}`,
-            {
-              headers: {
-                'x-access-token': token,
-              },
-            }
-          );
-          setModerator(response.data);
-        } catch (error) {
-          console.error('Failed to fetch moderator', error);
-        }
-      }
-    };
-
-    if (community) {
-      fetchModerator();
-    }
-  }, [community, token, moderator]);
 
   if (!community || !moderator) {
     return <div>Loading...</div>; // Replace with loading spinner

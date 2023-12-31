@@ -5,9 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Product } from '../../../types/ProductTypes';
 import Pagination from '../../Base/Pagination';
 import { handleErrors } from '../../Base/functions/handleErrors';
-import { useSelector } from 'react-redux';
-
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../store';
 import InLineCard from '../../Base/InLineCard';
 import { deleteProduct } from '../../Base/functions/deleteProduct';
@@ -30,7 +28,6 @@ const CardContainer: React.FC<CardContainerProps> = ({
   isListView = false,
 }) => {
   const [products, setProducts] = useState<Product[]>([]);
-  // const [loading, setLoading] = useState<boolean>(true);
   const [totalPages, setTotalPages] = useState<number>(0);
 
   const userId = useSelector((state: RootState) => state.persisted.user.id);
@@ -44,8 +41,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
         headers: token ? { 'x-access-token': token } : {},
       });
 
-      const fetchedProducts = response.data.products;
-
+      const fetchedProducts = response.data;
       const myProducts = fetchedProducts.map((product: Product) => {
         return {
           ...product,
@@ -78,7 +74,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
     fetchProducts();
   };
 
-  const handleClick = async () => {
+  const handleClick = () => {
     navigate('/all-products');
   };
 
@@ -120,14 +116,18 @@ const CardContainer: React.FC<CardContainerProps> = ({
       ) : (
         <>
           <div className='grid grid-cols-1 min-[600px]:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 '>
-            {products.map((product) => (
-              <Card
-                product={product}
-                key={product._id}
-                myProduct={product.isMine}
-                onDeleteClick={handleDelete}
-              />
-            ))}
+            {!products.length ? (
+              <div>No products found</div>
+            ) : (
+              products.map((product) => (
+                <Card
+                  product={product}
+                  key={product._id}
+                  myProduct={product.isMine}
+                  onDeleteClick={handleDelete}
+                />
+              ))
+            )}
           </div>
 
           {pagination ? (

@@ -4,13 +4,23 @@ const communityService = require('../services/communityService');
 
 exports.uploadImage = async (req, res, next) => {
   const files = req.files;
+  const communityId = req.body.communityId;
 
   if (!files || files.length === 0) {
     return res.status(400).json({ message: 'No files uploaded.' });
   }
 
   try {
-    const imageUrls = await cloudService.uploadImage(files);
+    const community = await communityService.getCommunityById(communityId);
+
+    const communityName = community.name;
+    const folderName = community.name;
+
+    const imageUrls = await cloudService.uploadImage(
+      files,
+      communityName,
+      folderName
+    );
     res.status(200).json({ imageUrls });
   } catch (error) {
     next(error);
