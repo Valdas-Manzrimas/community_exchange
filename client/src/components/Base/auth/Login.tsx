@@ -63,16 +63,17 @@ const Login = () => {
 
   return (
     <section className='w-full mx-2 max-w-md lg:mx-0 flex justify-center self-start'>
-      <div className='w-full bg-white rounded-lg shadow border'>
+      <div className='relative w-full shadow'>
+        <div className='absolute top-0 left-0 w-full h-full bg-white opacity-40 -z-10 rounded-lg border'></div>
         <div className='p-6'>
-          <h1 className='text-xl font-bold leading-tight tracking-tight text-dark md:text-2xl'>
+          <h1 className='text-xl font-bold leading-tight tracking-tight mb-6 text-center text-gray-200 md:text-2xl'>
             Sign in to your account
           </h1>
           <form className='space-y-4 md:space-y-6' onSubmit={handleSubmit}>
             <div>
               <label
                 htmlFor='email'
-                className='block mb-2 text-sm font-medium text-dark'
+                className='block mb-2 text-sm font-medium text-gray-200'
               >
                 Your email
               </label>
@@ -89,7 +90,7 @@ const Login = () => {
             <div>
               <label
                 htmlFor='password'
-                className='block mb-2 text-sm font-medium text-dark'
+                className='block mb-2 text-sm font-medium text-gray-200'
               >
                 Password
               </label>

@@ -16,26 +16,18 @@ const Home = () => {
   return (
     <>
       <Landing />
-      <div className='relative flex z-20 items-center bg-gray-50'>
-        <div className='w-1/2 p-16'>
-          <img
-            src='https://as1.ftcdn.net/v2/jpg/02/71/62/78/1000_F_271627824_fDcoRAoWvgoVmb08mwJt485inYcaPzUv.jpg'
-            alt='bartering'
-            className='w-full object-fill rounded-3xl shadow-gray-50 shadow-md'
-          />
-        </div>
-
-        <div className='w-1/2 h-full flex flex-col items-center justify-center'>
-          <div className='mb-16'>
+      <div className='relative flex z-20 items-center flex-col md:flex-row'>
+        <div className='w-full md:w-1/2 h-full flex flex-col items-center justify-center'>
+          <div className='mt-32 md:mt-8 md:mb-16 md:mx-8'>
             <h1
-              className={`mb-8 text-3xl md:text-4xl  lg:text-7xl font-bold text-primary md:mb-6`}
+              className={`mb-8 text-6xl md:text-7xl text-center font-bold text-white md:mb-6`}
             >
-              Harmony Exchange
+              SANATANA
             </h1>
 
             <div className='transition-all duration-500 w-full'>
-              <p className='text-xl text-secondary-200 mb-4 text-center'>
-                The place to connect
+              <p className='text-xl text-secondary-200 mb-4 '>
+                The place to connect with your community
               </p>
             </div>
           </div>
@@ -43,60 +35,21 @@ const Home = () => {
             <Login />
           </div>
         </div>
-      </div>
-      {/* Plans */}
-      {!isAuthenticated && (
-        <div className='relative  px-4 md:px-8 lg:px-16 py-4'>
-          <div className='absolute top-0 left-0 bg-gray-200 opacity-20 w-full h-full -z-10' />
-          <h1 className='text-center py-12 font-bold text-secondary text-4xl'>
-            Sign Up for a journey towards unity
-          </h1>
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-12'>
-            <PlanCard
-              planName='Free'
-              price={0}
-              features={[
-                'Up to 6 members',
-                'Up to 3GB storage',
-                'Email support',
-              ]}
-            />
-            <PlanCard
-              planName='Standard'
-              price={6}
-              features={[
-                'Up to 12 members',
-                'Up to 12GB storage',
-                'Email support',
-              ]}
-            />
-            <PlanCard
-              planName='Active'
-              price={24}
-              features={[
-                'Up to 64 members',
-                'Up to 64GB storage',
-                'Email support',
-              ]}
-            />
-            <PlanCard
-              planName='Premium'
-              price={64}
-              features={[
-                'Up to 128 members',
-                'Up to 108GB storage',
-                'Email support',
-              ]}
-            />
-          </div>
+
+        <div className='w-1/2 p-16'>
+          <img
+            src='/assets/imgs/background/community.png'
+            alt='bartering'
+            className='w-full object-fill rounded-3xl'
+          />
         </div>
-      )}
+      </div>
       {/* About */}
-      <div className='relative w-full flex flex-col items-center justify-center'>
-        <div className='absolute top-0 left-0 bg-gray-200 opacity-20 w-full h-1/3 -z-10' />
+      <div className='relative w-full flex flex-col items-center justify-center mt-8'>
+        {/* <div className='absolute top-0 left-0 bg-gray-200 opacity-20 w-full h-1/3 -z-10' /> */}
 
         <img
-          src='/assets/imgs/background/wave.svg'
+          src='/assets/imgs/background/wave-white-up.png'
           alt='wave'
           className='bottom w-full object-fill'
         />
@@ -140,11 +93,58 @@ const Home = () => {
           </div>
         </div>
         <img
-          src='/assets/imgs/background/wave-down.svg'
+          src='/assets/imgs/background/wave-white-down.png'
           alt='wave down'
           className='w-full object-fill -mt-1'
         />
       </div>
+      {/* Plans */}
+      {!isAuthenticated && (
+        <div className='relative  px-4 md:px-8 lg:px-16 py-4'>
+          <div className='absolute top-0 left-0 w-full h-full -z-10' />
+          <h1 className='text-center py-12 my-8 font-bold text-secondary text-4xl'>
+            Sign Up for a journey towards unity
+          </h1>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-12'>
+            <PlanCard
+              planName='Free'
+              price={0}
+              features={[
+                'Up to 6 members',
+                'Up to 3GB storage',
+                'Email support',
+              ]}
+            />
+            <PlanCard
+              planName='Standard'
+              price={6}
+              features={[
+                'Up to 12 members',
+                'Up to 12GB storage',
+                'Email support',
+              ]}
+            />
+            <PlanCard
+              planName='Active'
+              price={24}
+              features={[
+                'Up to 64 members',
+                'Up to 64GB storage',
+                'Email support',
+              ]}
+            />
+            <PlanCard
+              planName='Premium'
+              price={64}
+              features={[
+                'Up to 128 members',
+                'Up to 108GB storage',
+                'Email support',
+              ]}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Explore  */}
       <div className=' w-full h-auto flex justify-center lg:justify-end items-center'>
