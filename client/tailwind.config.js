@@ -33,7 +33,7 @@ export default {
     },
     colors: {
       transparent: 'transparent',
-      light: '#dcfce6',
+      light: '#f9f9f9',
       white: '#ffffff',
       success: '#22c554',
       error: '#fc716d',
@@ -109,7 +109,7 @@ export default {
         800: '#991B1B',
         900: '#7F1D1D',
       },
-      dark: '#09090b',
+      dark: '#121212',
     },
   },
   plugins: [],

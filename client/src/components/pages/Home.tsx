@@ -16,17 +16,17 @@ const Home = () => {
   return (
     <>
       <Landing />
-      <div className='relative flex z-20 items-center flex-col md:flex-row'>
+      <div className='relative flex z-20 items-center flex-col md:flex-row lg:my-24'>
         <div className='w-full md:w-1/2 h-full flex flex-col items-center justify-center'>
           <div className='mt-32 md:mt-8 md:mb-16 md:mx-8'>
             <h1
               className={`mb-8 text-6xl md:text-7xl text-center font-bold text-white md:mb-6`}
             >
-              SANATANA
+              The Harmony Exchange
             </h1>
 
             <div className='transition-all duration-500 w-full'>
-              <p className='text-xl text-secondary-200 mb-4 '>
+              <p className='text-xl text-secondary-200 mb-4 text-center '>
                 The place to connect with your community
               </p>
             </div>
@@ -40,7 +40,7 @@ const Home = () => {
           <img
             src='/assets/imgs/background/community.png'
             alt='bartering'
-            className='w-full object-fill rounded-3xl'
+            className='w-full xl:w-3/4 object-fill rounded-3xl '
           />
         </div>
       </div>
@@ -49,21 +49,44 @@ const Home = () => {
         {/* <div className='absolute top-0 left-0 bg-gray-200 opacity-20 w-full h-1/3 -z-10' /> */}
 
         <img
-          src='/assets/imgs/background/wave-white-up.png'
+          src='/assets/imgs/background/wave_figma_up.png'
           alt='wave'
           className='bottom w-full object-fill'
         />
-        <div className=' w-full h-auto flex flex-col lg:flex-row bg-white justify-around items-center pb-8 lg:pb-16'>
-          <div className='bg-white flex flex-col lg:flex-row w-full lg:w-1/2 h-full pb-8 md:pt-10 md:mx-10  max-w-xl'>
-            <div className='w-full p-8 md:p-20 pt-16 md:pt-0  text-center'>
-              <h1 className='mb-10 text-2xl text-secondary font-bold'>
+        <div className=' w-full h-auto flex flex-col lg:flex-row bg-light sm:items-center lg:items-start justify-around py-16 lg:py-8'>
+          <div className='bg-light flex flex-col lg:flex-row w-full lg:w-1/2 h-full md:pt-10 lg:pt-12 md:mx-8  max-w-xl'>
+            <div className='w-full p-8 lg:p-6 md:p-20 pt-16 md:pt-0'>
+              <h1 className='mb-8 text-3xl md:text-4xl text-dark font-medium font-[Playfair Display]'>
                 The Harmony Exchange -
               </h1>
-              <p className='text-xl leading-8'>
-                where a community of conscious individuals comes together to
-                embrace the beauty of reciprocal living.
-              </p>
-              <p className='text-xl leading-8 mt-6'>
+              <div className='text-dark font-[Quicksand] leading-[25px] text-lg md:text-xl'>
+                <span className=' font-normal'>
+                  where a community of conscious{' '}
+                </span>
+                <span className=' font-semibold'>individuals</span>
+                <span className=' font-normal'> </span>
+                <span className=' font-semibold'>
+                  comes together to embrace
+                </span>
+                <span className=' font-normal'>
+                  {' '}
+                  the beauty of reciprocal living.
+                </span>
+              </div>
+
+              <div className='my-8 flex'>
+                <img
+                  src='/assets/imgs/icons/Quotation marks 2.svg'
+                  alt='quote'
+                  className='mr-4'
+                />
+                <div className=' text-dark text-lg md:text-xl font-semibold font-[Quicksand] leading-[25px]'>
+                  it's a connection hub, fostering exchanges of goods and
+                  services
+                </div>
+              </div>
+
+              <p className=' text-dark text-lg md:text-xl font-normal font-[Quicksand] leading-[25px]'>
                 {' '}
                 This web tool is more than just a platform; it's a connection
                 hub, fostering exchanges of goods and services among like-minded
@@ -72,20 +95,40 @@ const Home = () => {
             </div>
           </div>
 
-          <div className='w-full lg:w-1/2 p-4 py-12 lg:pt-0 pb-16 md:p-8 flex items-center justify-center'>
-            <div className='p-8 md:p-16 h-full border-1 border-secondary rounded-3xl flex flex-col items-center justify-center shadow-primary shadow-xl max-w-xl'>
-              <h1 className='mb-10 text-2xl text-primary font-bold'>Vision</h1>
-              <p className='text-xl text-center mb-8 text-primary'>
-                Imagine a space where communities and farmers, united by a
-                commitment to conscious and healthy living, come together to
-                share their abundance. That's the vision behind The Harmony
-                Exchange. We are here to facilitate the exchange of homegrown
-                produce, handcrafted goods, and valuable services among members
-                who understand the importance of mindful living.
+          <div className='w-full lg:w-1/2 p-4 py-12 lg:pt-0 lg:mt-24 md:p-8 flex items-center justify-center'>
+            <div className='bg-gray-50 rounded-3xl shadow p-10 max-w-xl md:p-20 lg:px-20 lg:py-12'>
+              <h1 className='mb-8 text-4xl font-medium font-[Playfair Display]'>
+                Vision
+              </h1>
+              <p className='text-dark text-lg font-[Quicksand] leading-normal mb-8'>
+                <span className=' font-normal '>
+                  Imagine a space where communities and farmers, united by a
+                  commitment to conscious and healthy living,{' '}
+                </span>
+                <span className=' font-semibold'>
+                  come together to share their abundance.
+                </span>
+                <span className=' font-normal'>
+                  {' '}
+                  That's the vision behind The Harmony Exchange.{' '}
+                </span>
               </p>
+              <p className='text-dark text-lg font-[Quicksand] leading-normal mb-8'>
+                <span className=' font-normal'>We are here to facilitate </span>
+                <span className=' font-semibold'>
+                  the exchange of homegrown produce, handcrafted goods, and
+                  valuable services
+                </span>
+                <span className=' font-normal'>
+                  {' '}
+                  among members who understand the importance of mindful living.
+                </span>
+              </p>
+
               <Link
                 to='/about'
-                className='text-secondar bg-gray-200 bg-transparent text-primary border-2 border-primary focus:outline-none hover:bg-gray-300 focus:ring-4 focus:ring-gray-400 font-medium rounded-full text-md px-5 py-2.5 me-2 mb-2 cursor-pointer z-10'
+                className='text-secondar bg-tertiary text-dark border-2 border-1 focus:outline-none hover:bg-tertiary-600 font-medium rounded-full text-md px-6 py-2.5 me-2 mb-2 cursor-pointer z-10
+                 font-[Quicksand]'
               >
                 <span>Read More</span>
               </Link>
@@ -93,7 +136,7 @@ const Home = () => {
           </div>
         </div>
         <img
-          src='/assets/imgs/background/wave-white-down.png'
+          src='/assets/imgs/background/wave_figma_down.png'
           alt='wave down'
           className='w-full object-fill -mt-1'
         />

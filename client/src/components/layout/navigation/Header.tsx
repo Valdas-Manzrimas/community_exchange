@@ -53,7 +53,7 @@ const Header: React.FC = () => {
         <img
           src='/assets/imgs/background/header_wave.png'
           alt='header-wave'
-          className='absolute -z-10 min-[1028px]:-top-4 xl:-top-8 min-[1530px]:-top-12 left-0 w-full object-fill '
+          className='absolute -z-10 min-[1028px]:-top-4 xl:-top-8 min-[1530px]:-top-12 2xl:-top-16 left-0 w-full object-fill '
         />
         <div className=' sm:grid sm:grid-cols-5 col-span-5 sm:col-span-1 sm:justify-self-start px-4 min-[1530px]:py-1'>
           {/* logo */}
