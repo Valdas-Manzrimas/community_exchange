@@ -16,6 +16,7 @@ import ResHeader from '../components/layout/navigation/ResHeader';
 import Header from '../components/layout/navigation/Header';
 import Main from '../components/pages/community/Main';
 import DashboardRoutes from './DashboardRoutes';
+import Footer from '../components/layout/Footer';
 
 export const pages: Page[] = [
   { path: '/', component: Home },
@@ -68,6 +69,8 @@ const MyRoutes = () => {
           </>
         )}
       </Routes>
+
+      <Footer />
     </BrowserRouter>
   );
 };
