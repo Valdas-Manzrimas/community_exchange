@@ -193,12 +193,6 @@ const Home = () => {
       <div className=' w-full h-auto flex justify-center lg:justify-end items-center'>
         <div className='flex w-full lg:w-1/2 h-full bg-gray-200 mx-10 mb-10s rounded-[150px]'></div>
       </div>
-
-      <div className='h-[500px]'></div>
-      {/* <CardContainer
-        pagination={false}
-        fetchUrl='http://localhost:8080/api/product/all?limit=12'
-      /> */}
     </>
   );
 };
