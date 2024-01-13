@@ -1,10 +1,11 @@
 // Home.tsx
 import { Link } from 'react-router-dom';
 import Landing from '../layout/Landing';
-import PlanCard from '../Base/PlanCard';
+// import PlanCard from '../Base/PlanCard';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import Login from '../Base/auth/Login';
+import SectionSliderPosts from '../Base/slider/SectionSliderPlan';
 
 // import CardContainer from '../layout/CardContainer';
 
@@ -143,49 +144,8 @@ const Home = () => {
       </div>
       {/* Plans */}
       {!isAuthenticated && (
-        <div className='relative  px-4 md:px-8 lg:px-16 py-4'>
-          <div className='absolute top-0 left-0 w-full h-full -z-10' />
-          <h1 className='text-center py-12 my-8 font-bold text-secondary text-4xl'>
-            Sign Up for a journey towards unity
-          </h1>
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-12'>
-            <PlanCard
-              planName='Free'
-              price={0}
-              features={[
-                'Up to 6 members',
-                'Up to 3GB storage',
-                'Email support',
-              ]}
-            />
-            <PlanCard
-              planName='Standard'
-              price={6}
-              features={[
-                'Up to 12 members',
-                'Up to 12GB storage',
-                'Email support',
-              ]}
-            />
-            <PlanCard
-              planName='Active'
-              price={24}
-              features={[
-                'Up to 64 members',
-                'Up to 64GB storage',
-                'Email support',
-              ]}
-            />
-            <PlanCard
-              planName='Premium'
-              price={64}
-              features={[
-                'Up to 128 members',
-                'Up to 108GB storage',
-                'Email support',
-              ]}
-            />
-          </div>
+        <div className='relative py-16 px-4 md:px-8 lg:px-16'>
+          <SectionSliderPosts heading='Choose a plan which suits you' />
         </div>
       )}
 
