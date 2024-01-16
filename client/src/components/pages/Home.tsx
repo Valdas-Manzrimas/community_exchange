@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import Login from '../Base/auth/Login';
 import SectionSliderPosts from '../Base/slider/SectionSliderPlan';
+import WaveContainer from '../layout/WaveContainer';
 
 // import CardContainer from '../layout/CardContainer';
 
@@ -46,102 +47,85 @@ const Home = () => {
         </div>
       </div>
       {/* About */}
-      <div className='relative w-full flex flex-col items-center justify-center mt-8'>
-        {/* <div className='absolute top-0 left-0 bg-gray-200 opacity-20 w-full h-1/3 -z-10' /> */}
-
-        <img
-          src='/assets/imgs/background/wave_figma_up.png'
-          alt='wave'
-          className='bottom w-full object-fill'
-        />
-        <div className=' w-full h-auto flex flex-col lg:flex-row bg-light sm:items-center lg:items-start justify-around py-16 lg:py-8'>
-          <div className='bg-light flex flex-col lg:flex-row w-full lg:w-1/2 h-full md:pt-10 lg:pt-12 md:mx-8  max-w-xl'>
-            <div className='w-full p-8 lg:p-6 md:p-20 pt-16 md:pt-0'>
-              <h1 className='mb-8 text-3xl md:text-4xl text-dark font-medium font-[Playfair Display]'>
-                The Harmony Exchange -
-              </h1>
-              <div className='text-dark font-[Quicksand] leading-[25px] text-lg md:text-xl'>
-                <span className=' font-normal'>
-                  where a community of conscious{' '}
-                </span>
-                <span className=' font-semibold'>individuals</span>
-                <span className=' font-normal'> </span>
-                <span className=' font-semibold'>
-                  comes together to embrace
-                </span>
-                <span className=' font-normal'>
-                  {' '}
-                  the beauty of reciprocal living.
-                </span>
-              </div>
-
-              <div className='my-8 flex'>
-                <img
-                  src='/assets/imgs/icons/Quotation marks 2.svg'
-                  alt='quote'
-                  className='mr-4'
-                />
-                <div className=' text-dark text-lg md:text-xl font-semibold font-[Quicksand] leading-[25px]'>
-                  it's a connection hub, fostering exchanges of goods and
-                  services
-                </div>
-              </div>
-
-              <p className=' text-dark text-lg md:text-xl font-normal font-[Quicksand] leading-[25px]'>
+      <WaveContainer styling='flex-col lg:flex-row justify-around'>
+        <div className='bg-light flex flex-col lg:flex-row w-full lg:w-1/2 h-full md:pt-10 lg:pt-12 md:mx-8  max-w-xl'>
+          <div className='w-full p-8 lg:p-6 md:p-20 pt-16 md:pt-0'>
+            <h1 className='mb-8 text-3xl md:text-4xl text-dark font-medium font-[Playfair Display]'>
+              The Harmony Exchange -
+            </h1>
+            <div className='text-dark font-[Quicksand] leading-[25px] text-lg md:text-xl'>
+              <span className=' font-normal'>
+                where a community of conscious{' '}
+              </span>
+              <span className=' font-semibold'>individuals</span>
+              <span className=' font-normal'> </span>
+              <span className=' font-semibold'>comes together to embrace</span>
+              <span className=' font-normal'>
                 {' '}
-                This web tool is more than just a platform; it's a connection
-                hub, fostering exchanges of goods and services among like-minded
-                individuals who share a commitment to conscious living.
-              </p>
+                the beauty of reciprocal living.
+              </span>
             </div>
-          </div>
 
-          <div className='w-full lg:w-1/2 p-4 py-12 lg:pt-0 lg:mt-24 md:p-8 flex items-center justify-center'>
-            <div className='bg-gray-50 rounded-3xl shadow p-10 max-w-xl md:p-20 lg:px-20 lg:py-12'>
-              <h1 className='mb-8 text-4xl font-medium font-[Playfair Display]'>
-                Vision
-              </h1>
-              <p className='text-dark text-lg font-[Quicksand] leading-normal mb-8'>
-                <span className=' font-normal '>
-                  Imagine a space where communities and farmers, united by a
-                  commitment to conscious and healthy living,{' '}
-                </span>
-                <span className=' font-semibold'>
-                  come together to share their abundance.
-                </span>
-                <span className=' font-normal'>
-                  {' '}
-                  That's the vision behind The Harmony Exchange.{' '}
-                </span>
-              </p>
-              <p className='text-dark text-lg font-[Quicksand] leading-normal mb-8'>
-                <span className=' font-normal'>We are here to facilitate </span>
-                <span className=' font-semibold'>
-                  the exchange of homegrown produce, handcrafted goods, and
-                  valuable services
-                </span>
-                <span className=' font-normal'>
-                  {' '}
-                  among members who understand the importance of mindful living.
-                </span>
-              </p>
-
-              <Link
-                to='/about'
-                className='text-secondar bg-tertiary text-dark border-2 border-1 focus:outline-none hover:bg-tertiary-600 font-medium rounded-full text-md px-6 py-2.5 me-2 mb-2 cursor-pointer z-10
-                 font-[Quicksand]'
-              >
-                <span>Read More</span>
-              </Link>
+            <div className='my-8 flex'>
+              <img
+                src='/assets/imgs/icons/Quotation marks 2.svg'
+                alt='quote'
+                className='mr-4'
+              />
+              <div className=' text-dark text-lg md:text-xl font-semibold font-[Quicksand] leading-[25px]'>
+                it's a connection hub, fostering exchanges of goods and services
+              </div>
             </div>
+
+            <p className=' text-dark text-lg md:text-xl font-normal font-[Quicksand] leading-[25px]'>
+              {' '}
+              This web tool is more than just a platform; it's a connection hub,
+              fostering exchanges of goods and services among like-minded
+              individuals who share a commitment to conscious living.
+            </p>
           </div>
         </div>
-        <img
-          src='/assets/imgs/background/wave_figma_down.png'
-          alt='wave down'
-          className='w-full object-fill -mt-1'
-        />
-      </div>
+
+        <div className='w-full lg:w-1/2 p-4 py-12 lg:pt-0 lg:mt-24 md:p-8 flex items-center justify-center'>
+          <div className='bg-gray-50 rounded-3xl shadow p-10 max-w-xl md:p-20 lg:px-20 lg:py-12'>
+            <h1 className='mb-8 text-4xl font-medium font-[Playfair Display]'>
+              Vision
+            </h1>
+            <p className='text-dark text-lg font-[Quicksand] leading-normal mb-8'>
+              <span className=' font-normal '>
+                Imagine a space where communities and farmers, united by a
+                commitment to conscious and healthy living,{' '}
+              </span>
+              <span className=' font-semibold'>
+                come together to share their abundance.
+              </span>
+              <span className=' font-normal'>
+                {' '}
+                That's the vision behind The Harmony Exchange.{' '}
+              </span>
+            </p>
+            <p className='text-dark text-lg font-[Quicksand] leading-normal mb-8'>
+              <span className=' font-normal'>We are here to facilitate </span>
+              <span className=' font-semibold'>
+                the exchange of homegrown produce, handcrafted goods, and
+                valuable services
+              </span>
+              <span className=' font-normal'>
+                {' '}
+                among members who understand the importance of mindful living.
+              </span>
+            </p>
+
+            <Link
+              to='/about'
+              className='text-secondar bg-tertiary text-dark border-2 border-1 focus:outline-none hover:bg-tertiary-600 font-medium rounded-full text-md px-6 py-2.5 me-2 mb-2 cursor-pointer z-10
+                 font-[Quicksand]'
+            >
+              <span>Read More</span>
+            </Link>
+          </div>
+        </div>
+      </WaveContainer>
       {/* Plans */}
       {!isAuthenticated && (
         <div className='relative py-16 px-4 md:px-8 lg:px-16'>

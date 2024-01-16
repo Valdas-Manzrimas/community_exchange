@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import Heading from '../../layout/Heading';
 import PlanCard from '../PlanCard';
 import MySlider from './MySlider';

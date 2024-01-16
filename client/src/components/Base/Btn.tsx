@@ -2,12 +2,19 @@ import React from 'react';
 
 type ButtonProps = {
   style: 'primary' | 'secondary' | 'tertiary';
+  className?: string;
   onClick: () => void;
   children: React.ReactNode;
   disabled?: boolean;
 };
 
-const Btn: React.FC<ButtonProps> = ({ style, onClick, children, disabled }) => {
+const Btn: React.FC<ButtonProps> = ({
+  style,
+  onClick,
+  children,
+  disabled,
+  className,
+}) => {
   let buttonStyle = '';
 
   if (style === 'primary') {
@@ -20,7 +27,7 @@ const Btn: React.FC<ButtonProps> = ({ style, onClick, children, disabled }) => {
 
   return (
     <button
-      className={`px-8 py-2 rounded-full ${buttonStyle}`}
+      className={`px-8 py-2 rounded-full flex items-center justify-center ${buttonStyle} ${className}`}
       onClick={onClick}
       disabled={disabled}
     >
