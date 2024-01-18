@@ -13,6 +13,9 @@ export default {
       md: '768px',
       // => @media (min-width: 768px) { ... }
 
+      xmd: '900px',
+      // => @media (min-width: 900px) { ... }
+
       lg: '1024px',
       // => @media (min-width: 1024px) { ... }
 
@@ -30,7 +33,7 @@ export default {
     },
     colors: {
       transparent: 'transparent',
-      light: '#dcfce6',
+      light: '#f9f9f9',
       white: '#ffffff',
       success: '#22c554',
       error: '#fc716d',
@@ -70,6 +73,18 @@ export default {
         800: '#342923',
         900: '#0A0405',
       },
+      tertiary: {
+        50: '#FDF9F0',
+        100: '#FAF2D9',
+        200: '#F5E9BF',
+        300: '#F0E0A5',
+        400: '#EAD88B',
+        DEFAULT: '#FF9635',
+        600: '#C6752B',
+        700: '#945422',
+        800: '#623619',
+        900: '#311B0F',
+      },
       gray: {
         50: '#FDFDFD',
         100: '#FAFAFA',
@@ -94,7 +109,7 @@ export default {
         800: '#991B1B',
         900: '#7F1D1D',
       },
-      dark: '#09090b',
+      dark: '#121212',
     },
   },
   plugins: [],

@@ -19,7 +19,7 @@ const communitySlice = createSlice({
   name: 'community',
   initialState,
   reducers: {
-    setCommunity: (state, action: PayloadAction<Community>) => {
+    setCommunity: (_, action: PayloadAction<Community>) => {
       return action.payload;
     },
     clearCommunity: () => initialState,
