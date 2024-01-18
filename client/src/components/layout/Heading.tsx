@@ -15,7 +15,7 @@ const Heading: React.FC<HeadingProps> = ({
 }) => {
   return (
     <div
-      className={`relative flex flex-col sm:flex-row sm:items-end justify-between ${className}`}
+      className={`relative flex flex-col sm:flex-row sm:items-end justify-between font-serif ${className}`}
     >
       <div
         className={
