@@ -22,13 +22,13 @@ const Home = () => {
         <div className='w-full md:w-1/2 h-full flex flex-col items-center justify-center'>
           <div className='mt-32 md:mt-8 md:mb-16 md:mx-8'>
             <h1
-              className={`mb-8 text-6xl md:text-7xl text-center font-bold text-white md:mb-6`}
+              className={`mb-8 text-6xl md:text-7xl text-center font-serif font-bold text-white md:mb-6`}
             >
               The Harmony Exchange
             </h1>
 
             <div className='transition-all duration-500 w-full'>
-              <p className='text-xl text-secondary-200 mb-4 text-center '>
+              <p className='text-xl text-secondary-200 mb-4 text-center'>
                 The place to connect with your community
               </p>
             </div>

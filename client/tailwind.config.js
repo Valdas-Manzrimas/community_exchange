@@ -30,6 +30,10 @@ export default {
         inner: 'inset 0 2px 4px 0 rgb(0 0 0 / 0.1)',
         2: '0 0 6px 0 rgba(0, 0, 0, 0.2)',
       },
+      fontFamily: {
+        sans: ['Quicksand', 'sans-serif'],
+        serif: ['Playfair Display', 'serif'],
+      },
     },
     colors: {
       transparent: 'transparent',
