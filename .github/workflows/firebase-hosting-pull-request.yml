@@ -15,3 +15,4 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_BARTER_PROJECT_82E56 }}'
           projectId: barter-project-82e56
+          entryPoint: client

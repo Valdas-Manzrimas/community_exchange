@@ -18,3 +18,4 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_BARTER_PROJECT_82E56 }}'
           channelId: live
           projectId: barter-project-82e56
+          entryPoint: client
