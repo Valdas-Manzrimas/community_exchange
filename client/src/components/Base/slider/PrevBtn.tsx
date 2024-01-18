@@ -1,5 +1,5 @@
 import twFocusClass from '../../utils/toFocusClass';
-import React, { ButtonHTMLAttributes, FC } from 'react';
+import { ButtonHTMLAttributes, FC } from 'react';
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {}
 

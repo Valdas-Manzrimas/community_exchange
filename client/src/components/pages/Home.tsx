@@ -38,9 +38,9 @@ const Home = () => {
           </div>
         </div>
 
-        <div className='w-1/2 p-16'>
+        <div className='w-1/2 p-8 flex justify-center'>
           <img
-            src='/assets/imgs/background/community.png'
+            src='/assets/imgs/background/community-1.png'
             alt='bartering'
             className='w-full xl:w-3/4 object-fill rounded-3xl '
           />

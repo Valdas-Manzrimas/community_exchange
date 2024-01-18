@@ -11,6 +11,7 @@ import { setAlert } from '../../../store/slices/alertSlice';
 
 import { handleErrors } from '../functions/handleErrors';
 import { setCommunity } from '../../../store/slices/communitySlice';
+import Btn from '../Btn';
 
 const RegisterCommunity = () => {
   const [communityName, setCommunityName] = useState('');
@@ -79,17 +80,17 @@ const RegisterCommunity = () => {
   };
 
   return (
-    <section className='w-full mx-2 max-w-md lg:mx-0 '>
-      <div className='w-full bg-white rounded-lg shadow border'>
+    <section className='w-full lg:mx-0 flex align-center'>
+      <div className='w-full rounded-lg flex justify-center mt-16'>
         <div className='p-6 space-y-4 md:space-y-6 sm:p-8'>
-          <h1 className='text-xl font-bold leading-tight tracking-tight text-dark md:text-2xl'>
+          <h1 className='text-xl font-bold leading-tight tracking-tight text-light md:text-2xl'>
             Create a community and your account
           </h1>
           <form className='space-y-2 md:space-y-3' onSubmit={handleSubmit}>
             <div>
               <label
                 htmlFor='communityName'
-                className='block mb-2 text-sm font-medium text-dark'
+                className='block mb-2 text-sm font-medium text-light'
               >
                 Community Name
               </label>
@@ -106,7 +107,7 @@ const RegisterCommunity = () => {
             <div>
               <label
                 htmlFor='email'
-                className='block mb-2 text-sm font-medium text-dark'
+                className='block mb-2 text-sm font-medium text-light'
               >
                 Your email
               </label>
@@ -123,7 +124,7 @@ const RegisterCommunity = () => {
             <div>
               <label
                 htmlFor='firstName'
-                className='block mb-2 text-sm font-medium text-dark'
+                className='block mb-2 text-sm font-medium text-light'
               >
                 First name
               </label>
@@ -141,7 +142,7 @@ const RegisterCommunity = () => {
             <div>
               <label
                 htmlFor='lastName'
-                className='block mb-2 text-sm font-medium text-dark'
+                className='block mb-2 text-sm font-medium text-light'
               >
                 Your surname
               </label>
@@ -160,7 +161,7 @@ const RegisterCommunity = () => {
             <div>
               <label
                 htmlFor='password'
-                className='block mb-2 text-sm font-medium text-dark'
+                className='block mb-2 text-sm font-medium text-light'
               >
                 Password
               </label>
@@ -176,12 +177,21 @@ const RegisterCommunity = () => {
               />
             </div>
 
-            <button
+            {/* <button
               type='submit'
               className='w-full text-dark bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center '
             >
               Create Community
-            </button>
+            </button> */}
+            <div className='w-full flex items-center justify-center'>
+              <Btn
+                type='submit'
+                style='secondary'
+                onClick={() => handleSubmit}
+                children='Create Community'
+                className='mt-6'
+              />
+            </div>
           </form>
         </div>
       </div>
