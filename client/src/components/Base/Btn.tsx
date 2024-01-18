@@ -2,6 +2,7 @@ import React from 'react';
 
 type ButtonProps = {
   style: 'primary' | 'secondary' | 'tertiary';
+  type?: 'button' | 'submit' | 'reset';
   className?: string;
   onClick: () => void;
   children: React.ReactNode;
@@ -14,6 +15,7 @@ const Btn: React.FC<ButtonProps> = ({
   children,
   disabled,
   className,
+  type = 'button',
 }) => {
   let buttonStyle = '';
 
@@ -30,6 +32,7 @@ const Btn: React.FC<ButtonProps> = ({
       className={`px-8 py-2 rounded-full flex items-center justify-center ${buttonStyle} ${className}`}
       onClick={onClick}
       disabled={disabled}
+      type={type}
     >
       {children}
     </button>

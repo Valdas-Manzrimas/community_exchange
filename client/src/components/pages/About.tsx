@@ -264,7 +264,7 @@ const About: React.FC = () => {
         </div>
 
         <div className='w-full text-light mt-16 lg:mt-6 mb-32 md:flex justify-center'>
-          <div className=' flex flex-col md:flex-row justify-around items-center max-w-[1055px] lg:gap-32'>
+          <div className=' flex flex-col md:flex-row justify-between items-center max-w-[1055px] lg:gap-32'>
             <div className='md:w-1/2 mx-4 flex md:justify-center flex-col md:items-center'>
               <Heading className='font-[Playfair Display] mb-8' isCenter>
                 What to expect
