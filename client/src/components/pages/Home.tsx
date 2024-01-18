@@ -7,6 +7,7 @@ import { RootState } from '../../store';
 import Login from '../Base/auth/Login';
 import SectionSliderPosts from '../Base/slider/SectionSliderPlan';
 import WaveContainer from '../layout/WaveContainer';
+import PageLayout from '../layout/PageLayout';
 
 // import CardContainer from '../layout/CardContainer';
 
@@ -16,7 +17,10 @@ const Home = () => {
   );
 
   return (
-    <>
+    <PageLayout
+      description='Sanatana community exchange platform, meant to support communities in exchanging products and services between its members'
+      title='Sanatana Home Page'
+    >
       <Landing />
       <div className='relative flex z-20 items-center flex-col md:flex-row lg:my-24'>
         <div className='w-full md:w-1/2 h-full flex flex-col items-center justify-center'>
@@ -137,7 +141,7 @@ const Home = () => {
       <div className=' w-full h-auto flex justify-center lg:justify-end items-center'>
         <div className='flex w-full lg:w-1/2 h-full bg-gray-200 mx-10 mb-10s rounded-[150px]'></div>
       </div>
-    </>
+    </PageLayout>
   );
 };
 

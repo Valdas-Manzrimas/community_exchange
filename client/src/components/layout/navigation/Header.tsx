@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Dropdown from '../../Base/Dropdown';
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,7 +11,8 @@ import { useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
-  // const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   const location = useLocation();
 
@@ -25,6 +26,38 @@ const Header: React.FC = () => {
     (state: RootState) => state.persisted.auth.isAuthenticated
   );
   // const user = useSelector((state: RootState) => state.persisted.user);
+
+  const authPages = [`/community/${id}`, '/dashboard/*'];
+  const isAuthRoute = authPages.some((route) =>
+    location.pathname.includes(route)
+  );
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 100;
+      setIsScrolled(isScrolled);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // hide header img on scroll down
+  useEffect(() => {
+    if (isScrolled) {
+      setIsVisible(false);
+    } else {
+      setIsVisible(true);
+    }
+  }, [isScrolled]);
+
+  // scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -50,12 +83,17 @@ const Header: React.FC = () => {
       {alert.message && <Alert type={alert.status} message={alert.message} />}
 
       <header className={`relative w-full sm:items-center`}>
-        <img
-          src='/assets/imgs/background/header_wave.png'
-          alt='header-wave'
-          className='absolute -z-10 min-[1028px]:-top-4 xl:-top-8 min-[1530px]:-top-12 2xl:-top-16 left-0 w-full object-fill '
-        />
-        <div className=' sm:grid sm:grid-cols-5 col-span-5 sm:col-span-1 sm:justify-self-start px-4 min-[1530px]:py-1'>
+        {!isAuthRoute && (
+          <img
+            src='/assets/imgs/background/header_wave.png'
+            alt='header-wave'
+            className={`absolute -z-10 min-[1028px]:-top-4 xl:-top-8 min-[1530px]:-top-12 2xl:-top-16 left-0 w-full object-fill transition-opacity duration-300 ease-in-out ${
+              !isVisible ? 'opacity-0' : 'opacity-100'
+            }`}
+          />
+        )}
+        <div className='relative sm:grid sm:grid-cols-5 col-span-5 sm:col-span-1 sm:justify-self-start px-4 min-[1530px]:py-1'>
+          <div className='absolute top-0 left-0 w-full h-full bg-light -z-10' />
           {/* logo */}
           <div className='flex items-center'>
             <div>

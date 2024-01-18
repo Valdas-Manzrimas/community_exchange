@@ -5,11 +5,13 @@ import { logout, AuthState } from '../../../store/slices/authSlice';
 import { clearUser, User } from '../../../store/slices/userSlice';
 import { AlertState } from '../../../store/slices/alertSlice';
 import Alert from '../Alert';
+import { Community } from '../../../store/slices/communitySlice';
 
 interface RootState {
   persisted: {
     auth: AuthState;
     user: User;
+    community: Community;
   };
   alert: AlertState;
 }
@@ -26,6 +28,7 @@ const ResHeader: React.FC = () => {
   );
   const user = useSelector((state: RootState) => state.persisted.user);
   const alert = useSelector((state: RootState) => state.alert);
+  const id = useSelector((state: RootState) => state.persisted.community);
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -53,21 +56,27 @@ const ResHeader: React.FC = () => {
   }, [navRef, showMenu]);
 
   const active = (path: string) => {
-    return location.pathname === path
-      ? 'border-secondary text-secondary'
-      : 'border-primary text-white';
+    if (path !== '/wishlist' && path !== '/messages') {
+      return location.pathname.includes(path)
+        ? 'border-secondary text-secondary'
+        : 'border-primary text-white';
+    } else {
+      return location.pathname === path
+        ? 'border-secondary text-secondary'
+        : 'border-primary text-primary';
+    }
   };
 
   return (
     <>
-      <nav className='fixed top-0 z-[1000] w-full bg-primary'>
+      <nav className='fixed top-0 z-[1000] w-full bg-light'>
         <div className='px-3 py-3 lg:px-5 lg:pl-3'>
           <div className='flex items-center justify-between'>
             {/* Logo box */}
             <div className='flex items-center justify-start rtl:justify-end'>
               <Link to='/' onClick={() => showMenu && toggleMenu}>
-                <span className='text-gray-50 font-semibold font-serif text-2xl md:text-4xl tracking-tight'>
-                  Barter
+                <span className='text-primary font-semibold font-serif text-2xl md:text-4xl tracking-tight'>
+                  SANATANA
                 </span>
               </Link>
             </div>
@@ -85,7 +94,7 @@ const ResHeader: React.FC = () => {
                       xmlns='http://www.w3.org/2000/svg'
                       viewBox='0 0 24 24'
                       fill='currentColor'
-                      className={`w-6 h-6 transition duration-7 ${active(
+                      className={`w-6 h-6 transition duration-7  ${active(
                         '/wishlist'
                       )}`}
                     >
@@ -100,7 +109,7 @@ const ResHeader: React.FC = () => {
                   </Link>
 
                   <Link
-                    to='/order-cart'
+                    to='/messages'
                     className='flex items-center ml-3'
                     onClick={() => showMenu && toggleMenu}
                   >
@@ -108,14 +117,15 @@ const ResHeader: React.FC = () => {
                       xmlns='http://www.w3.org/2000/svg'
                       viewBox='0 0 24 24'
                       fill='currentColor'
-                      className={`w-6 h-6 transition duration-7 ${active(
-                        '/order-cart'
+                      className={`w-6 h-6 transition duration-7  ${active(
+                        '/messages'
                       )}`}
                     >
-                      <title>109 shopping bag</title>
-                      <g id='_01_align_center' data-name='01 align center'>
-                        <path d='M18,6A6,6,0,0,0,6,6H0V21a3,3,0,0,0,3,3H21a3,3,0,0,0,3-3V6ZM12,2a4,4,0,0,1,4,4H8A4,4,0,0,1,12,2ZM22,21a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V8H6v2H8V8h8v2h2V8h4Z' />
-                      </g>
+                      <title>Messages</title>
+                      <path d='M20,0H4A4,4,0,0,0,0,4V16a4,4,0,0,0,4,4H6.9l4.451,3.763a1,1,0,0,0,1.292,0L17.1,20H20a4,4,0,0,0,4-4V4A4,4,0,0,0,20,0Zm2,16a2,2,0,0,1-2,2H17.1a2,2,0,0,0-1.291.473L12,21.69,8.193,18.473h0A2,2,0,0,0,6.9,18H4a2,2,0,0,1-2-2V4A2,2,0,0,1,4,2H20a2,2,0,0,1,2,2Z' />
+                      <path d='M7,7h5a1,1,0,0,0,0-2H7A1,1,0,0,0,7,7Z' />
+                      <path d='M17,9H7a1,1,0,0,0,0,2H17a1,1,0,0,0,0-2Z' />
+                      <path d='M17,13H7a1,1,0,0,0,0,2H17a1,1,0,0,0,0-2Z' />
                     </svg>
                     <span className='pro-count white'>
                       {/*totalCartItems*/}
@@ -127,13 +137,13 @@ const ResHeader: React.FC = () => {
               <button
                 name='hamburger'
                 type='button'
-                className='hamburger inline-flex items-center ml-4 p-2 text-sm text-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-brown'
+                className='hamburger inline-flex items-center ml-4 p-2 text-sm text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-tertiary'
                 onClick={toggleMenu}
               >
                 <span className='sr-only'>Open sidebar</span>
                 <svg
                   className={`hamburger w-6 h-6 ${
-                    showMenu ? 'text-brown' : 'text-gray-100'
+                    showMenu ? 'text-tertiary' : 'text-primary'
                   }`}
                   aria-hidden='true'
                   fill='currentColor'
@@ -159,13 +169,13 @@ const ResHeader: React.FC = () => {
 
       <aside
         ref={navRef}
-        className={`fixed top-0 right-0 z-40 w-64 h-screen pt-20 transition-transform duration-300 bg-primary border-l border-brown  ${
+        className={`fixed top-0 right-0 z-40 w-64 h-screen pt-20 transition-transform duration-300 bg-primary border-l border-tertiary  ${
           showMenu ? `translate-x-0` : 'translate-x-full not-visible'
         }`}
       >
         <div className='h-full px-3 pb-4 overflow-y-auto bg-primary flex flex-col'>
           {isAuthenticated && (
-            <div className='flex flex-col items-center justify-center border-b border-brown'>
+            <div className='flex flex-col items-center justify-center border-b border-tertiary'>
               <div className='flex items-center justify-center'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
@@ -186,7 +196,7 @@ const ResHeader: React.FC = () => {
               <span className='text-brown pb-2'>{user.email}</span>
             </div>
           )}
-          <ul className='space-y-2 pb-4 font-medium self-stretch border-b border-brown'>
+          <ul className='space-y-2 pb-4 font-medium self-stretch border-b border-tertiary'>
             <li className='mt-2'>
               <Link
                 onClick={toggleMenu}
@@ -230,39 +240,42 @@ const ResHeader: React.FC = () => {
                 <span className='flex-1 ms-3 whitespace-nowrap'>About</span>
               </Link>
             </li>
-            <li>
-              <Link
-                onClick={toggleMenu}
-                to='/all-products'
-                className={`flex items-center p-2 rounded-lg  group ${active(
-                  '/all-products'
-                )}`}
-              >
-                <svg
-                  className={`w-5 h-5 transition duration-7 ${active(
-                    '/all-products'
+            {isAuthenticated && (
+              <li>
+                <Link
+                  to={`/community/${id}`}
+                  className={`flex items-center p-2 rounded-lg group ${active(
+                    `/community/${id}`
                   )}`}
-                  aria-hidden='true'
-                  xmlns='http://www.w3.org/2000/svg'
-                  fill='currentColor'
-                  viewBox='0 0 18 20'
                 >
-                  <path d='M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z' />
-                </svg>
-                <span className='flex-1 ms-3 whitespace-nowrap'>Products</span>
-              </Link>
-            </li>
+                  <svg
+                    className={`w-5 h-5 transition duration-7 ${active(
+                      '/all-products'
+                    )}`}
+                    aria-hidden='true'
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='currentColor'
+                    viewBox='0 0 18 20'
+                  >
+                    <path d='M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z' />
+                  </svg>
+                  <span className='flex-1 ms-3 whitespace-nowrap'>
+                    Community
+                  </span>
+                </Link>
+              </li>
+            )}
             <li>
               <Link
                 onClick={toggleMenu}
-                to='/contact'
+                to='/contact-us'
                 className={`flex items-center p-2 rounded-lg  group ${active(
-                  '/contact'
+                  '/contact-us'
                 )}`}
               >
                 <svg
                   className={`w-5 h-5 transition duration-7 ${active(
-                    '/contact'
+                    '/contact-us'
                   )}`}
                   aria-hidden='true'
                   xmlns='http://www.w3.org/2000/svg'
@@ -342,31 +355,30 @@ const ResHeader: React.FC = () => {
                   '/login-register'
                 )}`}
               >
-                <svg
-                  className={`w-5 h-5 transition duration-7 ${active(
-                    '/login-register'
-                  )}`}
-                  aria-hidden='true'
-                  xmlns='http://www.w3.org/2000/svg'
-                  fill='none'
-                  viewBox='0 0 18 16'
-                >
-                  <path
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    d='M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3'
-                  />
-                </svg>
-                {!isAuthenticated ? (
-                  <span className='flex-1 whitespace-nowrap text-center'>
-                    Sign In / Sign Up
-                  </span>
-                ) : (
-                  <span className='flex-1 whitespace-nowrap text-center'>
-                    Sign Out
-                  </span>
+                {isAuthenticated && (
+                  <>
+                    <svg
+                      className={`w-5 h-5 transition duration-7 ${active(
+                        '/login-register'
+                      )}`}
+                      aria-hidden='true'
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 18 16'
+                    >
+                      <path
+                        stroke='currentColor'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        strokeWidth='2'
+                        d='M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3'
+                      />
+                    </svg>
+
+                    <span className='flex-1 whitespace-nowrap text-center'>
+                      Sign Out
+                    </span>
+                  </>
                 )}
               </Link>
             </li>
