@@ -19,7 +19,7 @@ const Home = () => {
   return (
     <PageLayout
       description='Sanatana community exchange platform, meant to support communities in exchanging products and services between its members'
-      title='Sanatana Home Page'
+      title='Sanatana'
     >
       <Landing />
       <div className='relative flex z-20 items-center flex-col md:flex-row lg:my-24'>
