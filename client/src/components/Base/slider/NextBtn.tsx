@@ -10,9 +10,9 @@ const NextBtn: FC<Props> = ({ className = 'w-10 h-10 text-lg', ...args }) => {
       {...args}
     >
       <img
-        src='/assets/imgs/icons/arrow-right.png'
+        src='/assets/imgs/icons/angle-right.svg'
         alt='arrow-right'
-        className='w-6 h-6'
+        className='w-4 h-4'
       />
     </button>
   );

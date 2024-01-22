@@ -6,8 +6,8 @@ const About: React.FC = () => {
   return (
     <>
       <div className='mt-16 md:mt-0'>
-        <div className='relative w-full py-16 lg:pt-24 lg:px-32 flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-gray-50'>
-          <div className=' w-full px-8 pb-6 md:px-16 -z-10 text-light'>
+        <div className='relative w-full py-16 md:pt-36 lg:px-32 flex flex-col md:flex-row justify-center divide-y md:divide-y-0 md:divide-x divide-gray-50'>
+          <div className=' w-full px-8 pb-6 md:px-16 -z-10 text-light max-w-[570px]'>
             <Heading className='font-[Playfair Display] mb-4'>
               Who we are
             </Heading>
@@ -22,7 +22,7 @@ const About: React.FC = () => {
             </div>
           </div>
 
-          <div className='w-full pt-4 px-8 md:px-16 -z-10 text-light  '>
+          <div className='w-full pt-4 px-8 md:px-16 -z-10 text-light  max-w-[570px] '>
             <Heading className='font-[Playfair Display] mb-4' isCenter>
               Vision
             </Heading>
@@ -35,7 +35,7 @@ const About: React.FC = () => {
           </div>
         </div>
 
-        <WaveContainer styling='flex-col lg:py-24 justify-center items-center '>
+        <WaveContainer styling='flex-col lg:py-32 justify-center items-center '>
           <div className='flex flex-col self-center'>
             <Heading className='font-[Playfair Display] self-start mb-4 px-8 md:px-12 lg:px-32'>
               Join Your Community's Exchange
@@ -104,7 +104,7 @@ const About: React.FC = () => {
 
         <div className='relative w-full -z-10 px-4 md:px-6 lg:px-24 text-light flex flex-col items-center'>
           <Heading
-            className='font-[Playfair Display] my-16 md:my-24 max-w-[1055px]'
+            className='font-[Playfair Display] my-16 md:my-20 max-w-[1055px]'
             isCenter
           >
             Our Values

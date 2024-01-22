@@ -24,7 +24,7 @@ const ContactUs = ({ className }: IWireframeContactProps): JSX.Element => {
               alt='location'
               className='w-4 h-4 mr-2 inline-block text-light filter invert'
             />
-            Gedimino pr. 1, Vilnius, LT-01103
+            Lithuania, India, Norway, Spain, UK
           </div>
           <div className="text-base font-normal font-['Quicksand'] leading-normal flex items-center">
             <img
@@ -32,7 +32,7 @@ const ContactUs = ({ className }: IWireframeContactProps): JSX.Element => {
               alt='email'
               className='w-4 h-4 mr-2 inline-block text-light filter invert'
             />
-            email123@gmail.com
+            v.manzrimas@gmail.com
           </div>
           <div className="text-base font-normal font-['Quicksand'] leading-normal flex items-center">
             <img
@@ -40,7 +40,7 @@ const ContactUs = ({ className }: IWireframeContactProps): JSX.Element => {
               alt='phone'
               className='w-4 h-4 mr-2 inline-block filter invert '
             />
-            +37068686868
+            +37063270185
           </div>
           <div className='p-2 mt-8 flex '>
             <img

@@ -10,9 +10,9 @@ const PrevBtn: FC<Props> = ({ className = 'w-10 h-10 text-lg', ...args }) => {
       {...args}
     >
       <img
-        src='/assets/imgs/icons/arrow-left.png'
+        src='/assets/imgs/icons/angle-left.svg'
         alt='arrow-left'
-        className='w-6 h-6'
+        className='w-4 h-4'
       />
     </button>
   );

@@ -54,7 +54,7 @@ export default function MySlider<T>({
 
   const handlers = useSwipeable({
     onSwipedLeft: () => {
-      if (currentIndex < data?.length - 1) {
+      if (currentIndex < data?.length - numberOfItems) {
         changeItemId(currentIndex + 1);
       }
     },
@@ -78,16 +78,16 @@ export default function MySlider<T>({
           opacity: { duration: 0.2 },
         }}
       >
-        <div className={`relative flow-root`} {...handlers}>
-          <div className={`flow-root overflow-hidden rounded-xl`}>
+        <div className={`relative flow-root `} {...handlers}>
+          <div className={`flow-root overflow-hidden rounded-xl px-8`}>
             <motion.ul
               initial={false}
-              className='relative whitespace-nowrap -mx-2 xl:-mx-4'
+              className='relative whitespace-nowrap -mx-2 xl:-mx-4 py-12'
             >
               <AnimatePresence initial={false} custom={direction}>
                 {data.map((item, indx) => (
                   <motion.li
-                    className={`relative inline-flex flex-row justify-center px-2 xl:px-4 whitespace-normal`}
+                    className={`relative inline-flex flex-row justify-center xl:px-4 whitespace-normal`}
                     custom={direction}
                     initial={{
                       x: `${(currentIndex - 1) * -100}%`,

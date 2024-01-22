@@ -63,7 +63,7 @@ const SectionSliderPosts: FC<SectionSliderPostsProps> = ({
   perView = 4,
 }) => {
   return (
-    <div className={`${className}`}>
+    <div className={`lg:max-w-[1400px] ${className}`}>
       <Heading desc={subHeading} isCenter>
         {heading}
       </Heading>

@@ -22,7 +22,7 @@ const PlanCard: React.FC<PlanCardProps> = ({
   };
 
   return (
-    <div className='h-full relative bg-gray-100 px-8 py-8 mx-4 rounded-[36px] font-[Quicksand] min-w-[270px] min-h-fit'>
+    <div className='h-full relative bg-gray-100 px-8 py-8 rounded-[36px] min-w-[270px] min-h-fit transform transition-all duration-500 ease-in-out hover:scale-110'>
       <div className='flex items-baseline text-gray-900 justify-center'>
         <span className='text-5xl font-normal tracking-tight mr-2'>
           {price}

@@ -91,7 +91,7 @@ const Home = () => {
         </div>
 
         <div className='w-full lg:w-1/2 p-4 py-12 lg:pt-0 lg:mt-24 md:p-8 flex items-center justify-center'>
-          <div className='bg-gray-50 rounded-3xl shadow p-10 max-w-xl md:p-20 lg:px-20 lg:py-12'>
+          <div className='bg-gray-50 rounded-3xl shadow p-10 max-w-xl md:p-20 lg:px-20 lg:py-24'>
             <h1 className='mb-8 text-4xl font-medium font-[Playfair Display]'>
               Vision
             </h1>
@@ -132,7 +132,7 @@ const Home = () => {
       </WaveContainer>
       {/* Plans */}
       {!isAuthenticated && (
-        <div className='relative py-16 px-4 md:px-8 lg:px-16'>
+        <div className='relative py-16 px-4 md:px-8 lg:px-16 lg:flex lg:justify-center'>
           <SectionSliderPosts heading='Choose a plan which suits you' />
         </div>
       )}
