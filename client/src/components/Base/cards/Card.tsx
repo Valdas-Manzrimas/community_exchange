@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Product } from '../../types/ProductTypes';
+import { Product } from '../../../types/ProductTypes';
 import { Link } from 'react-router-dom';
-import ModalContainer from '../layout/containers/ModalContainer';
+import ModalContainer from '../../layout/containers/ModalContainer';
 import { useNavigate } from 'react-router-dom';
 
 interface CardProps {

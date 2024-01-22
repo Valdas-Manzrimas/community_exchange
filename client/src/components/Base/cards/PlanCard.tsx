@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Btn from './Btn';
+import Btn from '../Btn';
 
 interface PlanCardProps {
   planName: string;

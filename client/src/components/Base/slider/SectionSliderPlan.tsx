@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import Heading from '../../layout/Heading';
-import PlanCard from '../PlanCard';
+import PlanCard from '../cards/PlanCard';
 import MySlider from './MySlider';
 
 export interface SectionSliderPostsProps {

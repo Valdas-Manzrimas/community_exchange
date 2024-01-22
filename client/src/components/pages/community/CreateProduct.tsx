@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import { handleErrors } from '../../Base/functions/handleErrors';
 import { setAlert } from '../../../store/slices/alertSlice';
-import ImageUpload from '../../Base/ImageUpload';
+import ImageUpload from '../../utils/ImageUpload';
 import LoadingSpinner from '../../Base/LoadingSpinner';
 import * as yup from 'yup';
 

@@ -1,13 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import Card from '../../Base/Card';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../../../types/ProductTypes';
-import Pagination from '../../Base/Pagination';
+import Pagination from '../../utils/Pagination';
 import { handleErrors } from '../../Base/functions/handleErrors';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../store';
-import InLineCard from '../../Base/InLineCard';
 import { deleteProduct } from '../../Base/functions/deleteProduct';
 
 interface CardContainerProps {
@@ -17,6 +15,10 @@ interface CardContainerProps {
   onPageChange?: (newPage: number) => void;
   currentPage?: number;
   isListView?: boolean;
+  children: (
+    product: Product,
+    handleDelete: (productId: string) => void
+  ) => React.ReactNode;
 }
 
 const CardContainer: React.FC<CardContainerProps> = ({
@@ -26,6 +28,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
   token,
   onPageChange,
   isListView = false,
+  children,
 }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -69,10 +72,13 @@ const CardContainer: React.FC<CardContainerProps> = ({
     }
   };
 
-  const handleDelete = async (productId: string) => {
-    await deleteProduct(productId, token);
-    fetchProducts();
-  };
+  const handleDelete = useCallback(
+    async (productId: string) => {
+      await deleteProduct(productId, token);
+      fetchProducts();
+    },
+    [token, fetchProducts]
+  );
 
   const handleClick = () => {
     navigate('/all-products');
@@ -99,14 +105,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {products.map((product) => (
-                    <InLineCard
-                      product={product}
-                      key={product._id}
-                      myProduct={product.isMine}
-                      onDeleteClick={handleDelete}
-                    />
-                  ))}
+                  {products.map((product) => children(product, handleDelete))}
                 </tbody>
               </table>
             </div>
@@ -114,37 +113,27 @@ const CardContainer: React.FC<CardContainerProps> = ({
           <div className='w-full m-1'></div>
         </div>
       ) : (
-        <>
-          <div className='grid grid-cols-1 min-[600px]:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 '>
-            {!products.length ? (
-              <div>No products found</div>
-            ) : (
-              products.map((product) => (
-                <Card
-                  product={product}
-                  key={product._id}
-                  myProduct={product.isMine}
-                  onDeleteClick={handleDelete}
-                />
-              ))
-            )}
-          </div>
-
-          {pagination ? (
-            <Pagination
-              currentPage={currentPage || 1}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
+        <div className='grid grid-cols-1 min-[600px]:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 '>
+          {!products.length ? (
+            <div>No products found</div>
           ) : (
-            <button
-              className='bg-blue-500 hover:bg-blue-700 text-narvik-500 font-bold py-2 px-4 rounded'
-              onClick={handleClick}
-            >
-              See more
-            </button>
+            products.map((product) => children(product, handleDelete))
           )}
-        </>
+        </div>
+      )}
+      {pagination ? (
+        <Pagination
+          currentPage={currentPage || 1}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      ) : (
+        <button
+          className='bg-blue-500 hover:bg-blue-700 text-narvik-500 font-bold py-2 px-4 rounded'
+          onClick={handleClick}
+        >
+          See more
+        </button>
       )}
     </div>
   );

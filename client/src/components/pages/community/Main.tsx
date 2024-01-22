@@ -114,7 +114,7 @@ const Main: FC<Main> = () => {
                   </div>
                 </div>
                 <Link
-                  to={`/dashboard/${id}`}
+                  to={`/dashboard/items/all`}
                   className='bg-primary text-white px-4 py-2 rounded-md'
                 >
                   Dashboard

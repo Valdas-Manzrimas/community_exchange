@@ -5,15 +5,16 @@ import { RootState } from '../../../store';
 import FilterContainer from '../../layout/containers/FilterContainer';
 import ModalContainer from '../../layout/containers/ModalContainer';
 import CreateProduct from './CreateProduct';
+import Card from '../../Base/cards/Card';
 
 const AllProducts: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [isListView, setIsListView] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-  };
+  // const handlePageChange = (newPage: number) => {
+  //   setCurrentPage(newPage);
+  // };
 
   const community = useSelector(
     (state: RootState) => state.persisted.community
@@ -39,13 +40,19 @@ const AllProducts: React.FC = () => {
       </ModalContainer>
 
       <CardContainer
-        pagination={true}
         fetchUrl={`http://localhost:8080/api/community/products/${community}`}
-        currentPage={currentPage}
-        isListView={false}
-        onPageChange={handlePageChange}
+        pagination={true}
         token={token}
-      />
+      >
+        {(product, handleDelete) => (
+          <Card
+            product={product}
+            key={product._id}
+            myProduct={product.isMine}
+            onDeleteClick={handleDelete}
+          />
+        )}
+      </CardContainer>
     </div>
   );
 };

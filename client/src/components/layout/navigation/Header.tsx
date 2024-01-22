@@ -27,10 +27,8 @@ const Header: React.FC = () => {
   );
   // const user = useSelector((state: RootState) => state.persisted.user);
 
-  const authPages = [`/community/${id}`, '/dashboard/*'];
-  const isAuthRoute = authPages.some((route) =>
-    location.pathname.includes(route)
-  );
+  const authPages = [/^\/community\/.*/, /^\/dashboard\/.*/];
+  const isAuthRoute = authPages.some((route) => route.test(location.pathname));
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,12 +45,12 @@ const Header: React.FC = () => {
 
   // hide header img on scroll down
   useEffect(() => {
-    if (isScrolled) {
+    if (isScrolled || isAuthRoute) {
       setIsVisible(false);
     } else {
       setIsVisible(true);
     }
-  }, [isScrolled]);
+  }, [isScrolled, isAuthRoute]);
 
   // scroll to top on route change
   useEffect(() => {
