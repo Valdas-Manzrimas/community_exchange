@@ -26,9 +26,9 @@ const Alert: React.FC<AlertProps> = ({ message, type }) => {
 
   return (
     <div
-      className={`absolute top-0 left-0 w-full py-1 px-6 transition-all ease-in-out duration-500 transform z-10 ${
+      className={`absolute top-[4rem] right-[1rem] max-w-[500px] py-3 px-12 rounded-full transition-all ease-in-out duration-500 transform z-10 ${
         isVisible ? 'opacity-100 translate-y-0 ' : '-translate-y-full opacity-0'
-      } ${type === 'success' ? 'bg-success' : 'bg-error'}`}
+      } ${type === 'success' ? 'bg-success' : 'bg-error opacity-80'}`}
       role='alert'
     >
       {message}
