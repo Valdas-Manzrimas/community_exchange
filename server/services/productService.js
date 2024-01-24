@@ -75,6 +75,10 @@ exports.getMyProducts = async (userId, page, limit) => {
 
 exports.getProductsByCommunity = async (communityId, page, limit) => {
   const products = await Product.find({ community: communityId })
+    .populate({
+      path: 'owner',
+      select: 'firstName lastName',
+    })
     .skip((page - 1) * limit)
     .limit(limit)
     .exec();

@@ -5,7 +5,8 @@ import { RootState } from '../../../store';
 import FilterContainer from '../../layout/containers/FilterContainer';
 import ModalContainer from '../../layout/containers/ModalContainer';
 import CreateProduct from './CreateProduct';
-import Card from '../../Base/cards/Card';
+// import Card from '../../Base/cards/Card';
+import ProductCard from '../../Base/cards/ProductCard';
 
 const AllProducts: React.FC = () => {
   // const [currentPage, setCurrentPage] = useState(1);
@@ -45,10 +46,11 @@ const AllProducts: React.FC = () => {
         token={token}
       >
         {(product, handleDelete) => (
-          <Card
+          <ProductCard
             product={product}
             key={product._id}
             myProduct={product.isMine}
+            href={`/items/${product._id}`}
             onDeleteClick={handleDelete}
           />
         )}

@@ -6,6 +6,7 @@ export type Product = {
   images: string[];
   tags: string[];
   owner: string;
+  ownerName: string;
   isMine: boolean;
   location: string;
   isAvailable: boolean;

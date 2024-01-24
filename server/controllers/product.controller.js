@@ -121,7 +121,14 @@ exports.getProductsByCommunity = async (req, res) => {
       page,
       limit
     );
-    res.status(200).json(productsData);
+
+    const productsDataWithOwnerName = productsData.map((product) => ({
+      ...product._doc,
+      ownerName: `${product.owner.firstName} ${product.owner.lastName}`,
+      owner: product.owner._id,
+    }));
+
+    res.status(200).json(productsDataWithOwnerName);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
