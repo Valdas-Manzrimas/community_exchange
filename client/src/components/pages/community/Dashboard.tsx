@@ -6,18 +6,15 @@ import FilterContainer from '../../layout/containers/FilterContainer';
 import ModalContainer from '../../layout/containers/ModalContainer';
 import CreateProduct from './CreateProduct';
 import Layout from '../../layout/Layout';
+import Card from '../../Base/cards/Card';
 
 const Dashboard: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const { isAuthenticated, token } = useSelector(
-    (state: RootState) => state.persisted.auth
+  const { token } = useSelector((state: RootState) => state.persisted.auth);
+  const community = useSelector(
+    (state: RootState) => state.persisted.community
   );
   const [isListView, setIsListView] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-  };
 
   return (
     <div className='w-full bg-gray-300 flex z-10'>
@@ -39,13 +36,19 @@ const Dashboard: React.FC = () => {
               <CreateProduct toggleModal={() => setIsModalOpen(false)} />
             </ModalContainer>
             <CardContainer
+              fetchUrl={`http://localhost:8080/api/community/products/${community}`}
               pagination={true}
-              fetchUrl={`http://localhost:8080/api/product/owned?page=${currentPage}`}
-              token={isAuthenticated && token ? token : undefined}
-              onPageChange={handlePageChange}
-              currentPage={currentPage}
-              isListView={isListView}
-            />
+              token={token}
+            >
+              {(product, handleDelete) => (
+                <Card
+                  product={product}
+                  key={product._id}
+                  myProduct={product.isMine}
+                  onDeleteClick={handleDelete}
+                />
+              )}
+            </CardContainer>
           </>
         }
       />

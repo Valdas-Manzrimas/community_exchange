@@ -8,6 +8,30 @@ import { setAlert } from '../../../store/slices/alertSlice';
 import ImageUpload from '../../utils/ImageUpload';
 import LoadingSpinner from '../../Base/LoadingSpinner';
 import * as yup from 'yup';
+import { Categories } from '../../../types/ProductTypes';
+
+const categories: Categories[] = [
+  'Electronics',
+  'Furniture',
+  'Clothing',
+  'Books',
+  'Services',
+  'Home & Kitchen',
+  'Toys & Games',
+  'Sports & Outdoors',
+  'Health & Personal Care',
+  'Automotive',
+  'Grocery & Gourmet Food',
+  'Office Products',
+  'Beauty & Personal Care',
+  'Pet Supplies',
+  'Arts, Crafts & Sewing',
+  'Patio, Lawn & Garden',
+  'Musical Instruments',
+  'Industrial & Scientific',
+  'Baby',
+  'Collectibles & Fine Art',
+];
 
 type FormState = {
   name: string;
@@ -211,14 +235,19 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
             >
               Category
             </label>
-            <input
+            <select
               className='appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white'
               id='category'
-              type='text'
-              placeholder='Product Category'
               value={form.category}
               onChange={handleChange}
-            />
+            >
+              <option value=''>Category</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
           </div>
           <div className='w-full md:w-1/2 px-3'>
             <label
@@ -245,14 +274,17 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
             >
               Condition
             </label>
-            <input
+            <select
               className='appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white'
               id='condition'
-              type='text'
-              placeholder='Product Condition'
               value={form.condition}
               onChange={handleChange}
-            />
+            >
+              <option value=''>Select Condition</option>
+              <option value='New'>New</option>
+              <option value='Used'>Used</option>
+              <option value='Refurbished'>Refurbished</option>
+            </select>
           </div>
           <div className='w-full md:w-1/2 px-3'>
             <label
