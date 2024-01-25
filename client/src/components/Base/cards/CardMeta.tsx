@@ -41,6 +41,7 @@ const CardMeta: FC<CardMetaProps> = ({
             className={`block font-medium text-sm ${
               index % 2 !== 0 ? 'text-right' : ''
             }`}
+            key={index}
           >
             {content}
           </span>

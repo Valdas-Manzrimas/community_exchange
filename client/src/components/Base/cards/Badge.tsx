@@ -18,21 +18,23 @@ const Badge: FC<BadgeProps> = ({
   const getColorClass = (hasHover = true) => {
     switch (color) {
       case 'pink':
-        return `text-pink bg-pink ${hasHover ? 'hover:bg-pink' : ''}`;
+        return `text-light bg-pink ${hasHover ? 'hover:bg-pink' : ''}`;
       case 'red':
         return `text-light bg-red-400 ${hasHover ? 'hover:bg-red-300' : ''}`;
       case 'gray':
-        return `text-gray bg-gray ${hasHover ? 'hover:bg-gray' : ''}`;
+        return `text-light bg-gray ${hasHover ? 'hover:bg-gray' : ''}`;
       case 'green':
-        return `text-green bg-green ${hasHover ? 'hover:bg-green' : ''}`;
+        return `text-light bg-green ${hasHover ? 'hover:bg-green' : ''}`;
       case 'purple':
-        return `text-purple bg-purple ${hasHover ? 'hover:bg-purple' : ''}`;
+        return `text-light bg-purple ${hasHover ? 'hover:bg-purple' : ''}`;
       case 'indigo':
-        return `text-indigo bg-indigo ${hasHover ? 'hover:bg-indigo' : ''}`;
+        return `text-light bg-indigo ${hasHover ? 'hover:bg-indigo' : ''}`;
       case 'yellow':
-        return `text-yellow bg-yellow ${hasHover ? 'hover:bg-yellow' : ''}`;
+        return `text-dark bg-yellow ${hasHover ? 'hover:bg-yellow' : ''}`;
       case 'blue':
-        return `text-blue bg-blue ${hasHover ? 'hover:bg-blue' : ''}`;
+        return `text-light bg-blue ${hasHover ? 'hover:bg-blue' : ''}`;
+      case 'teal':
+        return `text-light bg-teal ${hasHover ? 'hover:bg-teal' : ''}`;
       default:
         return `text-dark bg-light ${hasHover ? 'hover:bg-pink' : ''}`;
     }

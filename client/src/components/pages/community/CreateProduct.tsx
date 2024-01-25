@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import axios, { AxiosError } from 'axios';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import { handleErrors } from '../../Base/functions/handleErrors';
 import { setAlert } from '../../../store/slices/alertSlice';
@@ -9,6 +8,8 @@ import ImageUpload from '../../utils/ImageUpload';
 import LoadingSpinner from '../../Base/LoadingSpinner';
 import * as yup from 'yup';
 import { Categories } from '../../../types/ProductTypes';
+import Btn from '../../Base/Btn';
+import { useNavigate } from 'react-router';
 
 const categories: Categories[] = [
   'Electronics',
@@ -21,7 +22,7 @@ const categories: Categories[] = [
   'Sports & Outdoors',
   'Health & Personal Care',
   'Automotive',
-  'Grocery & Gourmet Food',
+  'Foodstuff',
   'Office Products',
   'Beauty & Personal Care',
   'Pet Supplies',
@@ -47,10 +48,6 @@ type FormState = {
   communityId: string;
 };
 
-interface CreateProductProps {
-  toggleModal: () => void;
-}
-
 const schema = yup.object().shape({
   name: yup.string().required('Name is required'),
   description: yup.string().required('Description is required'),
@@ -59,7 +56,7 @@ const schema = yup.object().shape({
   location: yup.string().required('Location is required'),
 });
 
-const CreateProduct: React.FC<CreateProductProps> = (props) => {
+const CreateProduct: React.FC = () => {
   const userId = useSelector((state: RootState) => state.persisted.user.id);
   const { isAuthenticated, token } = useSelector(
     (state: RootState) => state.persisted.auth
@@ -89,10 +86,10 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState('');
-  const { toggleModal } = props;
   const [resetImages, setResetImages] = useState(false);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (
     event: React.ChangeEvent<
@@ -161,7 +158,6 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
           setIsLoading(false);
           setError(null);
 
-          toggleModal();
           setForm((prevForm) => ({
             ...prevForm,
             images: [],
@@ -179,6 +175,7 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
         })
         .finally(() => {
           setIsSubmitting(false);
+          navigate('../all');
         });
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -189,7 +186,7 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
   };
 
   return (
-    <div className='flex flex-col items-center justify-center'>
+    <div className='w-full h-full flex flex-col items-center justify-center'>
       {isLoading && <LoadingSpinner />}
       <form onSubmit={handleSubmit} className='w-full max-w-lg'>
         <div className='flex flex-wrap -mx-3 mb-6'>
@@ -371,13 +368,13 @@ const CreateProduct: React.FC<CreateProductProps> = (props) => {
         {formError ||
           (error && <div className='text-error'>{formError || error}</div>)}
         <div className='flex items-center justify-center'>
-          <button
-            className='bg-blue-500 hover:bg-blue-700 text-narvik-600 border-narvik-600 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
+          <Btn
             type='submit'
             disabled={isSubmitting}
-          >
-            Create Product
-          </button>
+            style='secondary'
+            children='Create Product'
+            className='border border-tertiary-600 hover:bg-tertiary-600 hover:text-white hover:border'
+          />
         </div>
       </form>
     </div>

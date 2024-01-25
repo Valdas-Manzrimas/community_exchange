@@ -4,11 +4,12 @@ import AllProducts from '../components/pages/community/AllProducts';
 import SingleProduct from '../components/pages/community/SingleProduct';
 import MySpace from '../components/pages/community/MySpace';
 import Members from '../components/pages/community/Members';
+import CreateProduct from '../components/pages/community/CreateProduct';
 
 const DashboardRoutes: React.FC = () => {
   return (
-    <div className='max-w-screen-2xl h-screen bg-gray-100 flex -z-20'>
-      <div className='relative w-80'>
+    <div className='dashboard w-full bg-gray-100 flex'>
+      <div className='relative w-80 h-full'>
         <Sidebar />
       </div>
 
@@ -16,6 +17,7 @@ const DashboardRoutes: React.FC = () => {
         <Route path='/:id' element={<MySpace />} />
         <Route path='/items/all' element={<AllProducts />} />
         <Route path='/items/:productId' element={<SingleProduct />} />
+        <Route path='/items/create' element={<CreateProduct />} />
         <Route path='/members' element={<Members />} />
       </Routes>
     </div>

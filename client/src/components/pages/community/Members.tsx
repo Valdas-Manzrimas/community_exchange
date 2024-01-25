@@ -32,10 +32,10 @@ const Members = () => {
       .then((response) => response.json())
       .then((data) => setMembers(data))
       .catch((error) => console.error(error));
-  }, []);
+  }, [communityId, token]);
 
   return (
-    <div>
+    <div className='w-full h-full'>
       <h1 className='font-bold text-lg'>Community Members</h1>
       <ul className='p-4 w-full flex flex-wrap'>
         {members.map((member) => (

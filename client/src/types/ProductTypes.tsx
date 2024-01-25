@@ -28,7 +28,8 @@ export type MainColor =
   | 'purple'
   | 'indigo'
   | 'yellow'
-  | 'blue';
+  | 'blue'
+  | 'teal';
 
 export type Categories =
   | 'Electronics'
@@ -41,7 +42,7 @@ export type Categories =
   | 'Sports & Outdoors'
   | 'Health & Personal Care'
   | 'Automotive'
-  | 'Grocery & Gourmet Food'
+  | 'Foodstuff'
   | 'Office Products'
   | 'Beauty & Personal Care'
   | 'Pet Supplies'
@@ -60,15 +61,15 @@ export const categoryColors: Record<Categories, MainColor> = {
   Services: 'indigo',
   'Home & Kitchen': 'yellow',
   'Toys & Games': 'pink',
-  'Sports & Outdoors': 'gray',
+  'Sports & Outdoors': 'teal',
   'Health & Personal Care': 'blue',
   Automotive: 'green',
-  'Grocery & Gourmet Food': 'red',
+  Foodstuff: 'red',
   'Office Products': 'purple',
   'Beauty & Personal Care': 'indigo',
   'Pet Supplies': 'yellow',
   'Arts, Crafts & Sewing': 'pink',
-  'Patio, Lawn & Garden': 'gray',
+  'Patio, Lawn & Garden': 'teal',
   'Musical Instruments': 'blue',
   'Industrial & Scientific': 'green',
   Baby: 'red',

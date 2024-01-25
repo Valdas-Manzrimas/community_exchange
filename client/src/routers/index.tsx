@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { useMediaQuery } from '@react-hook/media-query';
 import { Page } from './types';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
@@ -12,23 +11,23 @@ import About from '../components/pages/About';
 import ContactUs from '../components/pages/ContactUs';
 import InvitationRegister from '../components/pages/invitationRegister';
 import Page404 from '../components/pages/Page404';
-import ResHeader from '../components/layout/navigation/ResHeader';
-import Header from '../components/layout/navigation/Header';
 import Main from '../components/pages/community/Main';
 import DashboardRoutes from './DashboardRoutes';
-import Footer from '../components/layout/Footer';
+import PageLayout from '../components/layout/PageLayout';
 
 export const pages: Page[] = [
   { path: '/', component: Home },
   { path: '/#', component: Home },
 
-  // other pages -------------------------------------------------------
   { path: '/about', component: About },
   { path: '/contact-us', component: ContactUs },
   { path: '/page404', component: Page404 },
   { path: '/register-community', component: RegisterCommunity },
   { path: '/invitation', component: InvitationRegister },
 ];
+
+const pagesDescription =
+  'Sanatana is a platform for communities to share their products and services between their members. It is a place where you can find everything you need from your community. You can also create your own community and invite your friends to join.';
 
 export const authPages: Page[] = [
   { path: '/community/:id', component: Main },
@@ -38,11 +37,12 @@ export const authPages: Page[] = [
 const MyRoutes = () => {
   const dispatch = useDispatch();
   const publicUrl = process.env.PUBLIC_URL || '';
-  const isMediumScreen = useMediaQuery('(max-width: 768px)');
 
   const { isAuthenticated, token, error } = useSelector(
     (state: RootState) => state.persisted.auth
   );
+
+  const { name } = useSelector((state: RootState) => state.persisted.community);
 
   useEffect(() => {
     if (error) {
@@ -52,11 +52,23 @@ const MyRoutes = () => {
 
   return (
     <BrowserRouter basename={publicUrl}>
-      {isMediumScreen ? <ResHeader /> : <Header />}
-
       <Routes>
         {pages.map(({ component: Component, path }, index) => {
-          return <Route key={index} element={<Component />} path={path} />;
+          return (
+            <Route
+              key={index}
+              element={
+                <PageLayout
+                  title='Sanatana'
+                  description={pagesDescription}
+                  isAuthPage={false}
+                >
+                  <Component />
+                </PageLayout>
+              }
+              path={path}
+            />
+          );
         })}
         <Route path='*' element={<Page404 />} />
 
@@ -64,13 +76,25 @@ const MyRoutes = () => {
         {isAuthenticated && token && (
           <>
             {authPages.map(({ component: Component, path }, index) => {
-              return <Route key={index} element={<Component />} path={path} />;
+              return (
+                <Route
+                  key={index}
+                  element={
+                    <PageLayout
+                      title={name}
+                      description={`Welcome to ${name} community. Here you can find everything you need from your community members. You can also create your own products and services and share them with your community members as well as request products and services from them.`}
+                      isAuthPage={true}
+                    >
+                      <Component />
+                    </PageLayout>
+                  }
+                  path={path}
+                />
+              );
             })}
           </>
         )}
       </Routes>
-
-      <Footer />
     </BrowserRouter>
   );
 };

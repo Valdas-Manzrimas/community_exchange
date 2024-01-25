@@ -25,15 +25,13 @@ const Dashboard: React.FC = () => {
               onFilterChange={() => console.log('filter')}
               onSortChange={() => console.log('sort')}
               onToggleView={() => setIsListView(!isListView)}
-              isModalOpen={isModalOpen}
-              toggleModal={() => setIsModalOpen(!isModalOpen)}
             />
             <ModalContainer
               title='Create Product'
               isOpen={isModalOpen}
               toggleModal={() => setIsModalOpen(!isModalOpen)}
             >
-              <CreateProduct toggleModal={() => setIsModalOpen(false)} />
+              <CreateProduct />
             </ModalContainer>
             <CardContainer
               fetchUrl={`http://localhost:8080/api/community/products/${community}`}

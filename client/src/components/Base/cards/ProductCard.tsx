@@ -38,7 +38,7 @@ const ProductCard: FC<ProductCardProps> = ({
       <div className={`block relative w-full rounded-t-3xl z-10 h-56`}>
         <div className='relative w-full h-full rounded-t-3xl z-10'>
           <div className='w-full h-full'>
-            {images[0].length > 10 ? (
+            {images.length > 0 ? (
               <img
                 className='object-cover absolute inset-0 w-full h-full'
                 src={images[0]}
@@ -46,9 +46,9 @@ const ProductCard: FC<ProductCardProps> = ({
               />
             ) : (
               <img
-                className='object-cover absolute inset-0 w-full h-full'
+                className='object-cover absolute inset-0 w-full h-full opacity-25'
                 src='/assets/imgs/background/image-not-found.png'
-                alt='no image'
+                alt='something'
               />
             )}
           </div>
@@ -66,8 +66,8 @@ const ProductCard: FC<ProductCardProps> = ({
             product={product}
           />
         </div>
-        <h3 className='nc-card-title block text-base font-semibold text-neutral-900 dark:text-neutral-100'>
-          <span className='line-clamp-2' title={name}>
+        <h3 className='block text-base font-semibold text-dark'>
+          <span className='line-clamp-2 leading-normal h-[3rem]' title={name}>
             {name}
           </span>
         </h3>

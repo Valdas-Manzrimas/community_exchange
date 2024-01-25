@@ -60,7 +60,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
         navigate('/');
       }
     }
-  }, [fetchUrl, token, dispatch, userId]);
+  }, [fetchUrl, token, dispatch, userId, navigate]);
 
   useEffect(() => {
     fetchProducts();
@@ -85,7 +85,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
   };
 
   return (
-    <div className='h-100 bg-narvik-50 mt-4 p-4'>
+    <div className='w-full bg-narvik-50 mt-4 p-4'>
       {/* list view */}
       {isListView ? (
         <div className='w-full border-solid'>
@@ -113,7 +113,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
           <div className='w-full m-1'></div>
         </div>
       ) : (
-        <div className='grid grid-cols-1 min-[600px]:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 '>
+        <div className='grid grid-cols-1 min-[600px]:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 min-[1500px]:grid-cols-4 2xl:grid-cols-5 gap-4 '>
           {!products.length ? (
             <div>No products found</div>
           ) : (
