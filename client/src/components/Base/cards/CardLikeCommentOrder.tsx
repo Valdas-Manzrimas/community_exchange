@@ -1,12 +1,14 @@
 import { FC } from 'react';
 import CardCommentBtn from './CardCommentBtn';
 import CardLikeAction from './CardLikeAction';
+import CardOrderBtn from './CardOrderBtn';
 
 export interface CardLikeAndCommentProps {
   className?: string;
   itemClass?: string;
   hiddenCommentOnMobile?: boolean;
   useOnSinglePage?: boolean;
+  orderProductId: string;
 }
 
 const CardLikeAndComment: FC<CardLikeAndCommentProps> = ({
@@ -14,9 +16,10 @@ const CardLikeAndComment: FC<CardLikeAndCommentProps> = ({
   itemClass = 'px-2 h-6 text-xs',
   hiddenCommentOnMobile = true,
   useOnSinglePage = false,
+  orderProductId,
 }) => {
   return (
-    <div className={`flex items-center space-x-2 ${className}`}>
+    <div className={`w-full flex items-center space-x-2 ${className}`}>
       <CardLikeAction className={itemClass} />
       <CardCommentBtn
         className={`${
@@ -24,6 +27,9 @@ const CardLikeAndComment: FC<CardLikeAndCommentProps> = ({
         }  ${itemClass}`}
         isATagOnSingle={useOnSinglePage}
       />
+      <div className='w-full flex justify-end'>
+        <CardOrderBtn className={itemClass} productId={orderProductId} />
+      </div>
     </div>
   );
 };

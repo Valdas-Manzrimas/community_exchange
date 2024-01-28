@@ -175,7 +175,7 @@ const CreateProduct: React.FC = () => {
         })
         .finally(() => {
           setIsSubmitting(false);
-          navigate('../all');
+          navigate('../items/all');
         });
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -186,7 +186,7 @@ const CreateProduct: React.FC = () => {
   };
 
   return (
-    <div className='w-full h-full flex flex-col items-center justify-center'>
+    <div className='relative w-full h-full flex flex-col items-center justify-center'>
       {isLoading && <LoadingSpinner />}
       <form onSubmit={handleSubmit} className='w-full max-w-lg'>
         <div className='flex flex-wrap -mx-3 mb-6'>

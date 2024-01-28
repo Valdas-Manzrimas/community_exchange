@@ -8,6 +8,7 @@ import { clearCommunity } from '../../../store/slices/communitySlice';
 import { RootState } from '../../../store';
 import Alert from '../Alert';
 import { useNavigate } from 'react-router-dom';
+import Image from '../../Base/Image';
 
 const Header: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -97,9 +98,11 @@ const Header: React.FC = () => {
           <div className='flex items-center'>
             <div>
               <Link to='/'>
-                <span className='text-gray-800 sm:text-2xl md:text-3xl lg:text-4xl font-normal font-[Playfair Display]'>
-                  SANATANA
-                </span>
+                <Image
+                  src='/assets/imgs/background/Sanatana_logo.png'
+                  alt='logo'
+                  className='max-h-[3rem]'
+                />
               </Link>
             </div>
           </div>

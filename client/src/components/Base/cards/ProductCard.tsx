@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Product } from '../../../types/ProductTypes';
 import CategoryBadgeList from './CategoryBadgeList';
 import CardMeta from './CardMeta';
-import CardLikeAndComment from './CardLikeAndComment';
+import CardLikeCommentOrder from './CardLikeCommentOrder';
 
 export interface ProductCardProps {
   className?: string;
@@ -74,7 +74,10 @@ const ProductCard: FC<ProductCardProps> = ({
 
         {/* buttons */}
         <div className='flex justify-between items-center'>
-          <CardLikeAndComment className='relative' />
+          <CardLikeCommentOrder
+            className='relative'
+            orderProductId={product._id}
+          />
         </div>
       </div>
     </div>

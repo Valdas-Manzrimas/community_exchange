@@ -23,7 +23,7 @@ interface CardContainerProps {
 
 const CardContainer: React.FC<CardContainerProps> = ({
   fetchUrl,
-  currentPage,
+  currentPage: initialCurrentPage = 1,
   pagination,
   token,
   onPageChange,
@@ -32,6 +32,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
 }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [totalPages, setTotalPages] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(initialCurrentPage);
 
   const userId = useSelector((state: RootState) => state.persisted.user.id);
 
@@ -41,10 +42,14 @@ const CardContainer: React.FC<CardContainerProps> = ({
   const fetchProducts = useCallback(async () => {
     try {
       const response = await axios.get(fetchUrl, {
+        params: {
+          limit: 10,
+          page: currentPage,
+        },
         headers: token ? { 'x-access-token': token } : {},
       });
 
-      const fetchedProducts = response.data;
+      const fetchedProducts = response.data.products;
       const myProducts = fetchedProducts.map((product: Product) => {
         return {
           ...product,
@@ -60,13 +65,14 @@ const CardContainer: React.FC<CardContainerProps> = ({
         navigate('/');
       }
     }
-  }, [fetchUrl, token, dispatch, userId, navigate]);
+  }, [fetchUrl, token, dispatch, userId, navigate, currentPage]);
 
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
 
   const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
     if (onPageChange) {
       onPageChange(newPage);
     }
@@ -123,7 +129,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
       )}
       {pagination ? (
         <Pagination
-          currentPage={currentPage || 1}
+          currentPage={initialCurrentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}
         />
@@ -132,7 +138,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
           className='bg-blue-500 hover:bg-blue-700 text-narvik-500 font-bold py-2 px-4 rounded'
           onClick={handleClick}
         >
-          See more
+          Load more
         </button>
       )}
     </div>

@@ -1,6 +1,7 @@
 const Product = require('../models/product.model');
 const User = require('../models/user.model');
 const cloudService = require('../services/cloudService');
+const { paginate } = require('../utils/productUtils');
 
 exports.createProduct = async (productDetails) => {
   const { communityId } = productDetails;
@@ -73,15 +74,13 @@ exports.getMyProducts = async (userId, page, limit) => {
   return products;
 };
 
-exports.getProductsByCommunity = async (communityId, page, limit) => {
-  const products = await Product.find({ community: communityId })
-    .populate({
-      path: 'owner',
-      select: 'firstName lastName',
-    })
-    .skip((page - 1) * limit)
-    .limit(limit)
-    .exec();
-
-  return products;
+exports.getProductsByCommunity = async (communityId, query) => {
+  const { results, totalPages } = await paginate(Product, query, {
+    community: communityId,
+  });
+  const products = await Product.populate(results, {
+    path: 'owner',
+    select: 'firstName lastName',
+  });
+  return { products, totalPages };
 };

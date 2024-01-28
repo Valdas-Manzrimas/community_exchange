@@ -5,6 +5,7 @@ import SingleProduct from '../components/pages/community/SingleProduct';
 import MySpace from '../components/pages/community/MySpace';
 import Members from '../components/pages/community/Members';
 import CreateProduct from '../components/pages/community/CreateProduct';
+import OrderPage from '../components/pages/community/OrderPage';
 
 const DashboardRoutes: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const DashboardRoutes: React.FC = () => {
         <Route path='/items/all' element={<AllProducts />} />
         <Route path='/items/:productId' element={<SingleProduct />} />
         <Route path='/items/create' element={<CreateProduct />} />
+        <Route path='/order/:productId' element={<OrderPage />} />
         <Route path='/members' element={<Members />} />
       </Routes>
     </div>
