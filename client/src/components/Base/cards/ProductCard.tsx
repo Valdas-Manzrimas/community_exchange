@@ -1,12 +1,15 @@
-import React, { FC, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { FC } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Product } from '../../../types/ProductTypes';
+import CategoryBadgeList from './CategoryBadgeList';
+import CardMeta from './CardMeta';
+import CardLikeCommentOrder from './CardLikeCommentOrder';
 
 export interface ProductCardProps {
   className?: string;
   product: Product;
   key: string;
-  ratio: string;
+  ratio?: string;
   myProduct: boolean;
   href: string;
   onDeleteClick: (productId: string, token: string) => void;
@@ -16,39 +19,66 @@ const ProductCard: FC<ProductCardProps> = ({
   className = 'h-full',
   product,
   href,
-  ratio = 'aspect-w-4 aspect-h-3',
 }) => {
-  const { category, name } = product;
+  const { category, name, images } = product;
 
-  const [isHover, setIsHover] = useState(false);
+  //   const [isHover, setIsHover] = useState(false);
+
+  const navigate = useNavigate();
+
+  const navigateToProduct = () => {
+    navigate(`/dashboard${href}`);
+  };
 
   return (
     <div
-      className={`relative flex flex-col group rounded-3xl overflow-hidden bg-white dark:bg-neutral-900 ${className} ${
-        isHover ? 'shadow-xl' : 'shadow-md'
-      }}`}
-      onMouseEnter={() => setIsHover(true)}
-      onMouseLeave={() => setIsHover(false)}
-      //
+      className={`relative flex flex-col group rounded-3xl overflow-hidden bg-white max-w-[280px] hover:shadow-md hover:transition-shadow ${className}`}
+      onClick={navigateToProduct}
     >
-      <div
-        className={`block flex-shrink-0 relative w-full rounded-t-3xl overflow-hidden z-10 ${ratio}`}
-      ></div>
+      <div className={`block relative w-full rounded-t-3xl z-10 h-56`}>
+        <div className='relative w-full h-full rounded-t-3xl z-10'>
+          <div className='w-full h-full'>
+            {images.length > 0 ? (
+              <img
+                className='object-cover absolute inset-0 w-full h-full'
+                src={images[0]}
+                alt={name}
+              />
+            ) : (
+              <img
+                className='object-cover absolute inset-0 w-full h-full opacity-25'
+                src='/assets/imgs/background/image-not-found.png'
+                alt='something'
+              />
+            )}
+          </div>
+          <span className='absolute top-2 inset-x-3 z-10'>
+            <CategoryBadgeList category={category} />
+          </span>
+        </div>
+      </div>
       <Link to={href} className='absolute inset-0'></Link>
-      <span className='text-dark text-sm px-2 pb-0.5 bg-gray-300 rounded-md'>
-        {category}
-      </span>
 
-      <div className='p-4 flex flex-col space-y-3'>
-        <h3 className='nc-card-title block text-base font-semibold text-neutral-900 dark:text-neutral-100'>
-          <span className='line-clamp-2' title={name}>
+      <div className='p-2 flex flex-col space-y-3'>
+        <div className='flex w-full'>
+          <CardMeta
+            meta={['owner', 'createdAt', 'location', 'isAvailable']}
+            product={product}
+          />
+        </div>
+        <h3 className='block text-base font-semibold text-dark'>
+          <span className='line-clamp-2 leading-normal h-[3rem]' title={name}>
             {name}
           </span>
         </h3>
-        {/* <div className='flex items-end justify-between mt-auto'>
-          <PostCardLikeAndComment className='relative' />
-          <PostCardSaveAction className='relative' />
-        </div> */}
+
+        {/* buttons */}
+        <div className='flex justify-between items-center'>
+          <CardLikeCommentOrder
+            className='relative'
+            orderProductId={product._id}
+          />
+        </div>
       </div>
     </div>
   );

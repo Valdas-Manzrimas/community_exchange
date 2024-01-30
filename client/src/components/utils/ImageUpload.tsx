@@ -46,7 +46,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ setPropImages, reset }) => {
     <>
       <div className='flex items-center justify-center bg-grey-lighter'>
         <label
-          className='w-full flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-narvik-600'
+          className='w-full flex flex-col items-center px-4 py-6 bg-white text-primary rounded-lg shadow-lg tracking-wide uppercase border border-primary cursor-pointer hover:border-teal hover:text-teal transition-colors transition-500'
           htmlFor='file-upload'
         >
           <>

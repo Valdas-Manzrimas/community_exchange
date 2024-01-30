@@ -8,6 +8,7 @@ import { clearCommunity } from '../../../store/slices/communitySlice';
 import { RootState } from '../../../store';
 import Alert from '../Alert';
 import { useNavigate } from 'react-router-dom';
+import Image from '../../Base/Image';
 
 const Header: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -77,10 +78,11 @@ const Header: React.FC = () => {
   };
 
   return (
-    <div className={`sticky top-0 transition-all duration-500 z-50`}>
+    <div className={`sticky top-0 transition-all duration-500 z-50 `}>
       {alert.message && <Alert type={alert.status} message={alert.message} />}
 
-      <header className={`relative w-full sm:items-center`}>
+      <header className={`relative w-full sm:items-center bg-light`}>
+        {/* header wave on nonAuth routes */}
         {!isAuthRoute && (
           <img
             src='/assets/imgs/background/header_wave.png'
@@ -96,9 +98,11 @@ const Header: React.FC = () => {
           <div className='flex items-center'>
             <div>
               <Link to='/'>
-                <span className='text-gray-800 sm:text-2xl md:text-3xl lg:text-4xl font-normal font-[Playfair Display]'>
-                  SANATANA
-                </span>
+                <Image
+                  src='/assets/imgs/background/Sanatana_logo.png'
+                  alt='logo'
+                  className='max-h-[3rem]'
+                />
               </Link>
             </div>
           </div>
@@ -152,7 +156,7 @@ const Header: React.FC = () => {
             </div>
           </nav>
           {/* icons */}
-          <div className='col-span-5 sm:col-span-1 sm:flex sm:items-center sm:w-auto'>
+          <div className='col-span-5 sm:col-span-1 sm:flex sm:items-center sm:w-auto sm:ml-auto'>
             <div className='flex items-center'>
               {isAuthenticated && (
                 <>

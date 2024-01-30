@@ -1,29 +1,31 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
-import { Product } from '../../../types/ProductTypes';
+import useProduct from '../../Base/functions/useProduct';
+import LoadingSpinner from '../../Base/LoadingSpinner';
 
 const SingleProduct = () => {
-  const { productId } = useParams();
-  const [product, setProduct] = useState<Product | null>(null);
+  const { productId = '' } = useParams();
+
+  const { product, loading } = useProduct(productId);
+
   const [mainImage, setMainImage] = useState<string | null>(null);
 
   const userId = useSelector((state: RootState) => state.persisted.user.id);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8080/api/product/${productId}`)
-      .then((response) => {
-        setProduct(response.data);
-        setMainImage(response.data.images[0]);
-      })
-      .catch((error) => console.error('Error fetching product:', error));
-  }, [productId]);
+    if (product && product.images.length > 0) {
+      setMainImage(product.images[0]);
+    }
+  }, [product]);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   if (!product) {
-    return <div>Loading...</div>;
+    return <div>Product not found</div>;
   }
 
   const isOwner = userId === product.owner;

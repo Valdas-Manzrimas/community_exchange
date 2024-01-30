@@ -112,16 +112,20 @@ exports.getMyProducts = async (req, res) => {
 };
 
 exports.getProductsByCommunity = async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 12;
-
   try {
-    const productsData = await productService.getProductsByCommunity(
-      req.params.communityId,
-      page,
-      limit
-    );
-    res.status(200).json(productsData);
+    const { products, totalPages } =
+      await productService.getProductsByCommunity(
+        req.params.communityId,
+        req.query
+      );
+
+    const productsDataWithOwnerName = products.map((product) => ({
+      ...product._doc,
+      ownerName: `${product.owner.firstName} ${product.owner.lastName}`,
+      owner: product.owner._id,
+    }));
+
+    res.status(200).json({ products: productsDataWithOwnerName, totalPages });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

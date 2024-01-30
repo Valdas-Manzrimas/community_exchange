@@ -10,6 +10,7 @@ const upload = multer({
 });
 
 module.exports = function (app) {
+  // GET
   app.get('/api/product/all', productController.getAllProducts);
   app.get('/api/product/owned', verifyToken, productController.getMyProducts);
   app.get('/api/product/:productId', productController.getProductById);
@@ -19,6 +20,7 @@ module.exports = function (app) {
     productController.getProductsByCommunity
   );
 
+  // POST
   app.post(
     '/api/product/uploadImage',
     upload.array('images'),
@@ -26,8 +28,10 @@ module.exports = function (app) {
   );
   app.post('/api/product/create', verifyToken, productController.createProduct);
 
+  // PUT
   app.put('/api/product/update/:productId', productController.updateProduct);
 
+  // DELETE
   app.delete(
     '/api/product/deleteImage/:imageName',
     productController.deleteUploadedImage
