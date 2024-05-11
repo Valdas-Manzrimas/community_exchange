@@ -30,7 +30,19 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    phone: {
+      type: Number,
+      required: true,
+    },
     password: {
+      type: String,
+      required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    country: {
       type: String,
       required: true,
     },

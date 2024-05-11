@@ -1,27 +1,28 @@
 // useProduct.ts
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Product } from '../../../types/ProductTypes';
+import { Product } from '../../../../types/ProductTypes';
 
 const useProduct = (productId: string) => {
   const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [productLoading, setProductLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setLoading(true);
+    setProductLoading(true);
     axios
       .get(`http://localhost:8080/api/product/${productId}`)
       .then((response) => {
         setProduct(response.data);
-        setLoading(false);
+        setProductLoading(false);
       })
       .catch((error) => {
         console.error('Error fetching product:', error);
-        setLoading(false);
+        setProductLoading(false);
+        throw error;
       });
   }, [productId]);
 
-  return { product, loading };
+  return { product, productLoading };
 };
 
 export default useProduct;

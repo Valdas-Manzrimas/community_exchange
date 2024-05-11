@@ -16,3 +16,7 @@ module.exports.paginate = async (model, query, conditions = {}) => {
     currentPage: page,
   };
 };
+
+module.exports.parsePopulateFields = (req) => {
+  return req.query.populate ? req.query.populate.split(',') : [];
+};

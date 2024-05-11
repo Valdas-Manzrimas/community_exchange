@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
-import useProduct from '../../Base/functions/useProduct';
+import useProduct from '../../Base/functions/hooks/useProduct';
 import LoadingSpinner from '../../Base/LoadingSpinner';
 
 const SingleProduct = () => {
   const { productId = '' } = useParams();
 
-  const { product, loading } = useProduct(productId);
+  const { product, productLoading } = useProduct(productId);
 
   const [mainImage, setMainImage] = useState<string | null>(null);
 
@@ -20,7 +20,7 @@ const SingleProduct = () => {
     }
   }, [product]);
 
-  if (loading) {
+  if (productLoading) {
     return <LoadingSpinner />;
   }
 

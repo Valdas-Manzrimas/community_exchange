@@ -1,29 +1,49 @@
+// Dropdown.tsx
+
+// TODO: Make dropdown options load only when the dropdown is clicked
+// For ex when fetching user products in OrderPage.tsx
+
 import { useState, useRef, useEffect, ReactNode } from 'react';
+import useOnClickOutside from '../utils/useOnClickOutside';
+
+type Option = {
+  key: string | number;
+  value: ReactNode;
+  displayValue?: string;
+};
 
 type DropdownProps = {
   buttonText: string | ReactNode;
   buttonStyles?: string;
-  options: string[];
+  options: Option[];
+  optionStyles?: string;
   replaceButtonText?: boolean;
-  onOptionClick?: (option: string) => void;
+  onOptionClick?: (key: string | number, displayValue?: string) => void;
+  label?: string;
+  labelStyles?: string;
 };
 
 const Dropdown = ({
   buttonText,
-  buttonStyles = 'text-white inline-flex w-full justify-center gap-x-0.5 pl-1 pr-3 text-sm font-semibold hover:bg-primary',
+  buttonStyles = 'text-primary border-2 inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500',
   options,
+  optionStyles = 'block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900',
   replaceButtonText = true,
   onOptionClick,
+  label,
+  labelStyles = `block text-md font-medium `,
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedOption, setSelectedOption] = useState<Option | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleOptionClick = (option: string) => {
+  useOnClickOutside(dropdownRef, () => setIsOpen(false));
+
+  const handleOptionClick = (option: Option) => {
     setSelectedOption(option);
     setIsOpen(false);
     if (onOptionClick) {
-      onOptionClick(option);
+      onOptionClick(option.key, option.displayValue);
     }
   };
 
@@ -44,8 +64,9 @@ const Dropdown = ({
   }, []);
 
   return (
-    <div className='relative text-left z-10' ref={dropdownRef}>
-      <div className='flex items-center'>
+    <div className='relative inline-block text-left'>
+      <div>
+        {label && <label className={labelStyles}>{label}</label>}
         <button
           type='button'
           className={`${buttonStyles}`}
@@ -53,26 +74,31 @@ const Dropdown = ({
           aria-expanded='true'
           onClick={() => setIsOpen(!isOpen)}
         >
-          {replaceButtonText ? selectedOption || buttonText : buttonText}
+          {replaceButtonText
+            ? selectedOption?.displayValue || buttonText
+            : buttonText}
         </button>
       </div>
 
       {isOpen && (
-        <div className='absolute right-0 mt-2 w-32 bg-white focus:outline-none '>
+        <div
+          ref={dropdownRef}
+          className='origin-top-right absolute left-0 mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none'
+        >
           <div
-            className='py-1'
+            className='py-1 min-w-[275px]'
             role='menu'
             aria-orientation='vertical'
             aria-labelledby='options-menu'
           >
             {options.map((option) => (
               <button
-                key={option}
-                className='block px-4 py-2 text-sm text-primary hover:bg-gray-200 w-full text-left'
+                key={option.key}
+                className={optionStyles}
                 role='menuitem'
                 onClick={() => handleOptionClick(option)}
               >
-                {option}
+                {option.value}
               </button>
             ))}
           </div>

@@ -1,5 +1,6 @@
-// file: authSlice.js
+// authSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { FLUSH } from 'redux-persist';
 
 export interface AuthState {
   token: string | null;
@@ -17,19 +18,18 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    login: (state, action) => {
+    login: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
       state.isAuthenticated = true;
       state.error = null;
     },
-    logout: (state) => {
-      state.token = null;
-      state.isAuthenticated = false;
-      state.error = null;
-    },
+    logout: () => initialState,
     authError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(FLUSH, () => initialState);
   },
 });
 

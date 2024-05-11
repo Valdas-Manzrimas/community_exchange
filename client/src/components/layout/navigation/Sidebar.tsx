@@ -53,6 +53,7 @@ const Sidebar = () => {
         setCommunityData(data);
       } catch (error) {
         console.error('Error fetching user data:', error);
+        throw error;
       }
     };
 
@@ -70,8 +71,14 @@ const Sidebar = () => {
               <Dropdown
                 buttonText={communityData[0]?.name}
                 options={communityData
-                  .map((community) => community.name)
-                  .filter((name): name is string => !!name)}
+                  .filter(
+                    (community): community is Community => !!community.name
+                  )
+                  .map((community) => ({
+                    key: community.id, // assuming community.id is a string
+                    label: community.name,
+                    value: community.name,
+                  }))}
                 key={communityData[0]?.id || ''}
                 replaceButtonText
                 buttonStyles='px-2 py-1 text-sm font-semibold text-white bg-primary rounded-lg hover:opacity-80'

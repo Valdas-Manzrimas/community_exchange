@@ -66,11 +66,13 @@ exports.getAllProducts = async (page, limit) => {
   return products;
 };
 
-exports.getMyProducts = async (userId, page, limit) => {
-  const products = await Product.find({ owner: userId })
+exports.getMyProducts = async (user, page, limit, populateFields) => {
+  const query = Product.find({ owner: user })
     .skip((page - 1) * limit)
     .limit(limit)
-    .exec();
+    .select(populateFields.join('name', '_id'));
+
+  const products = await query.exec();
   return products;
 };
 

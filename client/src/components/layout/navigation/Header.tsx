@@ -68,14 +68,21 @@ const Header: React.FC = () => {
       : 'text-gray-800';
   };
 
-  const handleOptionClick = (option: string) => {
-    if (option === 'Logout') {
+  const handleOptionClick = (key: string | number, displayValue?: string) => {
+    if (displayValue === 'Logout') {
       dispatch(logout());
       dispatch(clearUser());
       dispatch(clearCommunity());
       navigate('/');
     }
+    console.log('Selected option key:', key);
   };
+
+  const options = [
+    { key: '1', value: 'Profile', displayValue: 'Profile' },
+    { key: '2', value: 'Settings', displayValue: 'Settings' },
+    { key: '3', value: 'Logout', displayValue: 'Logout' },
+  ];
 
   return (
     <div className={`sticky top-0 transition-all duration-500 z-50 `}>
@@ -217,14 +224,14 @@ const Header: React.FC = () => {
                           data-name='Layer 1'
                           viewBox='0 0 24 24'
                           fill='currentColor'
-                          className='w-6 h-6 ml-2 fill-current text-white'
+                          className='w-6 h-6 ml-2 fill-current text-primary'
                         >
                           <path d='m12,0C5.383,0,0,5.383,0,12s5.383,12,12,12,12-5.383,12-12S18.617,0,12,0Zm-5,21.797v-.797c0-2.757,2.243-5,5-5s5,2.243,5,5v.797c-1.501.769-3.201,1.203-5,1.203s-3.499-.434-5-1.203Zm11-.582v-.215c0-3.309-2.691-6-6-6s-6,2.691-6,6v.215c-3.008-1.965-5-5.362-5-9.215C1,5.935,5.935,1,12,1s11,4.935,11,11c0,3.853-1.992,7.25-5,9.215ZM12,5c-2.206,0-4,1.794-4,4s1.794,4,4,4,4-1.794,4-4-1.794-4-4-4Zm0,7c-1.654,0-3-1.346-3-3s1.346-3,3-3,3,1.346,3,3-1.346,3-3,3Z' />
                         </svg>
                       }
                       replaceButtonText={false}
                       onOptionClick={handleOptionClick}
-                      options={['Profile', 'Settings', `Logout`]}
+                      options={options}
                     />
                   </div>
                 </>
