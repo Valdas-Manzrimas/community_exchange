@@ -5,6 +5,7 @@ const communityService = require('./communityService');
 const roleService = require('./roleService');
 const jwtService = require('./jwtService');
 const yup = require('yup');
+const { createUserSchema } = require('../middlewares/yupVerification');
 
 const Community = db.community;
 const User = db.user;
@@ -63,14 +64,22 @@ exports.createUser = async (userDetails, session = null) => {
   });
   // save user
   try {
+    await createUserSchema.validate(userDetails, { abortEarly: false });
+
     if (session?.inTransaction?.()) {
       await user.save({ session });
     } else {
       await user.save();
     }
   } catch (error) {
-    console.error('Error saving user:', error);
-    throw error;
+    // console.error('Error saving user:', error);
+    const validationErrors = error.inner.map((err) => ({
+      field: err.path,
+      message: err.message,
+    }));
+    throw new Error(
+      'Validation errors occurred: ' + JSON.stringify(validationErrors)
+    );
   }
 
   return user;
@@ -80,24 +89,28 @@ exports.createUser = async (userDetails, session = null) => {
 exports.createUserAndCommunity = async (userDetails, communityDetails) => {
   const session = await mongoose.startSession();
   session.startTransaction();
-
   const user = await this.createUser(userDetails, session);
 
-  communityDetails.owner = user._id;
-  const community = await communityService.createCommunity(
-    communityDetails,
-    session
-  );
+  try {
+    communityDetails.owner = user._id;
+    const community = await communityService.createCommunity(
+      communityDetails,
+      session
+    );
 
-  // Add the community id to the user
-  user.communities.push({ community: community._id, role: 'Admin' });
-  await user.save({ session });
+    // Add the community id to the user
+    user.communities.push({ community: community._id, role: 'Admin' });
+    await user.save({ session });
 
-  const token = jwtService.generateToken({ id: user._id });
+    const token = jwtService.generateToken({ id: user._id });
 
-  await session.commitTransaction();
+    await session.commitTransaction();
 
-  return { user, community, token };
+    return { user, community, token };
+  } catch (error) {
+    await session.abortTransaction(); // Rollback the transaction in case of error
+    throw error; // Propagate the error back to the calling function
+  }
 };
 
 // CREATE User by invitation
