@@ -32,8 +32,8 @@ const PlanCard: React.FC<PlanCardProps> = ({
       </div>
       <hr className='my-5 text-brown-700' />
       <ul className='my-7 space-y-3'>
-        {features.map((feature) => (
-          <li className='flex items-center space-x-3'>
+        {features.map((feature, index) => (
+          <li className='flex items-center space-x-3' key={index}>
             <svg
               width='15'
               height='11'
@@ -54,8 +54,8 @@ const PlanCard: React.FC<PlanCardProps> = ({
             </span>
           </li>
         ))}
-        {notIncluded?.map((feature) => (
-          <li className='flex space-x-3 items-center text-gray-600'>
+        {notIncluded?.map((feature, index) => (
+          <li className='flex space-x-3 items-center text-gray-600' key={index}>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               width='15'

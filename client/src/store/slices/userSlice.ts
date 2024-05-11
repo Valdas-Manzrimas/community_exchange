@@ -8,6 +8,9 @@ export interface User {
   email: string;
   roles?: [string];
   communities?: [string];
+  phone?: number;
+  city?: string;
+  country?: string;
 }
 
 const initialState: User = {
@@ -17,6 +20,9 @@ const initialState: User = {
   email: '',
   roles: ['ROLE_USER'],
   communities: [''],
+  phone: 0,
+  city: '',
+  country: '',
 };
 
 export const userSlice = createSlice({

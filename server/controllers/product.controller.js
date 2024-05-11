@@ -1,6 +1,7 @@
 const productService = require('../services/productService');
 const cloudService = require('../services/cloudService');
 const communityService = require('../services/communityService');
+const { parsePopulateFields } = require('../utils/productUtils');
 
 exports.uploadImage = async (req, res, next) => {
   const files = req.files;
@@ -98,12 +99,14 @@ exports.getAllProducts = async (req, res) => {
 exports.getMyProducts = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 12;
+  const populateFields = parsePopulateFields(req);
 
   try {
     const productsData = await productService.getMyProducts(
-      req.userId,
+      req.user,
       page,
-      limit
+      limit,
+      populateFields
     );
     res.status(200).json(productsData);
   } catch (error) {

@@ -55,6 +55,9 @@ exports.createUser = async (userDetails, session = null) => {
     firstName: userDetails.firstName,
     lastName: userDetails.lastName,
     email: userDetails.email,
+    phone: userDetails.phone,
+    city: userDetails.city,
+    country: userDetails.country,
     password: bcrypt.hashSync(userDetails.password, 8),
     communities: [],
   });
@@ -87,7 +90,7 @@ exports.createUserAndCommunity = async (userDetails, communityDetails) => {
   );
 
   // Add the community id to the user
-  user.communities.push({ community: community._id, role: 'Moderator' });
+  user.communities.push({ community: community._id, role: 'Admin' });
   await user.save({ session });
 
   const token = jwtService.generateToken({ id: user._id });
@@ -130,6 +133,10 @@ exports.updateUser = async (userId, userDetails) => {
   user.firstName = userDetails.firstName || user.firstName;
   user.lastName = userDetails.lastName || user.lastName;
   user.email = userDetails.email || user.email;
+  user.phone = userDetails.phone || user.phone;
+  user.city = userDetails.city || user.city;
+  user.country = userDetails.country || user.country;
+
   if (userDetails.password) {
     user.password = bcrypt.hashSync(userDetails.password, 8);
   }

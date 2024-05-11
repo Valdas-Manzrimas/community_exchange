@@ -1,5 +1,5 @@
+//CardContainer.tsx
 import { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../../../types/ProductTypes';
 import Pagination from '../../utils/Pagination';
@@ -7,6 +7,7 @@ import { handleErrors } from '../../Base/functions/handleErrors';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../store';
 import { deleteProduct } from '../../Base/functions/deleteProduct';
+import api from '../../../store/api';
 
 interface CardContainerProps {
   fetchUrl: string;
@@ -41,7 +42,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
 
   const fetchProducts = useCallback(async () => {
     try {
-      const response = await axios.get(fetchUrl, {
+      const response = await api.get(fetchUrl, {
         params: {
           limit: 10,
           page: currentPage,
@@ -64,6 +65,7 @@ const CardContainer: React.FC<CardContainerProps> = ({
       if (error === 403) {
         navigate('/');
       }
+      throw error;
     }
   }, [fetchUrl, token, dispatch, userId, navigate, currentPage]);
 

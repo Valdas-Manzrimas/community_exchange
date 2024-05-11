@@ -6,6 +6,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import { Community } from '../../../store/slices/communitySlice';
 import Layout from '../../layout/Layout';
+import api from '../../../store/api';
+import Heading from '../../layout/Heading';
 
 interface Moderator {
   _id: string;
@@ -36,7 +38,7 @@ const Main: FC<Main> = () => {
             }
           );
           setCommunity(response.data);
-          const moderatorResponse = await axios.get(
+          const moderatorResponse = await api.get(
             `http://localhost:8080/api/user/${response.data.moderator._id}`,
             {
               headers: {
@@ -60,7 +62,7 @@ const Main: FC<Main> = () => {
 
   return (
     <div className='bg-white h-screen'>
-      <div className='relative flex w-full h-2/5 mb-10 md:mb-0'>
+      <div className='relative flex w-full h-2/5 md:mb-0'>
         {community?.pictures?.[0] ? (
           <Image
             fill
@@ -78,49 +80,66 @@ const Main: FC<Main> = () => {
             alt='hero'
           />
         )}
-
-        <div className='z-10 text-secondary w-full flex items-center justify-center'>
-          <div className='max-w-3xl'>
-            <h1 className='font-bold text-4xl md:text-5xl xl:text-6xl mt-3 md:!leading-[110%] '>
-              {community.name}
-            </h1>
-          </div>
-        </div>
       </div>
+
+      <Link
+        to={`/dashboard/items/all`}
+        className='bg-primary text-white px-4 py-2 rounded-md'
+      >
+        Dashboard
+      </Link>
       <div className='flex w-full'>
         <Layout
           children={
-            <div className='flex'>
-              <div className='w-1/2 p-4 pr-6'>
-                <p className='mt-7 text-base lg:text-xl text-neutral-300 '>
+            <>
+              {/* Community Name */}
+              <div className='w-full mb-5'>
+                <h1 className='font-bold text-[5vw] md:text-4xl xl:text-6xl md:!leading-[110%] text-center '>
+                  {community.name}
+                </h1>
+              </div>
+
+              {/* Description */}
+              <div className='w-full mb-5'>
+                <p className='text-sm md:text-base text-neutral-300 '>
                   {community.description}
                 </p>
               </div>
-              <div className='w-1/2'>
-                <h2 className='text-2xl font-bold mb-4'>Community Details</h2>
-                <div className='flex flex-col'>
-                  <div className='flex mb-4 flex-col'>
-                    <h3 className='text-lg font-bold mr-2'>Moderator:</h3>
-                    <p className='text-lg text-neutral-300'>
-                      {moderator.firstName + ' ' + moderator.lastName}
-                    </p>
-                    <p>{moderator.email}</p>
-                  </div>
-                  <div className='flex items-center mb-4'>
-                    <h3 className='text-lg font-bold mr-2'>Members:</h3>
-                    <p className='text-lg text-neutral-300'>
-                      {community?.users?.length}
-                    </p>
-                  </div>
+
+              {/* Community photo gallery */}
+
+              {/* Mission & Values */}
+              <div className='flex flex-col md:flex-row'>
+                <div className='w-full md:w-1/2 flex flex-col justify-center'>
+                  <Heading
+                    children={'Our Mission'}
+                    className='text-dark w-full mb-2'
+                    isCenter
+                  />
+                  <p className='text-start'>
+                    TEST Lorem ipsum dolor sit amet consectetur adipisicing
+                    elit. Perspiciatis, debitis tempora exercitationem eius
+                    asperiores cupiditate nihil ullam error id expedita, modi
+                    voluptas ab amet distinctio similique beatae? Minima, unde
+                    aliquam!
+                  </p>
                 </div>
-                <Link
-                  to={`/dashboard/items/all`}
-                  className='bg-primary text-white px-4 py-2 rounded-md'
-                >
-                  Dashboard
-                </Link>
+                <div className='w-full md:w-1/2 flex flex-col justify-center'>
+                  <Heading
+                    children={'Our Values'}
+                    className='text-dark w-full mb-2'
+                    isCenter
+                  />
+                  <p className='text-start'>
+                    TEST Lorem ipsum dolor sit amet consectetur adipisicing
+                    elit. Perspiciatis, debitis tempora exercitationem eius
+                    asperiores cupiditate nihil ullam error id expedita, modi
+                    voluptas ab amet distinctio similique beatae? Minima, unde
+                    aliquam!
+                  </p>
+                </div>{' '}
               </div>
-            </div>
+            </>
           }
         />
       </div>
