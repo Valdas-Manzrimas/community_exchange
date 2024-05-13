@@ -33,3 +33,9 @@ exports.loginSchema = yup.object().shape({
     .required('Password is required')
     .min(6, 'Password must be at least 6 characters'),
 });
+
+exports.sendInvitationSchema = yup.object().shape({
+  communityId: yup.string().required(),
+  userId: yup.string().required(),
+  email: yup.string().email().required(),
+});

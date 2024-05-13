@@ -76,7 +76,7 @@ exports.createUser = async (userDetails, session = null) => {
   });
   // save user
   try {
-    await createUserSchema.validate(userDetails, { abortEarly: false });
+    await createUserSchema.validate(user, { abortEarly: false });
 
     if (session?.inTransaction?.()) {
       await user.save({ session });
@@ -131,16 +131,19 @@ exports.createUserByInvitation = async (
   communityId,
   session = null
 ) => {
-  const user = await exports.createUser(userDetails, session);
+  try {
+    const user = await exports.createUser(userDetails, session);
 
-  if (communityId) {
-    user.communities.push(communityId);
-    await user.save();
+    if (communityId) {
+      user.communities.push({ community: communityId, role: 'User' });
+      await communityService.joinCommunity(user._id, communityId);
 
-    await communityService.joinCommunity(user._id, communityId);
+      await user.save();
+    }
+    return user;
+  } catch (error) {
+    throw error;
   }
-  await roleService.addUserRole(user._id, 'user');
-  return user;
 };
 
 // GET user by id

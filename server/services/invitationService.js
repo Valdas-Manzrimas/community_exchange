@@ -1,12 +1,19 @@
 const config = require('../config/auth.config');
+const { sendInvitationSchema } = require('../middlewares/yupVerification');
 const Community = require('../models/community.model');
 const Invitation = require('../models/invitation.model');
 const jwtService = require('./jwtService');
 const roleService = require('./roleService');
+const yup = require('yup');
 
 exports.sendInvitation = async (communityId, userId, email) => {
-  if (roleService.checkUserRole(userId, communityId, 'moderator') === false) {
-    throw new Error('User is not a moderator of this community.');
+  await sendInvitationSchema.validate({ communityId, userId, email });
+
+  if (
+    roleService.checkUserRole(userId, communityId, 'moderator' || 'admin') ===
+    false
+  ) {
+    throw new Error('User is not a moderator or admin of this community.');
   }
 
   const invitation = new Invitation({
@@ -29,7 +36,7 @@ exports.sendInvitation = async (communityId, userId, email) => {
   await savedInvitation.save();
 
   return {
-    message: 'Invitation sent successfully.',
+    message: 'Invitation sent successfully. Invitation is valid for 1 week.',
     url: `http://127.0.0.1:5173/invitation?token=${token}`,
   };
 };

@@ -88,6 +88,15 @@ exports.signupByInvitation = async (req, res) => {
     });
   } catch (error) {
     console.error('Error during user registration:', error);
+
+    if (error instanceof jwtService.TokenExpiredError) {
+      return res.status(400).json({ message: 'Invitation token has expired.' });
+    } else if (error instanceof jwtService.JsonWebTokenError) {
+      return res.status(400).json({ message: 'Invalid invitation token.' });
+    } else if (error.name === 'ValidationError') {
+      return res.status(400).json({ message: error.message });
+    }
+
     res
       .status(500)
       .json({ message: 'An error occurred during user registration.' });
