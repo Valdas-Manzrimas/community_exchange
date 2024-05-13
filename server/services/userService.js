@@ -5,7 +5,10 @@ const communityService = require('./communityService');
 const roleService = require('./roleService');
 const jwtService = require('./jwtService');
 const yup = require('yup');
-const { createUserSchema } = require('../middlewares/yupVerification');
+const {
+  createUserSchema,
+  loginSchema,
+} = require('../middlewares/yupVerification');
 
 const Community = db.community;
 const User = db.user;
@@ -20,6 +23,13 @@ const changePasswordSchema = yup.object().shape({
 
 // SIGNIN User
 exports.signin = async (email, password) => {
+  // yup validation
+  try {
+    await loginSchema.validate({ email, password });
+  } catch (error) {
+    throw new Error(error);
+  }
+  // ...
   const user = await User.findOne({ email: email });
   if (!user) {
     throw new Error('User Not found.');
@@ -40,6 +50,8 @@ exports.signin = async (email, password) => {
     firstName: user.firstName,
     lastName: user.lastName,
     email: user.email,
+    country: user.country,
+    city: user.city,
     communities: communityIds,
     token: token,
   };

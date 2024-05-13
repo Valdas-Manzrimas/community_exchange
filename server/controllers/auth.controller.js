@@ -105,9 +105,16 @@ exports.signin = async (req, res) => {
   }
 };
 
+// SIGN OUT
 exports.signout = async (req, res) => {
-  req.session = null;
-  return res.status(204).send();
+  try {
+    req.session = null;
+    return res.status(200).json({ message: 'User signed out successfully' });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: 'An error occurred while signing out' });
+  }
 };
 
 // INVITATION CONTROLLERS
