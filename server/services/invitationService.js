@@ -2,43 +2,71 @@ const config = require('../config/auth.config');
 const { sendInvitationSchema } = require('../middlewares/yupVerification');
 const Community = require('../models/community.model');
 const Invitation = require('../models/invitation.model');
+const User = require('../models/user.model');
 const jwtService = require('./jwtService');
 const roleService = require('./roleService');
-const yup = require('yup');
 
 exports.sendInvitation = async (communityId, userId, email) => {
-  await sendInvitationSchema.validate({ communityId, userId, email });
-
-  if (
-    roleService.checkUserRole(userId, communityId, 'moderator' || 'admin') ===
-    false
-  ) {
-    throw new Error('User is not a moderator or admin of this community.');
-  }
-
-  const invitation = new Invitation({
-    email: email,
-    communityId: communityId,
-    invitedBy: userId,
-  });
-
-  const savedInvitation = await invitation.save();
-
-  const token = jwtService.generateToken(
-    { _id: savedInvitation._id },
-    config.secret,
-    {
-      expiresIn: 604800, // 1 week
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error('User not found');
     }
-  );
 
-  savedInvitation.token = token;
-  await savedInvitation.save();
+    const community = await Community.findById(communityId);
+    if (!community) {
+      throw new Error('Community not found');
+    }
 
-  return {
-    message: 'Invitation sent successfully. Invitation is valid for 1 week.',
-    url: `http://127.0.0.1:5173/invitation?token=${token}`,
-  };
+    // Check if the user is already a member of the community
+    const isMember = await User.exists({
+      email,
+      'communities.communityId': communityId,
+    });
+
+    if (isMember) {
+      throw new Error('User is already a member of the community');
+    }
+
+    // Check if the user has already received an invitation to join the community
+    const existingInvitation = await Invitation.findOne({
+      email,
+      communityId,
+      used: true,
+    });
+    if (existingInvitation) {
+      throw new Error(
+        'User has already received an invitation to join the community'
+      );
+    }
+
+    const invitation = new Invitation({
+      email: email,
+      communityId: communityId,
+      invitedBy: userId,
+    });
+
+    // Create a new invitation
+    const savedInvitation = await invitation.save();
+
+    const token = jwtService.generateToken(
+      { _id: savedInvitation._id },
+      config.secret,
+      {
+        expiresIn: 604800, // 1 week
+      }
+    );
+
+    savedInvitation.token = token;
+    await savedInvitation.save();
+
+    return {
+      message: 'Invitation sent successfully.',
+      url: `http://127.0.0.1:5173/invitation?token=${token}`,
+    };
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
 exports.getInvitationDetails = async (invitationId) => {

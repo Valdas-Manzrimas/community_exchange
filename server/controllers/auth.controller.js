@@ -128,10 +128,26 @@ exports.signout = async (req, res) => {
 
 // INVITATION CONTROLLERS
 exports.sendInvitation = async (req, res) => {
+  const { email, communityId } = req.body;
+
+  if (!email) {
+    return res.status(400).send({ message: 'Email is required.' });
+  }
+
+  if (!communityId) {
+    return res.status(400).send({ message: 'Community ID is required.' });
+  }
+
+  if (!req.user) {
+    return res.status(401).send({ message: 'Unauthorized!' });
+  }
+
   try {
+    const userId = req.user._id;
+
     const result = await invitationService.sendInvitation(
       req.body.communityId,
-      req.user._id,
+      userId,
       req.body.email
     );
     res.status(200).send(result);
