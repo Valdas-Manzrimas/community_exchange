@@ -1,0 +1,12 @@
+# Ignore node_modules directory
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Ignore log files
+*.log
+
+# Ignore environment variables file
+.env
+
+harmony-exchange-0b2b2d6f33e8.json
