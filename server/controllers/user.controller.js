@@ -2,6 +2,7 @@
 const User = require('../models/user.model.js');
 const Role = require('../models/role.model');
 const userService = require('../services/userService');
+const { mongoose } = require('../models/index.js');
 
 exports.changePassword = async (req, res) => {
   try {
@@ -115,10 +116,13 @@ exports.setUserRole = async (req, res) => {
 
   try {
     const currentUser = await User.findById(req.user._id).exec();
-
     const communityId = req.body.communityId;
+    const userCommunities = currentUser.communities.filter(
+      (community) => community._id.toString() === communityId
+    );
+
     // check if current user is admin by role id
-    if (!currentUser.roles.includes('64aebb129b7ce08056d39f59')) {
+    if (userCommunities.length === 0 || userCommunities[0].role !== 'admin') {
       return res.status(403).send({ message: 'Unauthorized.' });
     }
 
@@ -130,8 +134,19 @@ exports.setUserRole = async (req, res) => {
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { roles: [roleObj._id] },
-      { new: true }
+      {
+        $set: {
+          'communities.$[elem].role': role,
+        },
+      },
+      {
+        arrayFilters: [
+          {
+            'elem._id': new mongoose.Types.ObjectId(communityId),
+          },
+        ],
+        new: true,
+      }
     ).exec();
 
     if (!updatedUser) {
