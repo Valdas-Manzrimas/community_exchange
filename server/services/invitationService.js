@@ -21,7 +21,7 @@ exports.sendInvitation = async (communityId, userId, email) => {
     // Check if the user is already a member of the community
     const isMember = await User.exists({
       email,
-      'communities.communityId': communityId,
+      'communities.community': communityId,
     });
 
     if (isMember) {
@@ -65,6 +65,9 @@ exports.sendInvitation = async (communityId, userId, email) => {
       url: `http://127.0.0.1:5173/invitation?token=${token}`,
     };
   } catch (error) {
+    if (invitation) {
+      await invitation.delete();
+    }
     throw new Error(error.message);
   }
 };

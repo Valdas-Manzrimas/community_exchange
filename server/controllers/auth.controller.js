@@ -6,11 +6,16 @@
 // TODO: add comments
 // TODO: add tests
 // TODO: add documentation
+// TODO: add normal mail address
 
 const config = require('../config/auth.config');
 const jwtService = require('../services/jwtService');
 const userService = require('../services/userService');
 const invitationService = require('../services/invitationService');
+const communityService = require('../services/communityService');
+
+const sgMail = require('@sendgrid/mail');
+require('dotenv').config();
 
 exports.signup = async (req, res) => {
   try {
@@ -89,14 +94,13 @@ exports.signupByInvitation = async (req, res) => {
   } catch (error) {
     console.error('Error during user registration:', error);
 
-    if (error instanceof jwtService.TokenExpiredError) {
+    if (error && error.name === 'TokenExpiredError') {
       return res.status(400).json({ message: 'Invitation token has expired.' });
-    } else if (error instanceof jwtService.JsonWebTokenError) {
+    } else if (error && error.name === 'JsonWebTokenError') {
       return res.status(400).json({ message: 'Invalid invitation token.' });
-    } else if (error.name === 'ValidationError') {
+    } else if (error && error.name === 'ValidationError') {
       return res.status(400).json({ message: error.message });
     }
-
     res
       .status(500)
       .json({ message: 'An error occurred during user registration.' });
@@ -130,6 +134,8 @@ exports.signout = async (req, res) => {
 exports.sendInvitation = async (req, res) => {
   const { email, communityId } = req.body;
 
+  const communityName = await communityService.getCommunityName(communityId);
+
   if (!email) {
     return res.status(400).send({ message: 'Email is required.' });
   }
@@ -148,8 +154,40 @@ exports.sendInvitation = async (req, res) => {
     const result = await invitationService.sendInvitation(
       req.body.communityId,
       userId,
-      req.body.email
+      email
     );
+
+    // Send an email with the invitation details
+    const subject = `Invitation to join ${communityName}`;
+    const text = `You have been invited to join the ${communityName} community. Please click the following link to accept the invitation: ${result.url}`;
+
+    const html = `
+          <div style="text-align: center;">
+            <h1 style="font-size: 24px; margin-bottom: 20px;">Invitation to join ${communityName}</h1>
+            <p style="font-size: 18px; margin-bottom: 20px; text-align: left; padding: 0 20px; line-height: 1.5;">
+              You have been invited to join the ${communityName} community. Please click the following link to accept the invitation:
+            </p>
+            <a href="${result.url}" style="background-color: #007bff; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;" >Accept Invitation</a>
+          </div>
+    `;
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    const msg = {
+      to: email,
+      // UPDATE TO COMPANY EMAIL ADDRESS!
+      from: 'vrajaviharidas@gmail.com',
+      subject,
+      text,
+      html,
+    };
+    sgMail
+      .send(msg)
+      .then(() => {
+        console.log('Email sent');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
     res.status(200).send(result);
   } catch (error) {
     res.status(500).send({ message: error.message });

@@ -42,9 +42,5 @@ module.exports = function (app) {
     controller.adminBoard
   );
 
-  app.put(
-    '/api/user/setrole',
-    [authJwt.verifyToken, authJwt.isAdmin],
-    controller.setUserRole
-  );
+  app.put('/api/user/setrole', [authJwt.verifyToken], controller.setUserRole);
 };

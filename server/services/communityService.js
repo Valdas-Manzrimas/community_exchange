@@ -13,33 +13,34 @@ exports.joinCommunity = async (userId, communityId) => {
   return community;
 };
 
-exports.createCommunity = async (communityDetails, session = null) => {
-  const existingCommunity = await Community.findOne({
-    name: communityDetails.name,
-  });
-  if (existingCommunity) {
+exports.createCommunity = async (
+  { name, owner, ...communityDetails },
+  session = null
+) => {
+  const existingCommunity = await Community.findOne({ name });
+  if (existingCommunity)
     throw new Error(
       'Community with this name already exists. Name must be unique.'
     );
-  }
 
-  const newCommunity = new Community({
+  const community = new Community({
     _id: new mongoose.Types.ObjectId(),
+    name,
+    owner,
+    users: [owner],
     ...communityDetails,
-    users: [communityDetails.owner],
-    moderator: communityDetails.owner,
   });
 
-  const communityName = cloudService.getBucketFolderName(communityDetails.name);
-  await cloudService.createFolder(`${communityName}/product_images/`);
+  const bucketFolderName = cloudService.getBucketFolderName(name);
+  await cloudService.createFolder(`${bucketFolderName}/product_images/`);
 
   if (session?.inTransaction?.()) {
-    await newCommunity.save({ session });
+    await community.save({ session });
   } else {
-    await newCommunity.save();
+    await community.save();
   }
 
-  return newCommunity;
+  return community;
 };
 
 exports.getCommunityById = async (id) => {
@@ -98,4 +99,12 @@ exports.removeUserFromCommunity = async (communityId, userId, requesterId) => {
   }
 
   return community;
+};
+
+exports.getCommunityName = async (id) => {
+  const community = await Community.findById(id);
+  if (!community) {
+    throw new Error(`Community with id ${id} does not exist`);
+  }
+  return community.name;
 };

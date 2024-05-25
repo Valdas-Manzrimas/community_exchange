@@ -21,7 +21,7 @@ const verifyToken = (req, res, next) => {
 };
 
 const isAdmin = (req, res, next) => {
-  User.findById(req.userId)
+  User.findById(req.user._id)
     .exec()
     .then((user) => {
       if (!user) {
@@ -32,7 +32,7 @@ const isAdmin = (req, res, next) => {
     })
     .then((roles) => {
       for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === 'admin') {
+        if (roles[i].name === 'admin' || 'Admin') {
           return next();
         }
       }

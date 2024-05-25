@@ -6,7 +6,7 @@ const userService = require('../services/userService');
 exports.changePassword = async (req, res) => {
   try {
     await userService.changePassword(
-      req.userId,
+      req.user._id,
       req.body.currentPassword,
       req.body.newPassword
     );
@@ -71,20 +71,19 @@ exports.allAccess = (req, res) => {
   res.status(200).send('Public Content.');
 };
 
-exports.userBoard = (req, res) => {
-  User.findById(req.userId)
-    .select('-password')
-    .exec()
-    .then((user) => {
-      if (!user) {
-        return res.status(404).send({ message: 'User not found.' });
-      }
-      res.status(200).json(user);
-    })
-    .catch((error) => {
-      console.error('Error fetching user data:', error);
-      res.status(500).send({ message: 'Error fetching user data.' });
-    });
+exports.userBoard = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('-password').exec();
+
+    if (!user) {
+      return res.status(404).send({ message: 'User not found.' });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    res.status(500).send({ message: 'Error fetching user data.' });
+  }
 };
 
 exports.getUserById = async (req, res) => {
@@ -115,7 +114,9 @@ exports.setUserRole = async (req, res) => {
   const { userId, role } = req.body;
 
   try {
-    const currentUser = await User.findById(req.userId).exec();
+    const currentUser = await User.findById(req.user._id).exec();
+
+    const communityId = req.body.communityId;
     // check if current user is admin by role id
     if (!currentUser.roles.includes('64aebb129b7ce08056d39f59')) {
       return res.status(403).send({ message: 'Unauthorized.' });
@@ -139,6 +140,7 @@ exports.setUserRole = async (req, res) => {
 
     res.status(200).send({ message: 'User role updated successfully.' });
   } catch (err) {
-    return res.status(500).send({ message: err.message });
+    console.error('Error updating user role:', err);
+    return res.status(500).send({ message: 'Internal Server Error.' });
   }
 };

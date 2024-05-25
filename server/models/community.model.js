@@ -48,7 +48,7 @@ const communitySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    moderator: {
+    owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,

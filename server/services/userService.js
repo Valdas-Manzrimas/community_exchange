@@ -101,17 +101,19 @@ exports.createUser = async (userDetails, session = null) => {
 exports.createUserAndCommunity = async (userDetails, communityDetails) => {
   const session = await mongoose.startSession();
   session.startTransaction();
-  const user = await this.createUser(userDetails, session);
 
+  const user = await this.createUser(userDetails, session);
   try {
-    communityDetails.owner = user._id;
     const community = await communityService.createCommunity(
-      communityDetails,
+      {
+        name: communityDetails.name,
+        owner: user._id,
+        ...communityDetails,
+      },
       session
     );
 
-    // Add the community id to the user
-    user.communities.push({ community: community._id, role: 'Admin' });
+    user.communities.push({ _id: community._id, role: 'admin' });
     await user.save({ session });
 
     const token = jwtService.generateToken({ id: user._id });
@@ -122,29 +124,29 @@ exports.createUserAndCommunity = async (userDetails, communityDetails) => {
   } catch (error) {
     await session.abortTransaction(); // Rollback the transaction in case of error
     throw error; // Propagate the error back to the calling function
+  } finally {
+    session.endSession(); // End the session regardless of success or failure
   }
 };
 
 // CREATE User by invitation
 exports.createUserByInvitation = async (
-  userDetails,
+  inviteeDetails,
   communityId,
   session = null
 ) => {
-  try {
-    const user = await exports.createUser(userDetails, session);
+  const user = await this.createUser(inviteeDetails, session);
 
-    if (communityId) {
-      user.communities.push({ community: communityId, role: 'User' });
-      await communityService.joinCommunity(user._id, communityId);
-
-      await user.save();
-    }
-    return user;
-  } catch (error) {
-    throw error;
+  if (communityId) {
+    await communityService.joinCommunity(user._id, communityId);
+    user.communities.push({ _id: communityId, role: 'user' });
   }
+
+  await user.save();
+  return user;
 };
+
+// Refactored code to use standardized variable names, removed debugging statements, improved readability and removed redundant information.
 
 // GET user by id
 exports.getUser = (userId) => {

@@ -39,3 +39,13 @@ exports.sendInvitationSchema = yup.object().shape({
   userId: yup.string().required(),
   email: yup.string().email().required(),
 });
+
+exports.passwordSchema = yup.object().shape({
+  newPassword: yup
+    .string()
+    .required('New password is required')
+    .min(8, 'Password must be at least 8 characters long')
+    .test('hasNumber', 'Password must contain at least one number', (value) =>
+      /[0-9]/.test(value)
+    ),
+});
