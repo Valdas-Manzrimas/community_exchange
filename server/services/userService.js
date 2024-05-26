@@ -210,6 +210,7 @@ exports.changePassword = async (userId, currentPassword, newPassword) => {
   await user.save();
 };
 
+// GET ALL COMMMUNITY MEMBERS
 exports.getAllCommunityMembers = async (communityId) => {
   const users = await User.find({ community: communityId })
     .populate('communities')

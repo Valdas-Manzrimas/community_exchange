@@ -31,23 +31,31 @@ exports.getAllCommunityMembers = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   try {
-    const user = await User.findById(req.userId).exec();
+    const userToUpdate = await User.findById(req.user._id).exec();
 
-    if (!user) {
+    if (!userToUpdate) {
       return res.status(404).send({ message: 'User not found.' });
     }
 
-    const { firstName, lastName, email } = req.body;
+    const updatedUserFields = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      // email: req.body.email,
+      phone: req.body.phone,
+      city: req.body.city,
+      country: req.body.country,
+    };
 
-    user.firstName = firstName;
-    user.lastName = lastName;
-    user.email = email;
+    Object.keys(updatedUserFields).forEach((key) => {
+      if (updatedUserFields[key]) {
+        userToUpdate[key] = updatedUserFields[key];
+      }
+    });
 
-    await user.save();
+    await userToUpdate.save();
 
     res.status(200).json({ message: 'User updated successfully!' });
   } catch (error) {
-    console.error('Error updating user:', error);
     res.status(500).send({ message: 'Error updating user.' });
   }
 };
@@ -56,7 +64,7 @@ exports.deleteUser = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const deletedUser = await User.findByIdAndDelete(req.userId).exec();
+    const deletedUser = await User.findByIdAndDelete(userId).exec();
 
     if (!deletedUser) {
       return res.status(404).send({ message: 'User not found.' });

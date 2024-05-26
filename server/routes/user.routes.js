@@ -11,7 +11,7 @@ module.exports = function (app) {
   app.get('/api/user/all', controller.allAccess);
 
   app.get(
-    '/api/user/members/:communityId',
+    '/api/user/all/:communityId',
     authJwt.verifyToken,
     controller.getAllCommunityMembers
   );
@@ -28,7 +28,11 @@ module.exports = function (app) {
     [authJwt.verifyToken],
     controller.changePassword
   );
-  app.delete('/api/user/delete', [authJwt.verifyToken], controller.deleteUser);
+  app.delete(
+    '/api/user/delete/:userId',
+    [authJwt.verifyToken],
+    controller.deleteUser
+  );
 
   app.get(
     '/api/user/mod',
