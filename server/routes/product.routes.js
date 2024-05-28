@@ -18,7 +18,12 @@ module.exports = function (app) {
   // GET
   app.get('/api/product/all', productController.getAllProducts);
   app.get('/api/product/owned', verifyToken, productController.getMyProducts);
-  app.get('/api/product/:productId', productController.getProductById);
+  app.get(
+    '/api/product/:productId',
+    verifyToken,
+    isMemberInCommunity,
+    productController.getProductById
+  );
   app.get(
     '/api/community/products/:communityId',
     verifyToken,

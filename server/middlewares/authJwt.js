@@ -5,6 +5,7 @@ const db = require('../models');
 const mongoose = require('mongoose');
 
 const Community = require('../models/community.model.js');
+const Product = require('../models/product.model.js');
 const User = db.user;
 const Role = db.role;
 
@@ -24,24 +25,38 @@ const verifyToken = (req, res, next) => {
 };
 
 const isMemberInCommunity = async (req, res, next) => {
-  const { communityId } = req.params;
+  const { communityId, productId } = req.params;
   const userId = req.user._id;
   const objectId = new mongoose.Types.ObjectId(communityId);
+  let community;
 
   try {
-    if (!objectId) {
-      return res.status(400).send({ message: 'Invalid community ID' });
+    // used in getAllCommunityProducts
+    if (communityId) {
+      community = await Community.findById(objectId);
+      if (!community) {
+        return res.status(404).send({ message: 'Community not found' });
+      }
+    }
+    // used in getProductById
+    if (productId) {
+      const product = await Product.findById(productId);
+
+      if (!product) {
+        return res.status(404).send({ message: 'Product not found ' });
+      }
+
+      community = await Community.findById(product.community);
     }
 
-    const community = await Community.findById(objectId);
     if (!community) {
-      return res.status(404).send({ message: 'Community not found' });
+      return res.status(404).send({ message: 'Community is not found' });
     }
 
     if (!community.users.includes(userId)) {
       return res
         .status(403)
-        .send({ message: 'You are not a member of this community' });
+        .send({ message: 'You are not a member of the community' });
     }
 
     next();

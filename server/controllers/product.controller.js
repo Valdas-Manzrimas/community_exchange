@@ -104,18 +104,6 @@ exports.deleteProduct = async (req, res) => {
   }
 };
 
-exports.getAllProducts = async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 4;
-
-  try {
-    const productsData = await productService.getAllProducts(page, limit);
-    res.status(200).json(productsData);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
 exports.getMyProducts = async (req, res, next) => {
   try {
     const products = await myProductsFilter(req, Product);
@@ -153,5 +141,18 @@ exports.getProductsByCommunity = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: 'Internal server error' });
+  }
+};
+
+// not used for now
+exports.getAllProducts = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 4;
+
+  try {
+    const productsData = await productService.getAllProducts(page, limit);
+    res.status(200).json(productsData);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
