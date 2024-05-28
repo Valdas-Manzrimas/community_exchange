@@ -2,6 +2,9 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/auth.config.js');
 const db = require('../models');
+const mongoose = require('mongoose');
+
+const Community = require('../models/community.model.js');
 const User = db.user;
 const Role = db.role;
 
@@ -20,6 +23,34 @@ const verifyToken = (req, res, next) => {
   }
 };
 
+const isMemberInCommunity = async (req, res, next) => {
+  const { communityId } = req.params;
+  const userId = req.user._id;
+  const objectId = new mongoose.Types.ObjectId(communityId);
+
+  try {
+    if (!objectId) {
+      return res.status(400).send({ message: 'Invalid community ID' });
+    }
+
+    const community = await Community.findById(objectId);
+    if (!community) {
+      return res.status(404).send({ message: 'Community not found' });
+    }
+
+    if (!community.users.includes(userId)) {
+      return res
+        .status(403)
+        .send({ message: 'You are not a member of this community' });
+    }
+
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Internal server error' });
+  }
+};
+
 const isAdmin = (req, res, next) => {
   User.findById(req.user._id)
     .exec()
@@ -32,7 +63,7 @@ const isAdmin = (req, res, next) => {
     })
     .then((roles) => {
       for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === 'admin' || 'Admin') {
+        if (roles[i].name === 'admin' || roles[i].name === 'Admin') {
           return next();
         }
       }
@@ -72,6 +103,7 @@ const isModerator = (req, res, next) => {
 
 const authJwt = {
   verifyToken,
+  isMemberInCommunity,
   isAdmin,
   isModerator,
 };

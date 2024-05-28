@@ -1,19 +1,20 @@
 // paginate.js
 
-module.exports.paginate = async (model, query, conditions = {}) => {
-  const page = parseInt(query.page) || 1;
-  const limit = parseInt(query.limit) || 12;
+module.exports.paginate = async (products, query) => {
+  const page = parseInt(query?.page) || 1;
+  const limit = parseInt(query?.limit) || 12;
   const skip = (page - 1) * limit;
 
-  const totalItems = await model.countDocuments(conditions);
+  const totalItems = products.length;
   const totalPages = Math.ceil(totalItems / limit);
 
-  const results = await model.find(conditions).skip(skip).limit(limit);
+  const results = products.slice(skip, skip + limit);
 
   return {
     results,
     totalPages,
     currentPage: page,
+    totalItems,
   };
 };
 

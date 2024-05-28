@@ -1,7 +1,13 @@
 const productService = require('../services/productService');
 const cloudService = require('../services/cloudService');
 const communityService = require('../services/communityService');
-const { parsePopulateFields } = require('../utils/productUtils');
+const { parsePopulateFields, paginate } = require('../utils/productUtils');
+const { productSchema } = require('../middlewares/yupVerification');
+const yup = require('yup');
+const { filterProducts } = require('../utils/filter');
+const Community = require('../models/community.model');
+const Product = require('../models/product.model');
+const { mongoose } = require('../models');
 
 exports.uploadImage = async (req, res, next) => {
   const files = req.files;
@@ -45,10 +51,24 @@ exports.deleteUploadedImage = async (req, res, next) => {
 
 exports.createProduct = async (req, res, next) => {
   try {
+    // Validate the request body using the Yup schema
+    await productSchema.validate(req.body, { abortEarly: false });
+
     const product = await productService.createProduct(req.body);
     res.status(201).json(product);
+    console.log('Product created successfully');
   } catch (error) {
-    next(error);
+    if (error instanceof yup.ValidationError) {
+      // Handle Yup validation errors
+      const validationErrors = error.inner.map((err) => ({
+        field: err.path,
+        message: err.message,
+      }));
+      res.status(400).json({ errors: validationErrors });
+    } else {
+      // Handle other errors
+      next(error);
+    }
   }
 };
 
@@ -115,21 +135,30 @@ exports.getMyProducts = async (req, res) => {
 };
 
 exports.getProductsByCommunity = async (req, res) => {
+  const { communityId } = req.params;
+  const communityObjectId = new mongoose.Types.ObjectId(communityId);
+
   try {
-    const { products, totalPages } =
-      await productService.getProductsByCommunity(
-        req.params.communityId,
-        req.query
-      );
+    const community = await Community.findById(communityObjectId);
+    if (!community) {
+      return res.status(404).send({ message: 'Community not found' });
+    }
 
-    const productsDataWithOwnerName = products.map((product) => ({
-      ...product._doc,
-      ownerName: `${product.owner.firstName} ${product.owner.lastName}`,
-      owner: product.owner._id,
-    }));
+    const userId = req.user._id;
+    if (!community.users.some((user) => user.equals(userId))) {
+      return res
+        .status(403)
+        .send({ message: 'You are not a member of this community' });
+    }
 
-    res.status(200).json({ products: productsDataWithOwnerName, totalPages });
+    const products = await filterProducts(req, Product);
+
+    const paginatedProducts = await paginate(products, req.query, {});
+    console.log(`Number of products: ${paginatedProducts.totalItems}`);
+
+    res.send(paginatedProducts);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    res.status(500).send({ message: 'Internal server error' });
   }
 };

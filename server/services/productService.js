@@ -4,11 +4,11 @@ const cloudService = require('../services/cloudService');
 const { paginate } = require('../utils/productUtils');
 
 exports.createProduct = async (productDetails) => {
-  const { communityId } = productDetails;
+  const { community } = productDetails;
 
   const product = new Product({
     ...productDetails,
-    community: communityId,
+    community,
     images: cloudService.getImageUrls(),
   });
 
@@ -39,10 +39,39 @@ exports.updateProduct = async (productId, productDetails) => {
   }
 
   // Update product details
-  product.title = productDetails.title || product.title;
-  product.description = productDetails.description || product.description;
-  product.price = productDetails.price || product.price;
-  product.images = productDetails.images || product.images;
+  if (productDetails.name) {
+    product.name = productDetails.name;
+  }
+  if (productDetails.community) {
+    product.community = productDetails.community;
+  }
+  if (productDetails.description) {
+    product.description = productDetails.description;
+  }
+  if (productDetails.category) {
+    product.category = productDetails.category;
+  }
+  if (productDetails.owner) {
+    product.owner = productDetails.owner;
+  }
+  if (productDetails.images) {
+    product.images = productDetails.images;
+  }
+  if (productDetails.tags) {
+    product.tags = productDetails.tags;
+  }
+  if (productDetails.condition) {
+    product.condition = productDetails.condition;
+  }
+  if (productDetails.location) {
+    product.location = productDetails.location;
+  }
+  if (productDetails.isAvailable) {
+    product.isAvailable = productDetails.isAvailable;
+  }
+  if (productDetails.wantedProducts) {
+    product.wantedProducts = productDetails.wantedProducts;
+  }
 
   await product.save();
   return product;
@@ -76,13 +105,19 @@ exports.getMyProducts = async (user, page, limit, populateFields) => {
   return products;
 };
 
-exports.getProductsByCommunity = async (communityId, query) => {
-  const { results, totalPages } = await paginate(Product, query, {
-    community: communityId,
-  });
-  const products = await Product.populate(results, {
-    path: 'owner',
-    select: 'firstName lastName',
-  });
-  return { products, totalPages };
-};
+// exports.getProductsByCommunity = async (communityId, query) => {
+//   const { results, totalPages } = await paginate(Product, query, {
+//     community: communityId,
+//   });
+//   const products = await Product.populate(results, {
+//     path: 'owner',
+//     select: 'firstName lastName',
+//   });
+
+//   // Filter out products that don't belong to the community
+//   const communityProducts = products.filter((product) =>
+//     product.community.equals(communityId)
+//   );
+
+//   return { products: communityProducts, totalPages };
+// };

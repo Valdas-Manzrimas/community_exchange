@@ -1,5 +1,10 @@
 const productController = require('../controllers/product.controller');
-const { verifyToken, isAdmin, isModerator } = require('../middlewares/authJwt');
+const {
+  verifyToken,
+  isMemberInCommunity,
+  isAdmin,
+  isModerator,
+} = require('../middlewares/authJwt');
 const multer = require('multer');
 
 const upload = multer({
@@ -17,6 +22,7 @@ module.exports = function (app) {
   app.get(
     '/api/community/products/:communityId',
     verifyToken,
+    isMemberInCommunity,
     productController.getProductsByCommunity
   );
 
@@ -29,7 +35,11 @@ module.exports = function (app) {
   app.post('/api/product/create', verifyToken, productController.createProduct);
 
   // PUT
-  app.put('/api/product/update/:productId', productController.updateProduct);
+  app.put(
+    '/api/product/update/:productId',
+    verifyToken || isAdmin,
+    productController.updateProduct
+  );
 
   // DELETE
   app.delete(

@@ -49,3 +49,17 @@ exports.passwordSchema = yup.object().shape({
       /[0-9]/.test(value)
     ),
 });
+
+exports.productSchema = yup.object().shape({
+  name: yup.string().required().min(3).max(75),
+  community: yup.string().required(),
+  description: yup.string().required(),
+  category: yup.string().required(),
+  owner: yup.string().required(),
+  images: yup.array().of(yup.string()),
+  tags: yup.array().of(yup.string()),
+  condition: yup.string().required(),
+  location: yup.string().required(),
+  isAvailable: yup.boolean().default(true),
+  wantedProducts: yup.array().of(yup.string()),
+});
