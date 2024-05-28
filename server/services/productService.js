@@ -94,30 +94,3 @@ exports.getAllProducts = async (page, limit) => {
     .exec();
   return products;
 };
-
-exports.getMyProducts = async (user, page, limit, populateFields) => {
-  const query = Product.find({ owner: user })
-    .skip((page - 1) * limit)
-    .limit(limit)
-    .select(populateFields.join('name', '_id'));
-
-  const products = await query.exec();
-  return products;
-};
-
-// exports.getProductsByCommunity = async (communityId, query) => {
-//   const { results, totalPages } = await paginate(Product, query, {
-//     community: communityId,
-//   });
-//   const products = await Product.populate(results, {
-//     path: 'owner',
-//     select: 'firstName lastName',
-//   });
-
-//   // Filter out products that don't belong to the community
-//   const communityProducts = products.filter((product) =>
-//     product.community.equals(communityId)
-//   );
-
-//   return { products: communityProducts, totalPages };
-// };

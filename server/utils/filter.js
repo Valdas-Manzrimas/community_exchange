@@ -30,3 +30,19 @@ module.exports.filterProducts = async (req, Product) => {
 
   return products;
 };
+
+module.exports.myProductsFilter = async (req, Product) => {
+  const userId = req.user._id;
+
+  const filters = {};
+
+  const products = await Product.find({
+    $or: [
+      { owner: userId }, // Filter products where the user is the owner
+      { community: { $elemMatch: { users: userId } } }, // Filter products where the userId is a member of the community
+    ],
+    ...filters,
+  });
+
+  return products;
+};

@@ -1,6 +1,10 @@
 // paginate.js
 
 module.exports.paginate = async (products, query) => {
+  if (!Array.isArray(products)) {
+    throw new Error('products parameter must be an array');
+  }
+
   const page = parseInt(query?.page) || 1;
   const limit = parseInt(query?.limit) || 12;
   const skip = (page - 1) * limit;

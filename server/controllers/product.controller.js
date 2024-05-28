@@ -1,10 +1,10 @@
 const productService = require('../services/productService');
 const cloudService = require('../services/cloudService');
 const communityService = require('../services/communityService');
-const { parsePopulateFields, paginate } = require('../utils/productUtils');
+const { paginate } = require('../utils/productUtils');
 const { productSchema } = require('../middlewares/yupVerification');
 const yup = require('yup');
-const { filterProducts } = require('../utils/filter');
+const { filterProducts, myProductsFilter } = require('../utils/filter');
 const Community = require('../models/community.model');
 const Product = require('../models/product.model');
 const { mongoose } = require('../models');
@@ -116,21 +116,14 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
-exports.getMyProducts = async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 12;
-  const populateFields = parsePopulateFields(req);
-
+exports.getMyProducts = async (req, res, next) => {
   try {
-    const productsData = await productService.getMyProducts(
-      req.user,
-      page,
-      limit,
-      populateFields
-    );
-    res.status(200).json(productsData);
+    const products = await myProductsFilter(req, Product);
+    const paginatedProducts = await paginate(products, req.query, {});
+    res.status(200).json(paginatedProducts);
+    console.log(`Number of products: ${paginatedProducts.totalItems}`);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
