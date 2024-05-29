@@ -2,6 +2,7 @@ const productController = require('../controllers/product.controller');
 const {
   verifyToken,
   isMemberInCommunity,
+  isProductOwner,
   isAdmin,
   isModerator,
 } = require('../middlewares/authJwt');
@@ -10,7 +11,7 @@ const multer = require('multer');
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 5 * 1024 * 1024, // limit is 5MB
+    fileSize: 2 * 1024 * 1024, // limit is 5MB
   },
 });
 
@@ -54,6 +55,7 @@ module.exports = function (app) {
   app.delete(
     '/api/product/delete/:productId',
     verifyToken,
+    isProductOwner,
     productController.deleteProduct
   );
 };

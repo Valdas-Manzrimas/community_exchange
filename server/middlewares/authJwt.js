@@ -66,6 +66,28 @@ const isMemberInCommunity = async (req, res, next) => {
   }
 };
 
+const isProductOwner = async (req, res, next) => {
+  const { productId } = req.params;
+  const userId = req.user._id;
+
+  const product = await Product.findById(productId);
+  if (!product) {
+    throw new Error(`Product with id ${productId} does not exist`);
+  }
+
+  if (!userId) {
+    throw new Error(`User does not exist`);
+  }
+
+  if (!product.owner === userId) {
+    return res
+      .status(403)
+      .send({ message: 'You are not the owner of the product' });
+  }
+
+  next();
+};
+
 const isAdmin = (req, res, next) => {
   User.findById(req.user._id)
     .exec()
@@ -119,6 +141,7 @@ const isModerator = (req, res, next) => {
 const authJwt = {
   verifyToken,
   isMemberInCommunity,
+  isProductOwner,
   isAdmin,
   isModerator,
 };

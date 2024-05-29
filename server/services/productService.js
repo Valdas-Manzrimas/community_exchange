@@ -24,14 +24,6 @@ exports.createProduct = async (productDetails) => {
   return newProduct;
 };
 
-exports.getProductById = async (productId) => {
-  const product = await Product.findById(productId).exec();
-  if (!product) {
-    throw new Error(`Product with id ${productId} does not exist`);
-  }
-  return product;
-};
-
 exports.updateProduct = async (productId, productDetails) => {
   const product = await Product.findById(productId);
   if (!product) {
@@ -75,22 +67,4 @@ exports.updateProduct = async (productId, productDetails) => {
 
   await product.save();
   return product;
-};
-
-exports.deleteProduct = async (productId) => {
-  const product = await Product.findById(productId);
-  if (!product) {
-    throw new Error(`Product with id ${productId} does not exist`);
-  }
-
-  await product.remove();
-  return product;
-};
-
-exports.getAllProducts = async (page, limit) => {
-  const products = await Product.find()
-    .skip((page - 1) * limit)
-    .limit(limit)
-    .exec();
-  return products;
 };

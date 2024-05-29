@@ -9,6 +9,8 @@ const Community = require('../models/community.model');
 const Product = require('../models/product.model');
 const { mongoose } = require('../models');
 
+// TODO: fix delete image on deleteProduct
+
 exports.uploadImage = async (req, res, next) => {
   const files = req.files;
   const communityId = req.body.communityId;
@@ -74,7 +76,12 @@ exports.createProduct = async (req, res, next) => {
 
 exports.getProductById = async (req, res) => {
   try {
-    const product = await productService.getProductById(req.params.productId);
+    const product = await Product.findById(req.params.productId).exec();
+
+    if (!product) {
+      throw new Error(`Product with id ${productId} does not exist`);
+    }
+
     res.status(200).json(product);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -94,11 +101,26 @@ exports.updateProduct = async (req, res) => {
 };
 
 exports.deleteProduct = async (req, res) => {
+  const productId = req.params.productId;
   try {
-    await productService.deleteProduct(req.params.productId);
-    res
+    const product = await Product.findByIdAndDelete(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    product.images.forEach((image) => {
+      cloudService.deleteUploadedImage(image);
+
+      if (error) {
+        return console.log('Error while deleting image:', error);
+      }
+    });
+
+    console.log(`Product ${product.name} deleted successfully`);
+    return res
       .status(200)
-      .json({ message: 'Product and its images deleted successfully' });
+      .json({ message: `Product ${product.name} deleted successfully` });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
