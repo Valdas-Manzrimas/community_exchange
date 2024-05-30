@@ -44,7 +44,7 @@ exports.createCommunity = async (
 };
 
 exports.getCommunityById = async (id) => {
-  const community = await Community.findById(id).populate('moderator', '_id');
+  const community = await Community.findById(id);
   if (!community) {
     throw new Error(`Community with id ${id} does not exist`);
   }

@@ -44,6 +44,18 @@ const communitySchema = new mongoose.Schema(
         },
       },
     ],
+    posts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Post',
+      },
+    ],
+    events: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Event',
+      },
+    ],
     plan: {
       type: String,
       required: true,
