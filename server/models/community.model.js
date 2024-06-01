@@ -22,6 +22,28 @@ const communitySchema = new mongoose.Schema(
     description: {
       type: String,
     },
+    mission: {
+      title: { default: 'Our Mission', type: String },
+      content: { default: 'Our mission is to...', type: String },
+    },
+    values: {
+      title: { default: 'Our Values', type: String },
+      content: { default: 'Our values are...', type: String },
+    },
+    settings: {
+      type: Object,
+      required: true,
+      default: {
+        plan: 'free',
+        allowPosts: true,
+        allowEvents: true,
+        allowPictures: true,
+        allowSharePosts: true,
+        allowShareEvents: true,
+        allowMission: true,
+        allowValues: true,
+      },
+    },
     pictures: [
       {
         type: String,
@@ -42,6 +64,12 @@ const communitySchema = new mongoose.Schema(
           enum: ['admin', 'moderator', 'user'],
           default: 'user',
         },
+      },
+    ],
+    products: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
       },
     ],
     posts: [
@@ -66,7 +94,8 @@ const communitySchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
+  { versionKey: '__v' }
 );
 
 communitySchema.pre('save', function (next) {

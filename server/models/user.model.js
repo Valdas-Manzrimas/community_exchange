@@ -57,6 +57,20 @@ const userSchema = new mongoose.Schema(
           enum: ['user', 'moderator', 'admin'],
           default: 'user',
         },
+        // user offering
+        orders: [
+          {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Order',
+          },
+        ],
+        // requested for exchange
+        requests: [
+          {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Order',
+          },
+        ],
       },
     ],
   },

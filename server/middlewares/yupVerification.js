@@ -63,3 +63,13 @@ exports.productSchema = yup.object().shape({
   isAvailable: yup.boolean().default(true),
   wantedProducts: yup.array().of(yup.string()),
 });
+
+// POSTS
+exports.postValidationSchema = yup.object().shape({
+  title: yup.string().required(),
+  text: yup.string().required(),
+  community: yup.string().required(),
+  author: yup.string().required(),
+  pictures: yup.array().of(yup.string()),
+  comments: yup.array().of(yup.string()),
+});

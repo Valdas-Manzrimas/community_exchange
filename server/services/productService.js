@@ -1,3 +1,4 @@
+const Community = require('../models/community.model');
 const Product = require('../models/product.model');
 const User = require('../models/user.model');
 const cloudService = require('../services/cloudService');
@@ -13,10 +14,15 @@ exports.createProduct = async (productDetails) => {
   });
 
   const currentUser = await User.findById(productDetails.owner).exec();
-
   if (!currentUser) {
     throw new Error('Bad request. User not found.');
   }
+
+  await Community.findByIdAndUpdate(
+    community,
+    { $push: { products: product._id } },
+    { new: true }
+  );
 
   const newProduct = await product.save();
   cloudService.resetImageUrls();

@@ -13,7 +13,6 @@ const ProductSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
     },
     category: {
       type: String,
@@ -50,6 +49,12 @@ const ProductSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
+      },
+    ],
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Comment',
       },
     ],
   },

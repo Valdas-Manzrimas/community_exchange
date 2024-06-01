@@ -27,7 +27,7 @@ exports.createCommunity = async (
     _id: new mongoose.Types.ObjectId(),
     name,
     owner,
-    users: [owner],
+    users: [{ _id: owner, role: 'moderator' }],
     ...communityDetails,
   });
 

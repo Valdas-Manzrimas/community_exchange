@@ -11,23 +11,12 @@ exports.createOrder = async (req, res) => {
     const sellerUserId = seller.id;
 
     const buyerProduct = await Product.findById(buyerProductId);
-    if (!buyerProduct) {
-      return res.status(404).json({ message: 'Buyer product not found' });
-    }
-
     const buyerUser = await User.findById(buyerUserId);
-    if (!buyerUser) {
-      return res.status(404).json({ message: 'Buyer user not found' });
-    }
-
     const sellerProduct = await Product.findById(sellerProductId);
-    if (!sellerProduct) {
-      return res.status(404).json({ message: 'Seller product not found' });
-    }
-
     const sellerUser = await User.findById(sellerUserId);
-    if (!sellerUser) {
-      return res.status(404).json({ message: 'Seller user not found' });
+
+    if (!buyerProduct || !buyerUser || !sellerProduct || !sellerUser) {
+      return res.status(404).json({ message: 'Product or user not found' });
     }
 
     const order = new Order({
